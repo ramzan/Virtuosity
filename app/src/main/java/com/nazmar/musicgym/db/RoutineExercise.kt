@@ -28,5 +28,7 @@ data class RoutineExercise(
     @PrimaryKey
     val exerciseId: Long,
 
-    val duration: Long
+    val duration: Long,
+
+    val order: Int
 )
