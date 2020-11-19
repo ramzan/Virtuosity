@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Music Gym</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="exercises">Exercises</string>
+    <string name="practice">Practice</string>
+    <string name="settings">Settings</string>
 </resources>

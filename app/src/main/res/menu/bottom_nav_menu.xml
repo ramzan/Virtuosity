@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/exercisesFragment"
+        android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+        android:title="@string/exercises" />
+
+    <item
+        android:id="@+id/practiceFragment"
+        android:icon="@drawable/ic_baseline_music_note_24"
+        android:title="@string/practice" />
+
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/settings" />
+
+</menu>

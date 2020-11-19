@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/practiceFragment">
+    <fragment
+        android:id="@+id/practiceFragment"
+        android:name="com.nazmar.musicgym.ui.practice.PracticeFragment"
+        android:label="@string/practice"
+        tools:layout="@layout/fragment_practice" />
+    <fragment
+        android:id="@+id/exercisesFragment"
+        android:name="com.nazmar.musicgym.ui.exercises.ExercisesFragment"
+        android:label="@string/exercises"
+        tools:layout="@layout/fragment_exercises" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.nazmar.musicgym.ui.settings.SettingsFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_settings" />
+</navigation>
