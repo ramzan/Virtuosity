@@ -65,6 +65,7 @@ abstract class ExerciseDatabase : RoomDatabase() {
                 return instance
             }
         }
+
         val PREPOPULATE_EXERCISES = listOf(
             Exercise("A Major Scale"),
             Exercise("A# Major Scale"),

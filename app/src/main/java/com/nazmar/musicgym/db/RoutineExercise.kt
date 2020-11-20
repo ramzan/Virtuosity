@@ -2,7 +2,6 @@ package com.nazmar.musicgym.db
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "routine_exercise_table",
@@ -19,13 +18,12 @@ import androidx.room.PrimaryKey
             childColumns = ["exerciseId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    primaryKeys = ["routineId", "exerciseId"]
 )
 data class RoutineExercise(
-    @PrimaryKey
     val routineId: Long,
 
-    @PrimaryKey
     val exerciseId: Long,
 
     val duration: Long,

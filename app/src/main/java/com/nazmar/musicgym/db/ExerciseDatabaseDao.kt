@@ -1,9 +1,7 @@
 package com.nazmar.musicgym.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.lifecycle.LiveData
+import androidx.room.*
 
 @Dao
 interface ExerciseDatabaseDao {
@@ -43,4 +41,8 @@ interface ExerciseDatabaseDao {
 
     @Insert
     suspend fun delete(routine: Routine)
+
+    @Query("SELECT * FROM exercise_table ORDER BY name COLLATE NOCASE ASC")
+    fun getAllExercises(): LiveData<List<Exercise>>
+
 }
