@@ -55,6 +55,7 @@ class ExercisesFragment : Fragment() {
         binding.exercisesToolbar.menu.findItem(R.id.search).apply {
             (actionView as SearchView).apply {
                 isIconified = false
+                queryHint = getString(R.string.exercises_search_hint)
                 setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(text: String?): Boolean {
                         return true
@@ -71,11 +72,13 @@ class ExercisesFragment : Fragment() {
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     imm.toggleSoftInputFromWindow(requireView().windowToken, InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
+                    (actionView as SearchView).requestFocus()
                     return true
                 }
 
                 override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
                     viewModel.setNameQuery("")
+                    (actionView as SearchView).setQuery("", false)
                     imm.hideSoftInputFromWindow(requireView().windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
                     return true
                 }
