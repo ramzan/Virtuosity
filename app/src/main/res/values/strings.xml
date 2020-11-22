@@ -8,4 +8,7 @@
     <string name="practice">Practice</string>
     <string name="settings">Settings</string>
     <string name="new_exercise">New exercise</string>
+    <string name="search">Search</string>
+    <string name="sort">Sort</string>
+    <string name="exercises_search_hint">Search exercises</string>
 </resources>

@@ -5,32 +5,32 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "history_table",
-    foreignKeys = [
-        ForeignKey(
-            entity = Exercise::class,
-            parentColumns = ["id"],
-            childColumns = ["exerciseId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
+        tableName = "history_table",
+        foreignKeys = [
+            ForeignKey(
+                    entity = Exercise::class,
+                    parentColumns = ["id"],
+                    childColumns = ["exerciseId"],
+                    onDelete = ForeignKey.CASCADE
+            )
+        ]
 )
 class HistoryItem(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
+        @PrimaryKey(autoGenerate = true)
+        val id: Long,
 
-    val exerciseId: Long,
+        val exerciseId: Long,
 
-    val time: Long = System.currentTimeMillis(),
+        val time: Long = System.currentTimeMillis(),
 
-    val bpm: Int,
+        val bpm: Int,
 
-    val note: String
+        val note: String
 ) {
     constructor(exerciseId: Long, bpm: Int, note: String) : this(
-        id = 0,
-        exerciseId = exerciseId,
-        bpm = bpm,
-        note = note
+            id = 0,
+            exerciseId = exerciseId,
+            bpm = bpm,
+            note = note
     )
 }

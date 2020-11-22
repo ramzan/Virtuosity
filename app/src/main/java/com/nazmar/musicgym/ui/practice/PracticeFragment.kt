@@ -14,12 +14,12 @@ class PracticeFragment : Fragment() {
     private lateinit var practiceViewModel: PracticeViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         practiceViewModel =
-            ViewModelProvider(this).get(PracticeViewModel::class.java)
+                ViewModelProvider(this).get(PracticeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_practice, container, false)
         val textView: TextView = root.findViewById(R.id.practice)
         practiceViewModel.text.observe(viewLifecycleOwner, {

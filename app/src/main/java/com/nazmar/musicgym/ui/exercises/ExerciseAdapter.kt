@@ -11,7 +11,7 @@ import com.nazmar.musicgym.db.Exercise
 
 
 class ExerciseAdapter(private val onClickListener: OnClickListener) :
-    ListAdapter<Exercise, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()) {
+        ListAdapter<Exercise, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -35,7 +35,7 @@ class ExerciseAdapter(private val onClickListener: OnClickListener) :
     }
 
     class ViewHolder private constructor(private val binding: ListItemExerciseBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+            RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Exercise) {
             binding.exerciseName.text = item.name
@@ -47,7 +47,7 @@ class ExerciseAdapter(private val onClickListener: OnClickListener) :
                 val layoutInflater = LayoutInflater.from(parent.context)
 
                 val binding =
-                    ListItemExerciseBinding.inflate(layoutInflater, parent, false)
+                        ListItemExerciseBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }
