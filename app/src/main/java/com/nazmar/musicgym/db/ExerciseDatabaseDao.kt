@@ -45,4 +45,6 @@ interface ExerciseDatabaseDao {
     @Query("SELECT * FROM exercise_table ORDER BY name COLLATE NOCASE ASC")
     fun getAllExercises(): LiveData<List<Exercise>>
 
+    @Query("SELECT * FROM exercise_table WHERE id = :key")
+    fun getExercise(key: Long): LiveData<Exercise?>
 }

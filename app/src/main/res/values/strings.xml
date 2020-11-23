@@ -11,4 +11,8 @@
     <string name="search">Search</string>
     <string name="sort">Sort</string>
     <string name="exercises_search_hint">Search exercises</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="delete_dialog_message">Delete exercise</string>
+    <string name="name">Name</string>
 </resources>

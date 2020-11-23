@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.practice.PracticeFragment"
-    android:paddingBottom="?android:actionBarSize" >
+    android:paddingBottom="?android:actionBarSize"
+    tools:context=".ui.practice.PracticeFragment">
 
     <TextView
         android:id="@+id/practice"

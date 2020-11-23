@@ -13,10 +13,25 @@
         android:id="@+id/exercisesFragment"
         android:name="com.nazmar.musicgym.ui.exercises.ExercisesFragment"
         android:label="@string/exercises"
-        tools:layout="@layout/fragment_exercises" />
+        tools:layout="@layout/fragment_exercises">
+        <action
+            android:id="@+id/action_exercisesFragment_to_exerciseViewFragment"
+            app:destination="@id/exerciseViewFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.nazmar.musicgym.ui.settings.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/exerciseViewFragment"
+        android:name="com.nazmar.musicgym.ui.exercises.ExerciseViewFragment"
+        android:label="ExerciseViewFragment">
+        <action
+            android:id="@+id/action_exerciseViewFragment_to_exercisesFragment"
+            app:destination="@id/exercisesFragment" />
+        <argument
+            android:name="exerciseId"
+            app:argType="long" />
+    </fragment>
 </navigation>

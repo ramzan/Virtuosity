@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/rename_exercise"
+        android:contentDescription="@string/rename"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="@string/rename"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/delete_exercise"
+        android:contentDescription="@string/delete"
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:title="@string/delete"
+        app:showAsAction="ifRoom" />
+
+</menu>

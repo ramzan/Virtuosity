@@ -32,5 +32,4 @@ class ExercisesViewModel(application: Application) : AndroidViewModel(applicatio
     fun addExercise() {
         repo.addExercise(Exercise("butt"))
     }
-
 }

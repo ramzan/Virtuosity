@@ -29,6 +29,11 @@ class Repository(database: ExerciseDatabase) {
         }
     }
 
+    fun getExercise(id: Long): LiveData<Exercise?> {
+        return db.getExercise(id)
+
+    }
+
     fun updateExercise(exercise: Exercise) {
         CoroutineScope(Dispatchers.IO).launch {
             update(exercise)
@@ -44,6 +49,10 @@ class Repository(database: ExerciseDatabase) {
 
     private suspend fun insert(exercise: Exercise) {
         db.insert(exercise)
+    }
+
+    private suspend fun get(id: Long): LiveData<Exercise?> {
+        return db.getExercise(id)
     }
 
 

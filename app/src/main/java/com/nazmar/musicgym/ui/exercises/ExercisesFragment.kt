@@ -2,18 +2,20 @@ package com.nazmar.musicgym.ui.exercises
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExercisesBinding
+import com.nazmar.musicgym.db.Exercise
 
 
 class ExercisesFragment : Fragment() {
@@ -30,14 +32,15 @@ class ExercisesFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_exercises, container, false
         )
 
         val adapter = ExerciseAdapter(ExerciseAdapter.OnClickListener {
-            Toast.makeText(requireContext(), it.name, Toast.LENGTH_SHORT).show()
+            Log.d("butt", it.id.toString())
+            showExerciseView(it)
         })
 
         binding.exerciseList.adapter = adapter
@@ -88,6 +91,12 @@ class ExercisesFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun showExerciseView(exercise: Exercise) {
+        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        val action = ExercisesFragmentDirections.actionExercisesFragmentToExerciseViewFragment(exercise.id)
+        navController.navigate(action)
     }
 
     override fun onStop() {
