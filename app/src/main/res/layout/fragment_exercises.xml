@@ -2,7 +2,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.exercises.ExercisesFragment">
+    tools:context=".ui.exercises.ExercisesFragment"
+    android:paddingBottom="?android:actionBarSize" >
 
     <data>
 
@@ -46,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="72dp"
+            android:layout_marginBottom="@dimen/fab_margin"
             android:contentDescription="@string/new_exercise"
             app:srcCompat="@drawable/ic_baseline_add_24" />
 
