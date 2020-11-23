@@ -71,6 +71,7 @@ class ExercisesFragment : Fragment() {
             val imm = (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                    (actionView as SearchView).onActionViewExpanded()
                     imm.toggleSoftInputFromWindow(requireView().windowToken, InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
                     (actionView as SearchView).requestFocus()
                     return true
@@ -84,18 +85,6 @@ class ExercisesFragment : Fragment() {
                 }
 
             })
-        }
-
-        binding.exercisesToolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.sort -> {
-                    true
-                }
-                R.id.search -> {
-                    true
-                }
-                else -> false
-            }
         }
 
         return binding.root
