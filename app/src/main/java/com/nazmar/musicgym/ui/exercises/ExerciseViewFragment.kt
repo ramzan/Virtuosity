@@ -108,16 +108,15 @@ class ExerciseViewFragment : DialogFragment() {
                 .setTitle(R.string.rename)
                 .setView(layout)
                 .setPositiveButton("OK") { _, _ ->
-                    eVViewModel.renameExercise(text.text.toString())
+                    eVViewModel.renameExercise(text.text.toString().trim())
                 }
                 .setNegativeButton("CANCEL") { _, _ -> }
                 .create()
 
         text.addTextChangedListener(object : TextWatcher {
             private fun handleText() {
-                // Grab the button
-                val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                okButton.isEnabled = !text.text.isEmpty()
+                val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                okButton.isEnabled = text.text.isNotEmpty()
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

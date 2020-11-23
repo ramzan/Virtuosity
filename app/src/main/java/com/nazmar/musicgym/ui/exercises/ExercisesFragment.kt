@@ -1,18 +1,22 @@
 package com.nazmar.musicgym.ui.exercises
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExercisesBinding
 import com.nazmar.musicgym.db.Exercise
@@ -39,7 +43,6 @@ class ExercisesFragment : Fragment() {
         )
 
         val adapter = ExerciseAdapter(ExerciseAdapter.OnClickListener {
-            Log.d("butt", it.id.toString())
             showExerciseView(it)
         })
 
@@ -50,9 +53,7 @@ class ExercisesFragment : Fragment() {
         })
 
         binding.fab.setOnClickListener {
-            it?.apply { isEnabled = false; postDelayed({ isEnabled = true }, 400) } //400 ms
-//            showEditDialog(null)
-            viewModel.addExercise()
+            showNewExerciseDialog()
         }
 
         binding.exercisesToolbar.menu.findItem(R.id.search).apply {
@@ -89,7 +90,6 @@ class ExercisesFragment : Fragment() {
 
             })
         }
-
         return binding.root
     }
 
@@ -97,6 +97,39 @@ class ExercisesFragment : Fragment() {
         val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         val action = ExercisesFragmentDirections.actionExercisesFragmentToExerciseViewFragment(exercise.id)
         navController.navigate(action)
+    }
+
+    private fun showNewExerciseDialog(): Boolean {
+        val layout = layoutInflater.inflate(R.layout.text_input_dialog, null)
+        val text = layout.findViewById<EditText>(R.id.name_input)
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.new_exercise)
+                .setView(layout)
+                .setPositiveButton("OK") { _, _ ->
+                    viewModel.addExercise(text.text.toString().trim())
+                }
+                .setNegativeButton("CANCEL") { _, _ -> }
+                .create()
+
+        text.addTextChangedListener(object : TextWatcher {
+            private fun handleText() {
+                val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                okButton.isEnabled = text.text.isNotEmpty()
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                handleText()
+            }
+        })
+        dialog.show()
+        return true
     }
 
     override fun onStop() {

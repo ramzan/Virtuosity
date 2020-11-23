@@ -29,7 +29,7 @@ class ExercisesViewModel(application: Application) : AndroidViewModel(applicatio
         _query.value = name.toLowerCase(Locale.ROOT).trim()
     }
 
-    fun addExercise() {
-        repo.addExercise(Exercise("butt"))
+    fun addExercise(name: String) {
+        repo.addExercise(Exercise(name))
     }
 }
