@@ -13,24 +13,29 @@ import androidx.room.PrimaryKey
                     childColumns = ["exerciseId"],
                     onDelete = ForeignKey.CASCADE
             )
-        ]
+        ],
+//        primaryKeys = ["exerciseId", "time"]
 )
-class HistoryItem(
+data class HistoryItem(
         @PrimaryKey(autoGenerate = true)
-        val id: Long,
+        val itemId: Long,
 
         val exerciseId: Long,
 
-        val time: Long = System.currentTimeMillis(),
+        val time: Long,
 
-        val bpm: Int,
-
-        val note: String
+        val bpm: Int
 ) {
-    constructor(exerciseId: Long, bpm: Int, note: String) : this(
-            id = 0,
+    constructor(exerciseId: Long, bpm: Int) : this(
+            itemId = 0,
             exerciseId = exerciseId,
-            bpm = bpm,
-            note = note
+            time = System.currentTimeMillis(),
+            bpm = bpm
     )
 }
+
+data class ExerciseMaxBpm(
+        val id: Long,
+        val name: String,
+        val bpm: Int?
+)

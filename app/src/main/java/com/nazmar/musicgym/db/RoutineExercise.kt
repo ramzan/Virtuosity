@@ -19,14 +19,14 @@ import androidx.room.ForeignKey
                     onDelete = ForeignKey.CASCADE
             )
         ],
-        primaryKeys = ["routineId", "exerciseId"]
+        primaryKeys = ["routineId", "order"]
 )
 data class RoutineExercise(
         val routineId: Long,
 
+        val order: Int,
+
         val exerciseId: Long,
 
-        val duration: Long,
-
-        val order: Int
+        val duration: Long
 )

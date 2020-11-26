@@ -18,7 +18,7 @@ class ExerciseViewViewModel(exerciseId: Long, application: Application) : Androi
 
     fun renameExercise(newName: String) {
         if (newName != exercise.value!!.name) {
-            repo.updateExercise(Exercise(exercise.value!!.id, newName, exercise.value!!.maxBpm))
+            repo.updateExercise(Exercise(exercise.value!!.id, newName))
         }
     }
 }

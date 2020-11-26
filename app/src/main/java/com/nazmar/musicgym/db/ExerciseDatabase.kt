@@ -50,7 +50,8 @@ abstract class ExerciseDatabase : RoomDatabase() {
                                     GlobalScope.launch(Dispatchers.IO) {
                                         withContext(Dispatchers.IO) {
                                             getInstance(context).exerciseDatabaseDao.apply {
-                                                insert(PREPOPULATE_EXERCISES)
+                                                insertExercises(PREPOPULATE_EXERCISES)
+                                                insertHistoryItems(PREPOPULATE_HISTORY)
                                             }
                                         }
                                     }
@@ -79,6 +80,21 @@ abstract class ExerciseDatabase : RoomDatabase() {
                 Exercise("F# Major Scale"),
                 Exercise("G Major Scale"),
                 Exercise("G# Major Scale")
+        )
+
+        val PREPOPULATE_HISTORY = listOf(
+                HistoryItem(1, 5),
+                HistoryItem(1, 30),
+                HistoryItem(1, 1),
+                HistoryItem(3, 5),
+                HistoryItem(4, 5),
+                HistoryItem(5, 5),
+                HistoryItem(6, 5),
+                HistoryItem(7, 5),
+                HistoryItem(8, 5),
+                HistoryItem(9, 5),
+                HistoryItem(10, 5),
+                HistoryItem(12, 50),
         )
     }
 }

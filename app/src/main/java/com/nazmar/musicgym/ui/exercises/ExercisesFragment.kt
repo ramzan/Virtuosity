@@ -19,7 +19,6 @@ import androidx.navigation.Navigation
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExercisesBinding
-import com.nazmar.musicgym.db.Exercise
 
 
 class ExercisesFragment : Fragment() {
@@ -43,7 +42,7 @@ class ExercisesFragment : Fragment() {
         )
 
         val adapter = ExerciseAdapter(ExerciseAdapter.OnClickListener {
-            showExerciseView(it)
+            showExerciseView(it.id)
         })
 
         binding.exerciseList.adapter = adapter
@@ -93,9 +92,9 @@ class ExercisesFragment : Fragment() {
         return binding.root
     }
 
-    private fun showExerciseView(exercise: Exercise) {
+    private fun showExerciseView(id: Long) {
         val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        val action = ExercisesFragmentDirections.actionExercisesFragmentToExerciseViewFragment(exercise.id)
+        val action = ExercisesFragmentDirections.actionExercisesFragmentToExerciseViewFragment(id)
         navController.navigate(action)
     }
 

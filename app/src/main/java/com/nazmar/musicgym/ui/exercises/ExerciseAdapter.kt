@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.ListItemExerciseBinding
 import com.nazmar.musicgym.db.Exercise
+import com.nazmar.musicgym.db.ExerciseMaxBpm
 
 
 class ExerciseAdapter(private val onClickListener: OnClickListener) :
-        ListAdapter<Exercise, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()) {
+        ListAdapter<ExerciseMaxBpm, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -26,8 +27,8 @@ class ExerciseAdapter(private val onClickListener: OnClickListener) :
      * associated with the current item to the [onClick] function.
      * @param clickListener lambda that will be called with the current [Exercise]
      */
-    class OnClickListener(val clickListener: (lift: Exercise) -> Unit) {
-        fun onClick(lift: Exercise) = clickListener(lift)
+    class OnClickListener(val clickListener: (lift: ExerciseMaxBpm) -> Unit) {
+        fun onClick(lift: ExerciseMaxBpm) = clickListener(lift)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,9 +38,9 @@ class ExerciseAdapter(private val onClickListener: OnClickListener) :
     class ViewHolder private constructor(private val binding: ListItemExerciseBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Exercise) {
+        fun bind(item: ExerciseMaxBpm) {
             binding.exerciseName.text = item.name
-            binding.maxBpm.text = item.maxBpm.toString()
+            binding.maxBpm.text = (item.bpm ?: 0).toString()
         }
 
         companion object {
@@ -55,12 +56,12 @@ class ExerciseAdapter(private val onClickListener: OnClickListener) :
     }
 }
 
-class ExerciseDiffCallback : DiffUtil.ItemCallback<Exercise>() {
-    override fun areItemsTheSame(oldItem: Exercise, newItem: Exercise): Boolean {
-        return oldItem.name == newItem.name && oldItem.maxBpm == newItem.maxBpm
+class ExerciseDiffCallback : DiffUtil.ItemCallback<ExerciseMaxBpm>() {
+    override fun areItemsTheSame(oldItem: ExerciseMaxBpm, newItem: ExerciseMaxBpm): Boolean {
+        return oldItem.name == newItem.name && oldItem.bpm == newItem.bpm
     }
 
-    override fun areContentsTheSame(oldItem: Exercise, newItem: Exercise): Boolean {
+    override fun areContentsTheSame(oldItem: ExerciseMaxBpm, newItem: ExerciseMaxBpm): Boolean {
         return oldItem == newItem
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.nazmar.musicgym.db.Exercise
 import com.nazmar.musicgym.db.ExerciseDatabase
+import com.nazmar.musicgym.db.ExerciseMaxBpm
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,8 +18,12 @@ class Repository(database: ExerciseDatabase) {
         return db.getAllExercises()
     }
 
-    fun getFilteredExercises(query: String): LiveData<List<Exercise>> {
-        return Transformations.map(getAllExercises()) {
+    fun getExerciseMaxBPMS(): LiveData<List<ExerciseMaxBpm>> {
+        return db.getAllExerciseMaxBPMs()
+    }
+
+    fun getFilteredExerciseMaxBPMs(query: String): LiveData<List<ExerciseMaxBpm>> {
+        return Transformations.map(getExerciseMaxBPMS()) {
             it.filter { exercise -> exercise.name.toLowerCase(Locale.ROOT).contains(query) }
         }
     }

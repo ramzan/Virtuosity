@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.nazmar.musicgym.db.Exercise
 import com.nazmar.musicgym.db.ExerciseDatabase
+import com.nazmar.musicgym.db.ExerciseMaxBpm
 import com.nazmar.musicgym.respository.Repository
 import java.util.*
 
@@ -14,14 +15,14 @@ class ExercisesViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val repo = Repository(ExerciseDatabase.getInstance(application))
 
-    val exercises: LiveData<List<Exercise>>
+    val exercises: LiveData<List<ExerciseMaxBpm>>
         get() = getFilteredExercises()
 
     private var _query = MutableLiveData("")
 
-    private fun getFilteredExercises(): LiveData<List<Exercise>> {
+    private fun getFilteredExercises(): LiveData<List<ExerciseMaxBpm>> {
         return Transformations.switchMap(_query) { name: String ->
-            repo.getFilteredExercises(name)
+            repo.getFilteredExerciseMaxBPMs(name)
         }
     }
 

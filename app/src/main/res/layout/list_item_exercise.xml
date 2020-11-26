@@ -6,7 +6,7 @@
 
         <variable
             name="lift"
-            type="com.nazmar.musicgym.db.Exercise" />
+            type="com.nazmar.musicgym.db.ExerciseMaxBpm" />
     </data>
 
     <LinearLayout
