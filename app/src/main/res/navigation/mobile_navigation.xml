@@ -27,9 +27,6 @@
         android:id="@+id/exerciseViewFragment"
         android:name="com.nazmar.musicgym.ui.exercises.ExerciseViewFragment"
         android:label="ExerciseViewFragment">
-        <action
-            android:id="@+id/action_exerciseViewFragment_to_exercisesFragment"
-            app:destination="@id/exercisesFragment" />
         <argument
             android:name="exerciseId"
             app:argType="long" />

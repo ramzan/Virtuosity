@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExercisesBinding
@@ -44,6 +45,8 @@ class ExercisesFragment : Fragment() {
         val adapter = ExerciseAdapter(ExerciseAdapter.OnClickListener {
             showExerciseView(it.id)
         })
+
+        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         binding.exerciseList.adapter = adapter
 

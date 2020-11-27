@@ -12,7 +12,6 @@ import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExerciseViewBinding
@@ -134,8 +133,7 @@ class ExerciseViewFragment : DialogFragment() {
     }
 
     private fun goBack() {
-        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        navController.navigate(ExerciseViewFragmentDirections.actionExerciseViewFragmentToExercisesFragment())
+        requireActivity().onBackPressed()
     }
 
 }
