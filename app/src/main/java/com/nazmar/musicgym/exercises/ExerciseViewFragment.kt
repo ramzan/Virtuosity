@@ -18,7 +18,9 @@ import com.nazmar.musicgym.databinding.FragmentExerciseViewBinding
 
 class ExerciseViewFragment : DialogFragment() {
 
-    private lateinit var binding: FragmentExerciseViewBinding
+    private var _binding: FragmentExerciseViewBinding? = null
+    private val binding get() = _binding!!
+
     private val eVViewModel: ExerciseViewViewModel by viewModels {
         ExerciseViewViewModelFactory(
                 arguments?.get(
@@ -48,7 +50,7 @@ class ExerciseViewFragment : DialogFragment() {
             savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentExerciseViewBinding.inflate(inflater)
+        _binding = FragmentExerciseViewBinding.inflate(inflater)
 
         binding.editorToolbar.apply {
             setNavigationOnClickListener {
@@ -130,5 +132,11 @@ class ExerciseViewFragment : DialogFragment() {
     private fun goBack() {
         requireActivity().onBackPressed()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
 }

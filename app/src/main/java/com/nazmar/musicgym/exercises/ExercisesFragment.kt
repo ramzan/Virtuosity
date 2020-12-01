@@ -23,7 +23,9 @@ import com.nazmar.musicgym.databinding.FragmentExercisesBinding
 
 class ExercisesFragment : Fragment() {
 
-    private lateinit var binding: FragmentExercisesBinding
+    private var _binding: FragmentExercisesBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel: ExercisesViewModel by activityViewModels {
         ExercisesViewModelFactory(
             requireNotNull(this.activity).application
@@ -36,7 +38,7 @@ class ExercisesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentExercisesBinding.inflate(inflater)
+        _binding = FragmentExercisesBinding.inflate(inflater)
 
         val adapter = ExerciseAdapter(ExerciseAdapter.OnClickListener {
             showExerciseView(it.id)
@@ -143,4 +145,10 @@ class ExercisesFragment : Fragment() {
         viewModel.setNameQuery("")
         super.onStop()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }
