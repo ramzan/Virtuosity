@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.ui.settings
+package com.nazmar.musicgym.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

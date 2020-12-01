@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.ui.exercises
+package com.nazmar.musicgym.exercises
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -49,12 +48,8 @@ class ExerciseViewFragment : DialogFragment() {
             savedInstanceState: Bundle?
     ): View {
 
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_exercise_view, container, false
-        )
+        binding = FragmentExerciseViewBinding.inflate(inflater)
 
-        binding.viewModel = eVViewModel
         binding.editorToolbar.apply {
             setNavigationOnClickListener {
                 goBack()

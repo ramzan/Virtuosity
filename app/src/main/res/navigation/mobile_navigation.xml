@@ -6,12 +6,12 @@
     app:startDestination="@id/practiceFragment">
     <fragment
         android:id="@+id/practiceFragment"
-        android:name="com.nazmar.musicgym.ui.practice.PracticeFragment"
+        android:name="com.nazmar.musicgym.practice.PracticeFragment"
         android:label="@string/practice"
         tools:layout="@layout/fragment_practice" />
     <fragment
         android:id="@+id/exercisesFragment"
-        android:name="com.nazmar.musicgym.ui.exercises.ExercisesFragment"
+        android:name="com.nazmar.musicgym.exercises.ExercisesFragment"
         android:label="@string/exercises"
         tools:layout="@layout/fragment_exercises">
         <action
@@ -20,12 +20,12 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.nazmar.musicgym.ui.settings.SettingsFragment"
+        android:name="com.nazmar.musicgym.settings.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/exerciseViewFragment"
-        android:name="com.nazmar.musicgym.ui.exercises.ExerciseViewFragment"
+        android:name="com.nazmar.musicgym.exercises.ExerciseViewFragment"
         android:label="ExerciseViewFragment">
         <argument
             android:name="exerciseId"

@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.ui.exercises
+package com.nazmar.musicgym.exercises
 
 
 import android.view.LayoutInflater

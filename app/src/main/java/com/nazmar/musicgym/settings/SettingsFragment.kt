@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.ui.settings
+package com.nazmar.musicgym.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.ui.exercises
+package com.nazmar.musicgym.exercises
 
 import android.app.AlertDialog
 import android.content.Context
@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.SearchView
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
@@ -27,26 +26,24 @@ class ExercisesFragment : Fragment() {
     private lateinit var binding: FragmentExercisesBinding
     private val viewModel: ExercisesViewModel by activityViewModels {
         ExercisesViewModelFactory(
-                requireNotNull(this.activity).application
+            requireNotNull(this.activity).application
         )
     }
 
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_exercises, container, false
-        )
+        binding = FragmentExercisesBinding.inflate(inflater)
 
         val adapter = ExerciseAdapter(ExerciseAdapter.OnClickListener {
             showExerciseView(it.id)
         })
 
-        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        adapter.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         binding.exerciseList.adapter = adapter
 
@@ -74,11 +71,16 @@ class ExercisesFragment : Fragment() {
                 })
             }
 
-            val imm = (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            val imm =
+                (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     (actionView as SearchView).onActionViewExpanded()
-                    imm.toggleSoftInputFromWindow(requireView().windowToken, InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
+                    imm.toggleSoftInputFromWindow(
+                        requireView().windowToken,
+                        InputMethodManager.SHOW_IMPLICIT,
+                        InputMethodManager.HIDE_NOT_ALWAYS
+                    )
                     (actionView as SearchView).requestFocus()
                     return true
                 }
@@ -86,7 +88,10 @@ class ExercisesFragment : Fragment() {
                 override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
                     viewModel.setNameQuery("")
                     (actionView as SearchView).setQuery("", false)
-                    imm.hideSoftInputFromWindow(requireView().windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                    imm.hideSoftInputFromWindow(
+                        requireView().windowToken,
+                        InputMethodManager.HIDE_NOT_ALWAYS
+                    )
                     return true
                 }
 
@@ -106,13 +111,13 @@ class ExercisesFragment : Fragment() {
         val text = layout.findViewById<EditText>(R.id.name_input)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.new_exercise)
-                .setView(layout)
-                .setPositiveButton("OK") { _, _ ->
-                    viewModel.addExercise(text.text.toString().trim())
-                }
-                .setNegativeButton("CANCEL") { _, _ -> }
-                .create()
+            .setTitle(R.string.new_exercise)
+            .setView(layout)
+            .setPositiveButton("OK") { _, _ ->
+                viewModel.addExercise(text.text.toString().trim())
+            }
+            .setNegativeButton("CANCEL") { _, _ -> }
+            .create()
 
         text.addTextChangedListener(object : TextWatcher {
             private fun handleText() {
