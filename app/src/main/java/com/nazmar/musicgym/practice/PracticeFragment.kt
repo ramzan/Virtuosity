@@ -4,27 +4,58 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
+import com.nazmar.musicgym.databinding.FragmentPracticeBinding
 
 class PracticeFragment : Fragment() {
 
-    private lateinit var practiceViewModel: PracticeViewModel
+    private var _binding: FragmentPracticeBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        practiceViewModel =
-                ViewModelProvider(this).get(PracticeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_practice, container, false)
-        val textView: TextView = root.findViewById(R.id.practice)
-        practiceViewModel.text.observe(viewLifecycleOwner, {
-            textView.text = it
+    private val viewModel: PracticeViewModel by viewModels {
+        PracticeViewModelFactory(requireNotNull(this.activity).application)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+
+        _binding = FragmentPracticeBinding.inflate(inflater)
+
+        val adapter = RoutineAdapter(RoutineAdapter.OnClickListener {
+            showRoutineEditor(it.id)
         })
-        return root
+
+
+        adapter.stateRestorationPolicy =
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
+
+        binding.routineList.adapter = adapter
+
+        viewModel.routines.observe(viewLifecycleOwner, {
+            adapter.submitList(it)
+        })
+
+        binding.fab.setOnClickListener {
+            showRoutineEditor(0)
+        }
+
+        return binding.root
+    }
+
+    private fun showRoutineEditor(id: Long) {
+        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        val action = PracticeFragmentDirections.actionPracticeFragmentToRoutineEditor(id)
+        navController.navigate(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -15,4 +15,9 @@
     <string name="delete">Delete</string>
     <string name="delete_dialog_message">Delete exercise</string>
     <string name="name">Name</string>
+    <string name="save">Save</string>
+    <string name="editorTitleEdit">Edit Routine</string>
+    <string name="editorTitleNew">New Routine</string>
+    <string name="empty_name_error_msg">Name cannot be empty</string>
+    <string name="nameInputHint">Name</string>
 </resources>

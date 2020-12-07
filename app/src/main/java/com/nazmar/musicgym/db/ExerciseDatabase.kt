@@ -52,6 +52,8 @@ abstract class ExerciseDatabase : RoomDatabase() {
                                             getInstance(context).exerciseDatabaseDao.apply {
                                                 insertExercises(PREPOPULATE_EXERCISES)
                                                 insertHistoryItems(PREPOPULATE_HISTORY)
+                                                PREPOPULATE_ROUTINES.forEach { insert(it) }
+                                                PREPOPULATE_ROUTINE_EXERCISES.forEach { insert(it) }
                                             }
                                         }
                                     }
@@ -96,5 +98,21 @@ abstract class ExerciseDatabase : RoomDatabase() {
                 HistoryItem(10, 5),
                 HistoryItem(12, 50),
         )
+
+        val PREPOPULATE_ROUTINES = listOf(
+                Routine(1, "A"),
+                Routine("B"),
+                Routine("C"),
+                Routine("D"),
+                Routine("E"),
+        )
+
+        val PREPOPULATE_ROUTINE_EXERCISES = listOf(
+                RoutineExercise(1, 1, 1, 81),
+                RoutineExercise(1, 2, 2, 72),
+                RoutineExercise(1, 3, 3, 63),
+                RoutineExercise(1, 4, 10, 54),
+                RoutineExercise(1, 5, 2, 45)
+                )
     }
 }

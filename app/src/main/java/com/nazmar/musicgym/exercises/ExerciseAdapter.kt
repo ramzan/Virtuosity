@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.ListItemExerciseBinding
-import com.nazmar.musicgym.db.Exercise
 import com.nazmar.musicgym.db.ExerciseMaxBpm
 
 
@@ -22,11 +21,6 @@ class ExerciseAdapter(private val onClickListener: OnClickListener) :
         holder.bind(item)
     }
 
-    /**
-     * Custom listener that handles clicks on [RecyclerView] items.  Passes the [Exercise]
-     * associated with the current item to the [onClick] function.
-     * @param clickListener lambda that will be called with the current [Exercise]
-     */
     class OnClickListener(val clickListener: (lift: ExerciseMaxBpm) -> Unit) {
         fun onClick(lift: ExerciseMaxBpm) = clickListener(lift)
     }

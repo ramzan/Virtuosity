@@ -30,3 +30,13 @@ data class RoutineExercise(
 
         val duration: Long
 )
+
+data class RoutineExerciseName(
+        val order: Int,
+
+        val exerciseId: Long,
+
+        val duration: Long,
+
+        val name: String
+)

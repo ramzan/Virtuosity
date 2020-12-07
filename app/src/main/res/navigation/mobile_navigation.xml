@@ -8,7 +8,11 @@
         android:id="@+id/practiceFragment"
         android:name="com.nazmar.musicgym.practice.PracticeFragment"
         android:label="@string/practice"
-        tools:layout="@layout/fragment_practice" />
+        tools:layout="@layout/fragment_practice" >
+        <action
+            android:id="@+id/action_practiceFragment_to_routineEditor"
+            app:destination="@id/routineEditor" />
+    </fragment>
     <fragment
         android:id="@+id/exercisesFragment"
         android:name="com.nazmar.musicgym.exercises.ExercisesFragment"
@@ -29,6 +33,14 @@
         android:label="ExerciseViewFragment">
         <argument
             android:name="exerciseId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/routineEditor"
+        android:name="com.nazmar.musicgym.practice.routine.RoutineEditorFragment"
+        android:label="RoutineEditor" >
+        <argument
+            android:name="routineId"
             app:argType="long" />
     </fragment>
 </navigation>

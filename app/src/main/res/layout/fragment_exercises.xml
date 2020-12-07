@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="?android:actionBarSize"
-    tools:context=".exercises.ExercisesFragment">
+    android:paddingBottom="?android:actionBarSize" >
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -28,7 +27,6 @@
         android:layout_marginHorizontal="0dp"
         android:paddingTop="?attr/actionBarSize"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".ui.lifts.LiftsFragment"
         tools:listitem="@layout/list_item_exercise" />
 
 
