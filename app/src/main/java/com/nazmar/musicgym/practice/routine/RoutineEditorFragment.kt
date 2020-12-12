@@ -3,16 +3,12 @@ package com.nazmar.musicgym.practice.routine
 import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
@@ -51,27 +47,29 @@ class RoutineEditorFragment : Fragment() {
 
         binding.routineExerciseList.adapter = adapter
 
-        val iTH = ItemTouchHelper(
-                object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
-                    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                        val fromPos = viewHolder.bindingAdapterPosition
-                        val toPos = target.bindingAdapterPosition
-                        Log.d("zot", "$fromPos -> $toPos")
-                        adapter.submitList(viewModel.move(fromPos, toPos))
-                        return true // true if moved, false otherwise
-                    }
-
-
-                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                        // remove from adapter
-                    }
-                })
-
-        iTH.attachToRecyclerView(binding.routineExerciseList)
-
-        viewModel.routineExercises.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
+        // Populate list with old routine
+        viewModel.oldExercises.observe(viewLifecycleOwner, {
+            viewModel.loadOldRoutine()
+            adapter.submitList(viewModel.currentExercises)
         })
+
+
+        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                if (viewHolder.getItemViewType() != target.getItemViewType()) {
+                    return false;
+                }
+                val fromPos = viewHolder.bindingAdapterPosition
+                val toPos = target.bindingAdapterPosition
+                viewModel.moveItem(fromPos, toPos)
+                adapter.notifyItemMoved(fromPos, toPos)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+        })
+
+        itemTouchHelper.attachToRecyclerView(binding.routineExerciseList)
 
         binding.apply {
             editorToolbar.title = getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
@@ -102,7 +100,7 @@ class RoutineEditorFragment : Fragment() {
 
 
             if (!viewModel.newRoutine) {
-                viewModel.routine.observeOnce(viewLifecycleOwner) {
+                viewModel.routine.observe(viewLifecycleOwner) {
                     if (it != null) {
                         deleteButton.isVisible = true
                         saveButton.isVisible = true
@@ -118,24 +116,18 @@ class RoutineEditorFragment : Fragment() {
                         InputMethodManager.HIDE_IMPLICIT_ONLY
                 )
             }
-
-            viewModel.routineExercises.observe(viewLifecycleOwner) {
-                Log.d("zot", it.toString())
-            }
-
-
         }
         return binding.root
     }
 
-    private fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
-        observe(lifecycleOwner, object : Observer<T> {
-            override fun onChanged(t: T?) {
-                observer.onChanged(t)
-                removeObserver(this)
-            }
-        })
-    }
+//    private fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+//        observe(lifecycleOwner, object : Observer<T> {
+//            override fun onChanged(t: T?) {
+//                observer.onChanged(t)
+//                removeObserver(this)
+//            }
+//        })
+//    }
 
 
     private fun goBack() {

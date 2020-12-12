@@ -4,11 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.nazmar.musicgym.db.ExerciseDatabase
 import com.nazmar.musicgym.db.Routine
-import com.nazmar.musicgym.db.RoutineExercise
 import com.nazmar.musicgym.db.RoutineExerciseName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class RoutineEditorViewModel(val routineId: Long, application: Application) : AndroidViewModel(application) {
 
@@ -18,7 +18,18 @@ class RoutineEditorViewModel(val routineId: Long, application: Application) : An
 
     val routine = dao.getRoutine(routineId)
 
-    val routineExercises = dao.getRoutineExerciseNames(routineId)
+    val exercises = dao.getAllExercises()
+
+    val oldExercises = dao.getRoutineExerciseNames(routineId)
+
+    private var _currentExercises = mutableListOf<RoutineExerciseName>()
+
+    val currentExercises: MutableList<RoutineExerciseName>
+        get() = _currentExercises
+
+    fun loadOldRoutine() {
+        _currentExercises = oldExercises.value!!.toMutableList()
+    }
 
     fun deleteRoutine() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -32,11 +43,9 @@ class RoutineEditorViewModel(val routineId: Long, application: Application) : An
         }
     }
 
-    fun move(fromPos: Int, toPos: Int) : List<RoutineExerciseName>{
-        val ls = routineExercises.value!!.toMutableList()
-        val tmp = ls[fromPos]
-        ls[fromPos] = ls[toPos]
-        ls[toPos] = tmp
-        return ls
+    fun moveItem(fromPos: Int, toPos: Int): Boolean {
+        Collections.swap(_currentExercises, fromPos, toPos)
+        return true
     }
+
 }

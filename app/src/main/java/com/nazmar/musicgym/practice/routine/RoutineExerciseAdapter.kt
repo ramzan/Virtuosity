@@ -9,13 +9,12 @@ import com.nazmar.musicgym.databinding.ListItemRoutineExerciseBinding
 import com.nazmar.musicgym.db.RoutineExerciseName
 
 
-class RoutineExerciseAdapter() :
+class RoutineExerciseAdapter :
         ListAdapter<RoutineExerciseName, RoutineExerciseAdapter.ViewHolder>(RoutineDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -26,8 +25,9 @@ class RoutineExerciseAdapter() :
 
         fun bind(item: RoutineExerciseName) {
             binding.exerciseName.text = item.name
-            binding.duration.text = item.duration.toString()
-            binding.order.text = item.order.toString()
+            val duration = "${item.duration / 60}:${item.duration % 60}"
+            binding.duration.text = duration
+//            binding.order.text = item.order.toString()
 
         }
 
