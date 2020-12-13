@@ -23,9 +23,9 @@ class ExerciseViewFragment : DialogFragment() {
 
     private val eVViewModel: ExerciseViewViewModel by viewModels {
         ExerciseViewViewModelFactory(
-                arguments?.get(
-                        "exerciseId"
-                ) as Long, requireNotNull(this.activity).application
+            arguments?.get(
+                "exerciseId"
+            ) as Long, requireNotNull(this.activity).application
         )
     }
 
@@ -46,8 +46,8 @@ class ExerciseViewFragment : DialogFragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
 
         _binding = FragmentExerciseViewBinding.inflate(inflater)
@@ -85,13 +85,13 @@ class ExerciseViewFragment : DialogFragment() {
 
     private fun showDeleteDialog(): Boolean {
         MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.delete_dialog_message)
-                .setPositiveButton("OK") { _, _ ->
-                    goBack()
-                    eVViewModel.deleteExercise()
-                }
-                .setNegativeButton("CANCEL") { _, _ -> }
-                .show()
+            .setTitle(R.string.delete_dialog_message)
+            .setPositiveButton("OK") { _, _ ->
+                goBack()
+                eVViewModel.deleteExercise()
+            }
+            .setNegativeButton("CANCEL") { _, _ -> }
+            .show()
         return true
     }
 
@@ -101,13 +101,13 @@ class ExerciseViewFragment : DialogFragment() {
         text.setText(eVViewModel.exercise.value!!.name)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.rename)
-                .setView(layout)
-                .setPositiveButton("OK") { _, _ ->
-                    eVViewModel.renameExercise(text.text.toString().trim())
-                }
-                .setNegativeButton("CANCEL") { _, _ -> }
-                .create()
+            .setTitle(R.string.rename)
+            .setView(layout)
+            .setPositiveButton("OK") { _, _ ->
+                eVViewModel.renameExercise(text.text.toString().trim())
+            }
+            .setNegativeButton("CANCEL") { _, _ -> }
+            .create()
 
         text.addTextChangedListener(object : TextWatcher {
             private fun handleText() {

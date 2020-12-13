@@ -16,8 +16,8 @@
         android:contentDescription="@string/save"
         android:icon="@drawable/ic_baseline_check_24"
         android:title="@string/save"
-        app:showAsAction="ifRoom"
         android:visible="false"
+        app:showAsAction="ifRoom"
         tools:visible="true" />
 
 </menu>

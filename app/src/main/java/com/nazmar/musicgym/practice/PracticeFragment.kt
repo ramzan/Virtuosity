@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentPracticeBinding
@@ -21,7 +20,11 @@ class PracticeFragment : Fragment() {
         PracticeViewModelFactory(requireNotNull(this.activity).application)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
         _binding = FragmentPracticeBinding.inflate(inflater)
@@ -32,7 +35,7 @@ class PracticeFragment : Fragment() {
 
 
         adapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
 
         binding.routineList.adapter = adapter

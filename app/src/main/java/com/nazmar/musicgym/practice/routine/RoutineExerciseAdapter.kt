@@ -10,7 +10,7 @@ import com.nazmar.musicgym.db.RoutineExerciseName
 
 
 class RoutineExerciseAdapter :
-        ListAdapter<RoutineExerciseName, RoutineExerciseAdapter.ViewHolder>(RoutineDiffCallback()) {
+    ListAdapter<RoutineExerciseName, RoutineExerciseAdapter.ViewHolder>(RoutineDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -21,7 +21,7 @@ class RoutineExerciseAdapter :
     }
 
     class ViewHolder private constructor(private val binding: ListItemRoutineExerciseBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RoutineExerciseName) {
             binding.exerciseName.text = item.name
@@ -36,7 +36,7 @@ class RoutineExerciseAdapter :
                 val layoutInflater = LayoutInflater.from(parent.context)
 
                 val binding =
-                        ListItemRoutineExerciseBinding.inflate(layoutInflater, parent, false)
+                    ListItemRoutineExerciseBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }
@@ -45,11 +45,17 @@ class RoutineExerciseAdapter :
 }
 
 class RoutineDiffCallback : DiffUtil.ItemCallback<RoutineExerciseName>() {
-    override fun areItemsTheSame(oldItem: RoutineExerciseName, newItem: RoutineExerciseName): Boolean {
+    override fun areItemsTheSame(
+        oldItem: RoutineExerciseName,
+        newItem: RoutineExerciseName
+    ): Boolean {
         return oldItem.name == newItem.name
     }
 
-    override fun areContentsTheSame(oldItem: RoutineExerciseName, newItem: RoutineExerciseName): Boolean {
+    override fun areContentsTheSame(
+        oldItem: RoutineExerciseName,
+        newItem: RoutineExerciseName
+    ): Boolean {
         return oldItem == newItem
     }
 }

@@ -24,14 +24,18 @@ class RoutineEditorFragment : Fragment() {
 
     private val viewModel: RoutineEditorViewModel by viewModels {
         RoutineEditorViewModelFactory(
-                arguments?.get(
-                        "routineId"
-                ) as Long, requireNotNull(this.activity).application
+            arguments?.get(
+                "routineId"
+            ) as Long, requireNotNull(this.activity).application
         )
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
         imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -42,7 +46,7 @@ class RoutineEditorFragment : Fragment() {
 
 
         adapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
 
         binding.routineExerciseList.adapter = adapter
@@ -54,10 +58,17 @@ class RoutineEditorFragment : Fragment() {
         })
 
 
-        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                if (viewHolder.getItemViewType() != target.getItemViewType()) {
-                    return false;
+        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                if (viewHolder.itemViewType != target.itemViewType) {
+                    return false
                 }
                 val fromPos = viewHolder.bindingAdapterPosition
                 val toPos = target.bindingAdapterPosition
@@ -66,13 +77,17 @@ class RoutineEditorFragment : Fragment() {
                 return true
             }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewModel.deleteItem(viewHolder.bindingAdapterPosition)
+                adapter.notifyItemRemoved(viewHolder.bindingAdapterPosition)
+            }
         })
 
         itemTouchHelper.attachToRecyclerView(binding.routineExerciseList)
 
         binding.apply {
-            editorToolbar.title = getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
+            editorToolbar.title =
+                getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
             editorToolbar.setNavigationOnClickListener {
                 goBack()
             }
@@ -112,8 +127,8 @@ class RoutineEditorFragment : Fragment() {
                 saveButton.isVisible = true
                 // Show the keyboard.
                 imm.toggleSoftInput(
-                        InputMethodManager.SHOW_FORCED,
-                        InputMethodManager.HIDE_IMPLICIT_ONLY
+                    InputMethodManager.SHOW_FORCED,
+                    InputMethodManager.HIDE_IMPLICIT_ONLY
                 )
             }
         }

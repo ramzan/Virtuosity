@@ -8,7 +8,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ExerciseViewViewModel(exerciseId: Long, application: Application) : AndroidViewModel(application) {
+class ExerciseViewViewModel(exerciseId: Long, application: Application) :
+    AndroidViewModel(application) {
 
     private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
 
