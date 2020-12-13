@@ -39,6 +39,8 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
     }
 
     fun updateRoutine(newName: String) {
+        if (newRoutine) return createRoutine(newName)
+
         CoroutineScope(Dispatchers.IO).launch {
             dao.update(Routine(routineId, newName))
             val oldExercises = dao.getRoutineExercises(routineId)
@@ -61,6 +63,17 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
                     dao.delete(oldExercises[i])
                 }
             }
+        }
+    }
+
+    private fun createRoutine(name: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val newRoutineId = dao.insert(Routine(name))
+            val order = 1
+
+            dao.insertRoutineExercises(currentExercises.map {
+                RoutineExercise(newRoutineId, order, it.exerciseId, it.duration)
+            })
         }
     }
 

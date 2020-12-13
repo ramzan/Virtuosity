@@ -24,7 +24,10 @@ interface ExerciseDatabaseDao {
     suspend fun insert(routineExercise: RoutineExercise)
 
     @Insert
-    suspend fun insert(routine: Routine)
+    suspend fun insertRoutineExercises(routineExercises: List<RoutineExercise>)
+
+    @Insert
+    suspend fun insert(routine: Routine): Long
 
     // Update
 
