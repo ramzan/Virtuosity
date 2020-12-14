@@ -12,6 +12,7 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.nazmar.musicgym.MainActivity
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExerciseViewBinding
 
@@ -32,6 +33,7 @@ class ExerciseViewFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (activity as MainActivity).hideBottomNavBar()
         setStyle(STYLE_NORMAL, R.style.ExerciseViewDialog)
     }
 
@@ -131,6 +133,7 @@ class ExerciseViewFragment : DialogFragment() {
 
     private fun goBack() {
         requireActivity().onBackPressed()
+        (activity as MainActivity).showBottomNavBar()
     }
 
     override fun onDestroyView() {

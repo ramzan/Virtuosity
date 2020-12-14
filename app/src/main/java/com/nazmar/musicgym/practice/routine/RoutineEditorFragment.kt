@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.nazmar.musicgym.MainActivity
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentRoutineEditorBinding
 
@@ -24,17 +25,22 @@ class RoutineEditorFragment : Fragment() {
 
     private val viewModel: RoutineEditorViewModel by viewModels {
         RoutineEditorViewModelFactory(
-            arguments?.get(
-                "routineId"
-            ) as Long, requireNotNull(this.activity).application
+                arguments?.get(
+                        "routineId"
+                ) as Long, requireNotNull(this.activity).application
         )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity as MainActivity).hideBottomNavBar()
     }
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
@@ -46,7 +52,7 @@ class RoutineEditorFragment : Fragment() {
 
 
         adapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
 
         binding.routineExerciseList.adapter = adapter
@@ -59,13 +65,13 @@ class RoutineEditorFragment : Fragment() {
 
 
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
             override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
             ): Boolean {
                 if (viewHolder.itemViewType != target.itemViewType) {
                     return false
@@ -87,7 +93,7 @@ class RoutineEditorFragment : Fragment() {
 
         binding.apply {
             editorToolbar.title =
-                getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
+                    getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
             editorToolbar.setNavigationOnClickListener {
                 goBack()
             }
@@ -127,8 +133,8 @@ class RoutineEditorFragment : Fragment() {
                 saveButton.isVisible = true
                 // Show the keyboard.
                 imm.toggleSoftInput(
-                    InputMethodManager.SHOW_FORCED,
-                    InputMethodManager.HIDE_IMPLICIT_ONLY
+                        InputMethodManager.SHOW_FORCED,
+                        InputMethodManager.HIDE_IMPLICIT_ONLY
                 )
             }
         }
@@ -148,6 +154,7 @@ class RoutineEditorFragment : Fragment() {
     private fun goBack() {
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
         requireActivity().onBackPressed()
+        (activity as MainActivity).showBottomNavBar()
     }
 
     override fun onDestroyView() {
