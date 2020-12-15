@@ -42,5 +42,19 @@
         <argument
             android:name="routineId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_routineEditor_to_durationPickerDialog"
+            app:destination="@id/durationPickerDialog" />
     </fragment>
+    <dialog
+        android:id="@+id/durationPickerDialog"
+        android:name="com.nazmar.musicgym.practice.routine.DurationPickerDialogFragment"
+        android:label="DurationPickerDialog">
+        <argument
+            android:name="exerciseIndex"
+            app:argType="integer" />
+        <argument
+            android:name="duration"
+            app:argType="long" />
+    </dialog>
 </navigation>

@@ -10,17 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/order"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginTop="16dp"-->
-        <!--            android:textAlignment="center"-->
-        <!--            android:textAppearance="?attr/textAppearanceHeadline5"-->
-        <!--            android:textColor="?android:attr/textColorSecondary" -->
-        <!--            tools:text="1" />-->
-
         <TextView
             android:id="@+id/exercise_name"
             android:layout_width="wrap_content"
@@ -31,6 +20,7 @@
             android:textColor="?android:attr/textColorSecondary"
             tools:text="C# Melodic Minor Scale" />
 
+
         <TextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
@@ -39,7 +29,7 @@
             android:textAlignment="center"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="05:00" />
+            tools:text="5:00" />
 
 
     </LinearLayout>

@@ -48,16 +48,16 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
             if (oldExercises.size <= currentExercises.size) {
                 for (i in oldExercises.indices) {
                     val updatedExercise = currentExercises[i]
-                    dao.update(RoutineExercise(routineId, i + 1, updatedExercise.exerciseId, updatedExercise.duration))
+                    dao.update(RoutineExercise(routineId, i + 1, updatedExercise.exerciseId, updatedExercise.getDuration()))
                 }
                 for (i in oldExercises.size until currentExercises.size) {
                     val newExercise = currentExercises[i]
-                    dao.insert(RoutineExercise(routineId, i + 1, newExercise.exerciseId, newExercise.duration))
+                    dao.insert(RoutineExercise(routineId, i + 1, newExercise.exerciseId, newExercise.getDuration()))
                 }
             } else {
                 for (i in 0 until currentExercises.size) {
                     val updatedExercise = currentExercises[i]
-                    dao.update(RoutineExercise(routineId, i + 1, updatedExercise.exerciseId, updatedExercise.duration))
+                    dao.update(RoutineExercise(routineId, i + 1, updatedExercise.exerciseId, updatedExercise.getDuration()))
                 }
                 for (i in currentExercises.size until oldExercises.size) {
                     dao.delete(oldExercises[i])
@@ -72,11 +72,10 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
             val order = 1
 
             dao.insertRoutineExercises(currentExercises.map {
-                RoutineExercise(newRoutineId, order, it.exerciseId, it.duration)
+                RoutineExercise(newRoutineId, order, it.exerciseId, it.getDuration())
             })
         }
     }
-
 
     fun moveItem(fromPos: Int, toPos: Int): Boolean {
         Collections.swap(_currentExercises, fromPos, toPos)
@@ -85,6 +84,13 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
 
     fun deleteItem(index: Int) {
         _currentExercises.removeAt(index)
+    }
+
+    fun updateDuration(exerciseIndex: Int, minutes: Long, seconds: Long) {
+        with(currentExercises[exerciseIndex]) {
+            this.minutes = minutes
+            this.seconds = seconds
+        }
     }
 
 }

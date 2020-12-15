@@ -3,17 +3,23 @@ package com.nazmar.musicgym.practice.routine
 import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.nazmar.musicgym.MainActivity
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentRoutineEditorBinding
+import com.nazmar.musicgym.hideBottomNavBar
+import com.nazmar.musicgym.showBottomNavBar
 
 
 class RoutineEditorFragment : Fragment() {
@@ -25,35 +31,29 @@ class RoutineEditorFragment : Fragment() {
 
     private val viewModel: RoutineEditorViewModel by viewModels {
         RoutineEditorViewModelFactory(
-                arguments?.get(
-                        "routineId"
-                ) as Long, requireNotNull(this.activity).application
+            arguments?.get(
+                "routineId"
+            ) as Long, requireNotNull(this.activity).application
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MainActivity).hideBottomNavBar()
-    }
-
-
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+
+        requireActivity().hideBottomNavBar()
 
         imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         _binding = FragmentRoutineEditorBinding.inflate(inflater)
 
-        val adapter = RoutineExerciseAdapter()
-
+        val adapter = RoutineExerciseAdapter(::showDurationPicker)
 
         adapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         binding.routineExerciseList.adapter = adapter
 
@@ -63,15 +63,54 @@ class RoutineEditorFragment : Fragment() {
             adapter.submitList(viewModel.currentExercises)
         })
 
+        val navController = findNavController();
+        // After a configuration change or process death, the currentBackStackEntry
+        // points to the dialog destination, so you must use getBackStackEntry()
+        // with the specific ID of your destination to ensure we always
+        // get the right NavBackStackEntry
+        val navBackStackEntry = navController.getBackStackEntry(R.id.routineEditor)
+
+        // Create our observer and add it to the NavBackStackEntry's lifecycle
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME
+                && navBackStackEntry.savedStateHandle.contains("exerciseIndex")
+            ) {
+                navBackStackEntry.savedStateHandle.apply {
+                    val index = get<Int>("exerciseIndex")
+                    val minutes = get<Long>("minutes")
+                    val seconds = get<Long>("seconds")
+
+                    Log.d("zzop", "buttnee")
+                    viewModel.updateDuration(index!!, minutes!!, seconds!!)
+                    (binding.routineExerciseList.adapter as RoutineExerciseAdapter).notifyItemChanged(
+                        index
+                    )
+
+                    remove<Int>("exerciseIndex")
+                    remove<Long>("minutes")
+                    remove<Long>("seconds")
+                }
+            }
+        }
+        navBackStackEntry.lifecycle.addObserver(observer)
+
+        // As addObserver() does not automatically remove the observer, we
+        // call removeObserver() manually when the view lifecycle is destroyed
+        viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                navBackStackEntry.lifecycle.removeObserver(observer)
+            }
+        })
+
 
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
             override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
             ): Boolean {
                 if (viewHolder.itemViewType != target.itemViewType) {
                     return false
@@ -93,7 +132,7 @@ class RoutineEditorFragment : Fragment() {
 
         binding.apply {
             editorToolbar.title =
-                    getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
+                getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
             editorToolbar.setNavigationOnClickListener {
                 goBack()
             }
@@ -133,28 +172,28 @@ class RoutineEditorFragment : Fragment() {
                 saveButton.isVisible = true
                 // Show the keyboard.
                 imm.toggleSoftInput(
-                        InputMethodManager.SHOW_FORCED,
-                        InputMethodManager.HIDE_IMPLICIT_ONLY
+                    InputMethodManager.SHOW_FORCED,
+                    InputMethodManager.HIDE_IMPLICIT_ONLY
                 )
             }
         }
         return binding.root
     }
 
-//    private fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
-//        observe(lifecycleOwner, object : Observer<T> {
-//            override fun onChanged(t: T?) {
-//                observer.onChanged(t)
-//                removeObserver(this)
-//            }
-//        })
-//    }
-
+    private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
+        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        val action =
+            RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
+                exerciseIndex,
+                duration
+            )
+        navController.navigate(action)
+    }
 
     private fun goBack() {
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
         requireActivity().onBackPressed()
-        (activity as MainActivity).showBottomNavBar()
+        requireActivity().showBottomNavBar()
     }
 
     override fun onDestroyView() {
