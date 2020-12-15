@@ -1,5 +1,6 @@
 package com.nazmar.musicgym
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -9,22 +10,25 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var navView: BottomNavigationView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        navView = findViewById(R.id.nav_view)
+        val navView = findViewById<BottomNavigationView>(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
         navView.setupWithNavController(navController)
     }
+}
 
-    fun hideBottomNavBar() {
-        navView.visibility = View.GONE
-    }
-
-    fun showBottomNavBar() {
-        navView.visibility = View.VISIBLE
+fun Activity.hideBottomNavBar() {
+    val bar = this.findViewById<BottomNavigationView>(R.id.nav_view)
+    if (bar != null) {
+        bar.visibility = View.GONE
     }
 }
+
+fun Activity.showBottomNavBar() {
+    val bar = this.findViewById<BottomNavigationView>(R.id.nav_view)
+    if (bar != null) {
+        bar.visibility = View.VISIBLE
+    }}

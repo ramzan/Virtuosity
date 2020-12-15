@@ -15,6 +15,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.MainActivity
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExerciseViewBinding
+import com.nazmar.musicgym.hideBottomNavBar
+import com.nazmar.musicgym.showBottomNavBar
 
 
 class ExerciseViewFragment : DialogFragment() {
@@ -33,7 +35,6 @@ class ExerciseViewFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MainActivity).hideBottomNavBar()
         setStyle(STYLE_NORMAL, R.style.ExerciseViewDialog)
     }
 
@@ -51,6 +52,8 @@ class ExerciseViewFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        requireActivity().hideBottomNavBar()
 
         _binding = FragmentExerciseViewBinding.inflate(inflater)
 
@@ -133,7 +136,7 @@ class ExerciseViewFragment : DialogFragment() {
 
     private fun goBack() {
         requireActivity().onBackPressed()
-        (activity as MainActivity).showBottomNavBar()
+        requireActivity().showBottomNavBar()
     }
 
     override fun onDestroyView() {
