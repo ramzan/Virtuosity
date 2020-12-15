@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -63,7 +65,7 @@ class RoutineEditorFragment : Fragment() {
             adapter.submitList(viewModel.currentExercises)
         })
 
-        val navController = findNavController();
+        val navController = findNavController()
         // After a configuration change or process death, the currentBackStackEntry
         // points to the dialog destination, so you must use getBackStackEntry()
         // with the specific ID of your destination to ensure we always
@@ -176,6 +178,26 @@ class RoutineEditorFragment : Fragment() {
                     InputMethodManager.HIDE_IMPLICIT_ONLY
                 )
             }
+
+            exerciseSpinner.apply {
+                onItemClickListener = AdapterView.OnItemClickListener { _, _, pos, _ ->
+                    viewModel.addExercise(pos)
+                    binding.routineExerciseList.adapter?.notifyItemInserted(viewModel.currentExercises.size)
+                    setText("")
+                }
+            }
+
+            // Populate tag autocomplete with all preexisting tags
+            viewModel.exercises.observe(viewLifecycleOwner, {
+                exerciseSpinner.setAdapter(
+                    ArrayAdapter(
+                        requireContext(),
+                        R.layout.list_item_exercise_spinner,
+                        it.map { e -> e.name }
+                    )
+                )
+            })
+
         }
         return binding.root
     }

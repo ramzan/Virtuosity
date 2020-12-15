@@ -20,4 +20,5 @@
     <string name="editorTitleNew">New Routine</string>
     <string name="empty_name_error_msg">Name cannot be empty</string>
     <string name="nameInputHint">Name</string>
+    <string name="add_an_exercise">Add an exercise</string>
 </resources>

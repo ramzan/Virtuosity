@@ -11,7 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class RoutineEditorViewModel(private val routineId: Long, application: Application) : AndroidViewModel(application) {
+class RoutineEditorViewModel(private val routineId: Long, application: Application) :
+    AndroidViewModel(application) {
 
     private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
 
@@ -48,16 +49,37 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
             if (oldExercises.size <= currentExercises.size) {
                 for (i in oldExercises.indices) {
                     val updatedExercise = currentExercises[i]
-                    dao.update(RoutineExercise(routineId, i + 1, updatedExercise.exerciseId, updatedExercise.getDuration()))
+                    dao.update(
+                        RoutineExercise(
+                            routineId,
+                            i + 1,
+                            updatedExercise.exerciseId,
+                            updatedExercise.getDuration()
+                        )
+                    )
                 }
                 for (i in oldExercises.size until currentExercises.size) {
                     val newExercise = currentExercises[i]
-                    dao.insert(RoutineExercise(routineId, i + 1, newExercise.exerciseId, newExercise.getDuration()))
+                    dao.insert(
+                        RoutineExercise(
+                            routineId,
+                            i + 1,
+                            newExercise.exerciseId,
+                            newExercise.getDuration()
+                        )
+                    )
                 }
             } else {
                 for (i in 0 until currentExercises.size) {
                     val updatedExercise = currentExercises[i]
-                    dao.update(RoutineExercise(routineId, i + 1, updatedExercise.exerciseId, updatedExercise.getDuration()))
+                    dao.update(
+                        RoutineExercise(
+                            routineId,
+                            i + 1,
+                            updatedExercise.exerciseId,
+                            updatedExercise.getDuration()
+                        )
+                    )
                 }
                 for (i in currentExercises.size until oldExercises.size) {
                     dao.delete(oldExercises[i])
@@ -93,4 +115,9 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
         }
     }
 
+    fun addExercise(index: Int) {
+        exercises.value!!.get(index).apply {
+            currentExercises.add(RoutineExerciseName(this.id, this.name, 5, 0))
+        }
+    }
 }
