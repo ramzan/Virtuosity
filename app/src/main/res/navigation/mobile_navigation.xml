@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/practiceFragment">
+    app:startDestination="@id/routineListFragment">
     <fragment
         android:id="@+id/exerciseListFragment"
         android:name="com.nazmar.musicgym.exercises.list.ExerciseListFragment"
@@ -20,10 +20,10 @@
             app:destination="@id/newExerciseDialogFragment" />
     </fragment>
     <fragment
-        android:id="@+id/practiceFragment"
-        android:name="com.nazmar.musicgym.practice.PracticeFragment"
+        android:id="@+id/routineListFragment"
+        android:name="com.nazmar.musicgym.practice.routine.list.RoutineListFragment"
         android:label="@string/practice"
-        tools:layout="@layout/fragment_practice">
+        tools:layout="@layout/fragment_routine_list">
         <action
             android:id="@+id/action_practiceFragment_to_routineEditor"
             app:destination="@id/routineEditorGraph" />
@@ -78,7 +78,7 @@
             app:argType="long" />
         <fragment
             android:id="@+id/routineEditor"
-            android:name="com.nazmar.musicgym.practice.routine.RoutineEditorFragment"
+            android:name="com.nazmar.musicgym.practice.routine.editor.RoutineEditorFragment"
             android:label="RoutineEditor">
             <argument
                 android:name="routineId"
@@ -89,7 +89,7 @@
         </fragment>
         <dialog
             android:id="@+id/durationPickerDialog"
-            android:name="com.nazmar.musicgym.practice.routine.DurationPickerDialogFragment"
+            android:name="com.nazmar.musicgym.practice.routine.editor.DurationPickerDialogFragment"
             android:label="DurationPickerDialog">
             <argument
                 android:name="exerciseIndex"

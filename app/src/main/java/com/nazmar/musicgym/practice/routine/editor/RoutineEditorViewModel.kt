@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice.routine
+package com.nazmar.musicgym.practice.routine.editor
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -124,7 +124,7 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
     }
 
     fun addExercise(index: Int) {
-        exercises.value!!.get(index).apply {
+        exercises.value!![index].apply {
             currentExercises.add(RoutineExerciseName(this.id, this.name, 5, 0))
         }
     }

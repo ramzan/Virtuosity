@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice.routine
+package com.nazmar.musicgym.practice.routine.editor
 
 import android.content.Context
 import android.os.Bundle

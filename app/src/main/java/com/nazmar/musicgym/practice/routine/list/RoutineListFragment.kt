@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice
+package com.nazmar.musicgym.practice.routine.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,18 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.nazmar.musicgym.R
-import com.nazmar.musicgym.databinding.FragmentPracticeBinding
+import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
 
-class PracticeFragment : Fragment() {
+class RoutineListFragment : Fragment() {
 
-    private var _binding: FragmentPracticeBinding? = null
+    private var _binding: FragmentRoutineListBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: PracticeViewModel by viewModels {
-        PracticeViewModelFactory(requireNotNull(this.activity).application)
+    private val viewModel: RoutineListViewModel by viewModels {
+        RoutineListViewModelFactory(requireNotNull(this.activity).application)
     }
 
     override fun onCreateView(
@@ -27,7 +26,7 @@ class PracticeFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        _binding = FragmentPracticeBinding.inflate(inflater)
+        _binding = FragmentRoutineListBinding.inflate(inflater)
 
         val adapter = RoutineAdapter(RoutineAdapter.OnClickListener {
             showRoutineEditor(it.id)
@@ -52,9 +51,8 @@ class PracticeFragment : Fragment() {
     }
 
     private fun showRoutineEditor(id: Long) {
-        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        val action = PracticeFragmentDirections.actionPracticeFragmentToRoutineEditor(id)
-        navController.navigate(action)
+        val action = RoutineListFragmentDirections.actionPracticeFragmentToRoutineEditor(id)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

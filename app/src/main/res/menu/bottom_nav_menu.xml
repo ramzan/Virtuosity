@@ -7,7 +7,7 @@
         android:title="@string/exercises" />
 
     <item
-        android:id="@+id/practiceFragment"
+        android:id="@+id/routineListFragment"
         android:icon="@drawable/ic_baseline_music_note_24"
         android:title="@string/practice" />
 

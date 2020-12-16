@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice
+package com.nazmar.musicgym.practice.routine.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
