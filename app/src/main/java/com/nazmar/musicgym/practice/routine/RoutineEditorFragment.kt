@@ -3,7 +3,6 @@ package com.nazmar.musicgym.practice.routine
 import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +10,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
@@ -31,18 +27,18 @@ class RoutineEditorFragment : Fragment() {
 
     private lateinit var imm: InputMethodManager
 
-    private val viewModel: RoutineEditorViewModel by viewModels {
+    private val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
         RoutineEditorViewModelFactory(
-            arguments?.get(
-                "routineId"
-            ) as Long, requireNotNull(this.activity).application
+                arguments?.get(
+                        "routineId"
+                ) as Long, requireNotNull(this.activity).application
         )
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
@@ -55,64 +51,23 @@ class RoutineEditorFragment : Fragment() {
         val adapter = RoutineExerciseAdapter(::showDurationPicker)
 
         adapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         binding.routineExerciseList.adapter = adapter
 
-        // Populate list with old routine
         viewModel.oldExercises.observe(viewLifecycleOwner, {
             viewModel.loadOldRoutine()
             adapter.submitList(viewModel.currentExercises)
         })
 
-        val navController = findNavController()
-        // After a configuration change or process death, the currentBackStackEntry
-        // points to the dialog destination, so you must use getBackStackEntry()
-        // with the specific ID of your destination to ensure we always
-        // get the right NavBackStackEntry
-        val navBackStackEntry = navController.getBackStackEntry(R.id.routineEditor)
-
-        // Create our observer and add it to the NavBackStackEntry's lifecycle
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME
-                && navBackStackEntry.savedStateHandle.contains("exerciseIndex")
-            ) {
-                navBackStackEntry.savedStateHandle.apply {
-                    val index = get<Int>("exerciseIndex")
-                    val minutes = get<Long>("minutes")
-                    val seconds = get<Long>("seconds")
-
-                    Log.d("zzop", "buttnee")
-                    viewModel.updateDuration(index!!, minutes!!, seconds!!)
-                    (binding.routineExerciseList.adapter as RoutineExerciseAdapter).notifyItemChanged(
-                        index
-                    )
-
-                    remove<Int>("exerciseIndex")
-                    remove<Long>("minutes")
-                    remove<Long>("seconds")
-                }
-            }
-        }
-        navBackStackEntry.lifecycle.addObserver(observer)
-
-        // As addObserver() does not automatically remove the observer, we
-        // call removeObserver() manually when the view lifecycle is destroyed
-        viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_DESTROY) {
-                navBackStackEntry.lifecycle.removeObserver(observer)
-            }
-        })
-
-
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
             override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
             ): Boolean {
                 if (viewHolder.itemViewType != target.itemViewType) {
                     return false
@@ -132,9 +87,13 @@ class RoutineEditorFragment : Fragment() {
 
         itemTouchHelper.attachToRecyclerView(binding.routineExerciseList)
 
+        viewModel.updatedIndex.observe(viewLifecycleOwner) {
+            adapter.notifyItemChanged(it)
+        }
+
         binding.apply {
             editorToolbar.title =
-                getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
+                    getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
             editorToolbar.setNavigationOnClickListener {
                 goBack()
             }
@@ -174,8 +133,8 @@ class RoutineEditorFragment : Fragment() {
                 saveButton.isVisible = true
                 // Show the keyboard.
                 imm.toggleSoftInput(
-                    InputMethodManager.SHOW_FORCED,
-                    InputMethodManager.HIDE_IMPLICIT_ONLY
+                        InputMethodManager.SHOW_IMPLICIT,
+                        InputMethodManager.HIDE_IMPLICIT_ONLY
                 )
             }
 
@@ -190,11 +149,11 @@ class RoutineEditorFragment : Fragment() {
             // Populate tag autocomplete with all preexisting tags
             viewModel.exercises.observe(viewLifecycleOwner, {
                 exerciseSpinner.setAdapter(
-                    ArrayAdapter(
-                        requireContext(),
-                        R.layout.list_item_exercise_spinner,
-                        it.map { e -> e.name }
-                    )
+                        ArrayAdapter(
+                                requireContext(),
+                                R.layout.list_item_exercise_spinner,
+                                it.map { e -> e.name }
+                        )
                 )
             })
 
@@ -203,13 +162,12 @@ class RoutineEditorFragment : Fragment() {
     }
 
     private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
-        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         val action =
-            RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
-                exerciseIndex,
-                duration
-            )
-        navController.navigate(action)
+                RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
+                        exerciseIndex,
+                        duration
+                )
+        findNavController().navigate(action)
     }
 
     private fun goBack() {

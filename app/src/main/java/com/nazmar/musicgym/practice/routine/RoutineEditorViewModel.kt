@@ -2,6 +2,8 @@ package com.nazmar.musicgym.practice.routine
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.nazmar.musicgym.db.ExerciseDatabase
 import com.nazmar.musicgym.db.Routine
 import com.nazmar.musicgym.db.RoutineExercise
@@ -12,7 +14,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 class RoutineEditorViewModel(private val routineId: Long, application: Application) :
-    AndroidViewModel(application) {
+        AndroidViewModel(application) {
 
     private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
 
@@ -28,6 +30,11 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
 
     val currentExercises: MutableList<RoutineExerciseName>
         get() = _currentExercises
+
+    private var _updatedIndex = MutableLiveData<Int>()
+
+    val updatedIndex: LiveData<Int>
+        get() = _updatedIndex
 
     fun loadOldRoutine() {
         _currentExercises = oldExercises.value!!.toMutableList()
@@ -50,35 +57,35 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
                 for (i in oldExercises.indices) {
                     val updatedExercise = currentExercises[i]
                     dao.update(
-                        RoutineExercise(
-                            routineId,
-                            i + 1,
-                            updatedExercise.exerciseId,
-                            updatedExercise.getDuration()
-                        )
+                            RoutineExercise(
+                                    routineId,
+                                    i + 1,
+                                    updatedExercise.exerciseId,
+                                    updatedExercise.getDuration()
+                            )
                     )
                 }
                 for (i in oldExercises.size until currentExercises.size) {
                     val newExercise = currentExercises[i]
                     dao.insert(
-                        RoutineExercise(
-                            routineId,
-                            i + 1,
-                            newExercise.exerciseId,
-                            newExercise.getDuration()
-                        )
+                            RoutineExercise(
+                                    routineId,
+                                    i + 1,
+                                    newExercise.exerciseId,
+                                    newExercise.getDuration()
+                            )
                     )
                 }
             } else {
                 for (i in 0 until currentExercises.size) {
                     val updatedExercise = currentExercises[i]
                     dao.update(
-                        RoutineExercise(
-                            routineId,
-                            i + 1,
-                            updatedExercise.exerciseId,
-                            updatedExercise.getDuration()
-                        )
+                            RoutineExercise(
+                                    routineId,
+                                    i + 1,
+                                    updatedExercise.exerciseId,
+                                    updatedExercise.getDuration()
+                            )
                     )
                 }
                 for (i in currentExercises.size until oldExercises.size) {
@@ -112,6 +119,7 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
         with(currentExercises[exerciseIndex]) {
             this.minutes = minutes
             this.seconds = seconds
+            _updatedIndex.value = exerciseIndex
         }
     }
 
@@ -119,5 +127,9 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
         exercises.value!!.get(index).apply {
             currentExercises.add(RoutineExerciseName(this.id, this.name, 5, 0))
         }
+    }
+
+    fun getItemDuration(index: Int): Long {
+        return currentExercises[index].getDuration()
     }
 }
