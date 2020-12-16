@@ -14,7 +14,7 @@ import android.widget.EditText
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
@@ -28,15 +28,15 @@ class ExercisesFragment : Fragment() {
 
     private val viewModel: ExercisesViewModel by activityViewModels {
         ExercisesViewModelFactory(
-            requireNotNull(this.activity).application
+                requireNotNull(this.activity).application
         )
     }
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         _binding = FragmentExercisesBinding.inflate(inflater)
 
@@ -45,7 +45,7 @@ class ExercisesFragment : Fragment() {
         })
 
         adapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         binding.exerciseList.adapter = adapter
 
@@ -74,14 +74,14 @@ class ExercisesFragment : Fragment() {
             }
 
             val imm =
-                (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                    (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     (actionView as SearchView).onActionViewExpanded()
                     imm.toggleSoftInputFromWindow(
-                        requireView().windowToken,
-                        InputMethodManager.SHOW_IMPLICIT,
-                        InputMethodManager.HIDE_NOT_ALWAYS
+                            requireView().windowToken,
+                            InputMethodManager.SHOW_IMPLICIT,
+                            InputMethodManager.HIDE_NOT_ALWAYS
                     )
                     (actionView as SearchView).requestFocus()
                     return true
@@ -91,8 +91,8 @@ class ExercisesFragment : Fragment() {
                     viewModel.setNameQuery("")
                     (actionView as SearchView).setQuery("", false)
                     imm.hideSoftInputFromWindow(
-                        requireView().windowToken,
-                        InputMethodManager.HIDE_NOT_ALWAYS
+                            requireView().windowToken,
+                            InputMethodManager.HIDE_NOT_ALWAYS
                     )
                     return true
                 }
@@ -103,9 +103,8 @@ class ExercisesFragment : Fragment() {
     }
 
     private fun showExerciseView(id: Long) {
-        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        val action = ExercisesFragmentDirections.actionExercisesFragmentToExerciseViewFragment(id)
-        navController.navigate(action)
+        val action = ExercisesFragmentDirections.actionExercisesFragmentToExercisesGraph(id)
+        findNavController().navigate(action)
     }
 
     private fun showNewExerciseDialog(): Boolean {
@@ -113,13 +112,13 @@ class ExercisesFragment : Fragment() {
         val text = layout.findViewById<EditText>(R.id.name_input)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.new_exercise)
-            .setView(layout)
-            .setPositiveButton("OK") { _, _ ->
-                viewModel.addExercise(text.text.toString().trim())
-            }
-            .setNegativeButton("CANCEL") { _, _ -> }
-            .create()
+                .setTitle(R.string.new_exercise)
+                .setView(layout)
+                .setPositiveButton("OK") { _, _ ->
+                    viewModel.addExercise(text.text.toString().trim())
+                }
+                .setNegativeButton("CANCEL") { _, _ -> }
+                .create()
 
         text.addTextChangedListener(object : TextWatcher {
             private fun handleText() {

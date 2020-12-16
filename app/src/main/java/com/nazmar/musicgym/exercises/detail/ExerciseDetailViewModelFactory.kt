@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.exercises
+package com.nazmar.musicgym.exercises.detail
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

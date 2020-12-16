@@ -5,6 +5,15 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/practiceFragment">
     <fragment
+        android:id="@+id/exercisesFragment"
+        android:name="com.nazmar.musicgym.exercises.ExercisesFragment"
+        android:label="@string/exercises"
+        tools:layout="@layout/fragment_exercises" >
+        <action
+            android:id="@+id/action_exercisesFragment_to_exercisesGraph"
+            app:destination="@id/exercisesGraph" />
+    </fragment>
+    <fragment
         android:id="@+id/practiceFragment"
         android:name="com.nazmar.musicgym.practice.PracticeFragment"
         android:label="@string/practice"
@@ -14,27 +23,10 @@
             app:destination="@id/routineEditor" />
     </fragment>
     <fragment
-        android:id="@+id/exercisesFragment"
-        android:name="com.nazmar.musicgym.exercises.ExercisesFragment"
-        android:label="@string/exercises"
-        tools:layout="@layout/fragment_exercises">
-        <action
-            android:id="@+id/action_exercisesFragment_to_exerciseViewFragment"
-            app:destination="@id/exerciseDetailFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.nazmar.musicgym.settings.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
-    <fragment
-        android:id="@+id/exerciseDetailFragment"
-        android:name="com.nazmar.musicgym.exercises.ExerciseDetailFragment"
-        android:label="ExerciseDetailFragment">
-        <argument
-            android:name="exerciseId"
-            app:argType="long" />
-    </fragment>
     <fragment
         android:id="@+id/routineEditor"
         android:name="com.nazmar.musicgym.practice.routine.RoutineEditorFragment"
@@ -57,4 +49,41 @@
             android:name="duration"
             app:argType="long" />
     </dialog>
+    <navigation
+        android:id="@+id/exercisesGraph"
+        app:startDestination="@id/exerciseDetailFragment">
+        <argument
+            android:name="exerciseId"
+            app:argType="long" />
+        <fragment
+            android:id="@+id/exerciseDetailFragment"
+            android:name="com.nazmar.musicgym.exercises.detail.ExerciseDetailFragment"
+            android:label="ExerciseDetailFragment">
+            <argument
+                android:name="exerciseId"
+                app:argType="long" />
+            <action
+                android:id="@+id/action_exerciseDetailFragment_to_renameDialogFragment"
+                app:destination="@id/renameDialogFragment" />
+            <action
+                android:id="@+id/action_exerciseDetailFragment_to_deleteDialogFragment"
+                app:destination="@id/deleteDialogFragment" />
+        </fragment>
+        <dialog
+            android:id="@+id/renameDialogFragment"
+            android:name="com.nazmar.musicgym.exercises.detail.RenameDialogFragment"
+            android:label="RenameDialogFragment">
+            <argument
+                android:name="exerciseId"
+                app:argType="long" />
+        </dialog>
+        <dialog
+            android:id="@+id/deleteDialogFragment"
+            android:name="com.nazmar.musicgym.exercises.detail.DeleteDialogFragment"
+            android:label="DeleteDialogFragment">
+            <argument
+                android:name="exerciseId"
+                app:argType="long" />
+        </dialog>
+    </navigation>
 </navigation>

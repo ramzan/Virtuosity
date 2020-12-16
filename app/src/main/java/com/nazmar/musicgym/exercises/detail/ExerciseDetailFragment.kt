@@ -1,17 +1,13 @@
-package com.nazmar.musicgym.exercises
+package com.nazmar.musicgym.exercises.detail
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
 import com.nazmar.musicgym.hideBottomNavBar
@@ -23,7 +19,7 @@ class ExerciseDetailFragment : DialogFragment() {
     private var _binding: FragmentExerciseDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ExerciseDetailViewModel by viewModels {
+    private val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
         ExerciseDetailViewModelFactory(
                 arguments?.get(
                         "exerciseId"
@@ -67,6 +63,11 @@ class ExerciseDetailFragment : DialogFragment() {
                     menu.getItem(0).isEnabled = it !== null
                     menu.getItem(1).isEnabled = it !== null
                 }
+                viewModel.exerciseDeleted.observe(viewLifecycleOwner) {
+                    if (it) {
+                        goBack()
+                    }
+                }
             }
 
             binding.apply {
@@ -87,50 +88,13 @@ class ExerciseDetailFragment : DialogFragment() {
         return binding.root
     }
 
-    private fun showDeleteDialog(): Boolean {
-        MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.delete_dialog_message)
-                .setPositiveButton("OK") { _, _ ->
-                    goBack()
-                    viewModel.deleteExercise()
-                }
-                .setNegativeButton("CANCEL") { _, _ -> }
-                .show()
-        return true
+    private fun showDeleteDialog() {
+        findNavController().navigate(ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToDeleteDialogFragment(requireArguments().getLong("exerciseId")))
+
     }
 
-    private fun showRenameDialog(): Boolean {
-        val layout = layoutInflater.inflate(R.layout.text_input_dialog, null)
-        val text = layout.findViewById<EditText>(R.id.name_input)
-        text.setText(viewModel.exercise.value!!.name)
-
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.rename)
-                .setView(layout)
-                .setPositiveButton("OK") { _, _ ->
-                    viewModel.renameExercise(text.text.toString().trim())
-                }
-                .setNegativeButton("CANCEL") { _, _ -> }
-                .create()
-
-        text.addTextChangedListener(object : TextWatcher {
-            private fun handleText() {
-                val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                okButton.isEnabled = text.text.isNotEmpty()
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                handleText()
-            }
-        })
-        dialog.show()
-        return true
+    private fun showRenameDialog() {
+        findNavController().navigate(ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToRenameDialogFragment(requireArguments().getLong("exerciseId")))
     }
 
     private fun goBack() {
