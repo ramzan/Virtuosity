@@ -31,13 +31,18 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
     val currentExercises: MutableList<RoutineExerciseName>
         get() = _currentExercises
 
+    private var currentExercisesLoaded = false
+
     private var _updatedIndex = MutableLiveData<Int>()
 
     val updatedIndex: LiveData<Int>
         get() = _updatedIndex
 
     fun loadOldRoutine() {
-        _currentExercises = oldExercises.value!!.toMutableList()
+        if (!currentExercisesLoaded) {
+            _currentExercises = oldExercises.value!!.toMutableList()
+            currentExercisesLoaded = true
+        }
     }
 
     fun deleteRoutine() {
