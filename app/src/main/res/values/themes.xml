@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="ExerciseViewDialog" parent="Theme.MusicGym">
+    <style name="ExerciseDetailDialog" parent="Theme.MusicGym">
         <item name="android:windowIsFloating">false</item>
     </style>
 </resources>

@@ -12,30 +12,29 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.nazmar.musicgym.MainActivity
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.databinding.FragmentExerciseViewBinding
+import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
 import com.nazmar.musicgym.hideBottomNavBar
 import com.nazmar.musicgym.showBottomNavBar
 
 
-class ExerciseViewFragment : DialogFragment() {
+class ExerciseDetailFragment : DialogFragment() {
 
-    private var _binding: FragmentExerciseViewBinding? = null
+    private var _binding: FragmentExerciseDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val eVViewModel: ExerciseViewViewModel by viewModels {
-        ExerciseViewViewModelFactory(
-            arguments?.get(
-                "exerciseId"
-            ) as Long, requireNotNull(this.activity).application
+    private val viewModel: ExerciseDetailViewModel by viewModels {
+        ExerciseDetailViewModelFactory(
+                arguments?.get(
+                        "exerciseId"
+                ) as Long, requireNotNull(this.activity).application
         )
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.ExerciseViewDialog)
+        setStyle(STYLE_NORMAL, R.style.ExerciseDetailDialog)
     }
 
     override fun onStart() {
@@ -49,20 +48,20 @@ class ExerciseViewFragment : DialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
 
         requireActivity().hideBottomNavBar()
 
-        _binding = FragmentExerciseViewBinding.inflate(inflater)
+        _binding = FragmentExerciseDetailBinding.inflate(inflater)
 
         binding.editorToolbar.apply {
             setNavigationOnClickListener {
                 goBack()
             }
 
-            eVViewModel.exercise.observe(viewLifecycleOwner) {
+            viewModel.exercise.observe(viewLifecycleOwner) {
                 binding.apply {
                     editorToolbar.title = it?.name ?: ""
                     menu.getItem(0).isEnabled = it !== null
@@ -90,29 +89,29 @@ class ExerciseViewFragment : DialogFragment() {
 
     private fun showDeleteDialog(): Boolean {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.delete_dialog_message)
-            .setPositiveButton("OK") { _, _ ->
-                goBack()
-                eVViewModel.deleteExercise()
-            }
-            .setNegativeButton("CANCEL") { _, _ -> }
-            .show()
+                .setTitle(R.string.delete_dialog_message)
+                .setPositiveButton("OK") { _, _ ->
+                    goBack()
+                    viewModel.deleteExercise()
+                }
+                .setNegativeButton("CANCEL") { _, _ -> }
+                .show()
         return true
     }
 
     private fun showRenameDialog(): Boolean {
         val layout = layoutInflater.inflate(R.layout.text_input_dialog, null)
         val text = layout.findViewById<EditText>(R.id.name_input)
-        text.setText(eVViewModel.exercise.value!!.name)
+        text.setText(viewModel.exercise.value!!.name)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.rename)
-            .setView(layout)
-            .setPositiveButton("OK") { _, _ ->
-                eVViewModel.renameExercise(text.text.toString().trim())
-            }
-            .setNegativeButton("CANCEL") { _, _ -> }
-            .create()
+                .setTitle(R.string.rename)
+                .setView(layout)
+                .setPositiveButton("OK") { _, _ ->
+                    viewModel.renameExercise(text.text.toString().trim())
+                }
+                .setNegativeButton("CANCEL") { _, _ -> }
+                .create()
 
         text.addTextChangedListener(object : TextWatcher {
             private fun handleText() {

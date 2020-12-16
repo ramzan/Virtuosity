@@ -20,7 +20,7 @@
         tools:layout="@layout/fragment_exercises">
         <action
             android:id="@+id/action_exercisesFragment_to_exerciseViewFragment"
-            app:destination="@id/exerciseViewFragment" />
+            app:destination="@id/exerciseDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -28,9 +28,9 @@
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
-        android:id="@+id/exerciseViewFragment"
-        android:name="com.nazmar.musicgym.exercises.ExerciseViewFragment"
-        android:label="ExerciseViewFragment">
+        android:id="@+id/exerciseDetailFragment"
+        android:name="com.nazmar.musicgym.exercises.ExerciseDetailFragment"
+        android:label="ExerciseDetailFragment">
         <argument
             android:name="exerciseId"
             app:argType="long" />
