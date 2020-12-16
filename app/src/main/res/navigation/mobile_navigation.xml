@@ -5,13 +5,19 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/practiceFragment">
     <fragment
-        android:id="@+id/exercisesFragment"
-        android:name="com.nazmar.musicgym.exercises.ExercisesFragment"
+        android:id="@+id/exerciseListFragment"
+        android:name="com.nazmar.musicgym.exercises.list.ExerciseListFragment"
         android:label="@string/exercises"
-        tools:layout="@layout/fragment_exercises">
+        tools:layout="@layout/fragment_exercise_list">
         <action
             android:id="@+id/action_exercisesFragment_to_exercisesGraph"
             app:destination="@id/exercisesGraph" />
+        <action
+            android:id="@+id/action_exerciseListFragment_to_exercisesGraph"
+            app:destination="@id/exercisesGraph" />
+        <action
+            android:id="@+id/action_exerciseListFragment_to_newExerciseDialogFragment"
+            app:destination="@id/newExerciseDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/practiceFragment"
@@ -93,4 +99,8 @@
                 app:argType="long" />
         </dialog>
     </navigation>
+    <dialog
+        android:id="@+id/newExerciseDialogFragment"
+        android:name="com.nazmar.musicgym.exercises.list.NewExerciseDialogFragment"
+        android:label="NewExerciseDialogFragment" />
 </navigation>

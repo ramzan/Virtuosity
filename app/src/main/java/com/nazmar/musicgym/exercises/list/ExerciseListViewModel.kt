@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.exercises
+package com.nazmar.musicgym.exercises.list
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ExercisesViewModel(application: Application) : AndroidViewModel(application) {
+class ExerciseListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
 

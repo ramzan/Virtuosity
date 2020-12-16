@@ -1,33 +1,28 @@
-package com.nazmar.musicgym.exercises
+package com.nazmar.musicgym.exercises.list
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.databinding.FragmentExercisesBinding
+import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
 
 
-class ExercisesFragment : Fragment() {
+class ExerciseListFragment : Fragment() {
 
-    private var _binding: FragmentExercisesBinding? = null
+    private var _binding: FragmentExerciseListBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ExercisesViewModel by activityViewModels {
-        ExercisesViewModelFactory(
+    private val viewModel: ExerciseListViewModel by activityViewModels {
+        ExerciseListViewModelFactory(
                 requireNotNull(this.activity).application
         )
     }
@@ -38,7 +33,7 @@ class ExercisesFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentExercisesBinding.inflate(inflater)
+        _binding = FragmentExerciseListBinding.inflate(inflater)
 
         val adapter = ExerciseAdapter(ExerciseAdapter.OnClickListener {
             showExerciseView(it.id)
@@ -103,41 +98,13 @@ class ExercisesFragment : Fragment() {
     }
 
     private fun showExerciseView(id: Long) {
-        val action = ExercisesFragmentDirections.actionExercisesFragmentToExercisesGraph(id)
+        val action = ExerciseListFragmentDirections.actionExercisesFragmentToExercisesGraph(id)
         findNavController().navigate(action)
     }
 
-    private fun showNewExerciseDialog(): Boolean {
-        val layout = layoutInflater.inflate(R.layout.text_input_dialog, null)
-        val text = layout.findViewById<EditText>(R.id.name_input)
-
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.new_exercise)
-                .setView(layout)
-                .setPositiveButton("OK") { _, _ ->
-                    viewModel.addExercise(text.text.toString().trim())
-                }
-                .setNegativeButton("CANCEL") { _, _ -> }
-                .create()
-
-        text.addTextChangedListener(object : TextWatcher {
-            private fun handleText() {
-                val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                okButton.isEnabled = text.text.isNotEmpty()
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                handleText()
-            }
-        })
-        dialog.show()
-        return true
+    private fun showNewExerciseDialog() {
+        val action = ExerciseListFragmentDirections.actionExerciseListFragmentToNewExerciseDialogFragment()
+        findNavController().navigate(action)
     }
 
     override fun onStop() {
