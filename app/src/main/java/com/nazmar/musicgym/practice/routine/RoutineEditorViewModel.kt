@@ -91,10 +91,10 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
     private fun createRoutine(name: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val newRoutineId = dao.insert(Routine(name))
-            val order = 1
+            var order = 1
 
             dao.insertRoutineExercises(currentExercises.map {
-                RoutineExercise(newRoutineId, order, it.exerciseId, it.getDuration())
+                RoutineExercise(newRoutineId, order++, it.exerciseId, it.getDuration())
             })
         }
     }
