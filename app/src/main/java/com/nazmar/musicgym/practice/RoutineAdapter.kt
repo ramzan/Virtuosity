@@ -10,7 +10,7 @@ import com.nazmar.musicgym.db.Routine
 
 
 class RoutineAdapter(private val onClickListener: OnClickListener) :
-    ListAdapter<Routine, RoutineAdapter.ViewHolder>(RoutineDiffCallback()) {
+        ListAdapter<Routine, RoutineAdapter.ViewHolder>(RoutineDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -29,7 +29,7 @@ class RoutineAdapter(private val onClickListener: OnClickListener) :
     }
 
     class ViewHolder private constructor(private val binding: ListItemRoutineBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+            RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Routine) {
             binding.routineTitle.text = item.name
@@ -40,7 +40,7 @@ class RoutineAdapter(private val onClickListener: OnClickListener) :
                 val layoutInflater = LayoutInflater.from(parent.context)
 
                 val binding =
-                    ListItemRoutineBinding.inflate(layoutInflater, parent, false)
+                        ListItemRoutineBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }

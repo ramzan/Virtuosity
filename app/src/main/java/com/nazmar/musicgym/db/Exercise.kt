@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "exercise_table")
 data class Exercise(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
+        @PrimaryKey(autoGenerate = true)
+        val id: Long,
 
-    var name: String
+        var name: String
 ) {
     constructor(name: String) : this(0, name)
 }

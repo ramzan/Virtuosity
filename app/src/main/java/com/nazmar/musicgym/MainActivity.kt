@@ -31,4 +31,5 @@ fun Activity.showBottomNavBar() {
     val bar = this.findViewById<BottomNavigationView>(R.id.nav_view)
     if (bar != null) {
         bar.visibility = View.VISIBLE
-    }}
+    }
+}

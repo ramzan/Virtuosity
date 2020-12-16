@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "routine_table")
 data class Routine(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
+        @PrimaryKey(autoGenerate = true)
+        val id: Long,
 
-    val name: String
+        val name: String
 ) {
     constructor(name: String) : this(0, name)
 }

@@ -20,9 +20,9 @@ class ExercisesViewModel(application: Application) : AndroidViewModel(applicatio
     private var _query = MutableLiveData("")
 
     val exercises: LiveData<List<ExerciseMaxBpm>> =
-        Transformations.switchMap(_query) { name: String ->
-            getFilteredExerciseMaxBPMs(name)
-        }
+            Transformations.switchMap(_query) { name: String ->
+                getFilteredExerciseMaxBPMs(name)
+            }
 
     private fun getFilteredExerciseMaxBPMs(query: String): LiveData<List<ExerciseMaxBpm>> {
         return Transformations.map(dao.getAllExerciseMaxBPMs()) {
