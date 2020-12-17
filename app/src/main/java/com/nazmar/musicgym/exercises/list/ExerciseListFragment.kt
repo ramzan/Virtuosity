@@ -21,6 +21,8 @@ class ExerciseListFragment : Fragment() {
     private var _binding: FragmentExerciseListBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var imm: InputMethodManager
+
     private val viewModel: ExerciseListViewModel by activityViewModels {
         ExerciseListViewModelFactory(
                 requireNotNull(this.activity).application
@@ -68,16 +70,11 @@ class ExerciseListFragment : Fragment() {
                 })
             }
 
-            val imm =
-                    (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            imm = (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     (actionView as SearchView).onActionViewExpanded()
-                    imm.toggleSoftInputFromWindow(
-                            requireView().windowToken,
-                            InputMethodManager.SHOW_IMPLICIT,
-                            InputMethodManager.HIDE_NOT_ALWAYS
-                    )
+                    showKeyboard(imm)
                     (actionView as SearchView).requestFocus()
                     return true
                 }
@@ -85,10 +82,7 @@ class ExerciseListFragment : Fragment() {
                 override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
                     viewModel.setNameQuery("")
                     (actionView as SearchView).setQuery("", false)
-                    imm.hideSoftInputFromWindow(
-                            requireView().windowToken,
-                            InputMethodManager.HIDE_NOT_ALWAYS
-                    )
+                    hideKeyboard(imm)
                     return true
                 }
 
@@ -109,12 +103,28 @@ class ExerciseListFragment : Fragment() {
 
     override fun onStop() {
         viewModel.setNameQuery("")
+        hideKeyboard(imm)
         super.onStop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun hideKeyboard(imm: InputMethodManager) {
+        imm.hideSoftInputFromWindow(
+                requireView().windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+        )
+    }
+
+    fun showKeyboard(imm: InputMethodManager) {
+        imm.toggleSoftInputFromWindow(
+                requireView().windowToken,
+                InputMethodManager.SHOW_IMPLICIT,
+                InputMethodManager.HIDE_NOT_ALWAYS
+        )
     }
 
 }
