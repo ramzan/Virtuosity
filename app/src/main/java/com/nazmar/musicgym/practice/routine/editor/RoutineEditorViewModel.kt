@@ -11,7 +11,6 @@ import com.nazmar.musicgym.db.RoutineExerciseName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 class RoutineEditorViewModel(private val routineId: Long, application: Application) :
         AndroidViewModel(application) {
@@ -112,7 +111,7 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
     }
 
     fun moveItem(fromPos: Int, toPos: Int): Boolean {
-        Collections.swap(_currentExercises, fromPos, toPos)
+        _currentExercises.add(toPos, _currentExercises.removeAt(fromPos))
         return true
     }
 
