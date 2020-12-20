@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
+import com.nazmar.musicgym.hideKeyboard
+import com.nazmar.musicgym.showKeyboard
 
 
 class ExerciseListFragment : Fragment() {
@@ -74,7 +76,7 @@ class ExerciseListFragment : Fragment() {
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     (actionView as SearchView).onActionViewExpanded()
-                    showKeyboard(imm)
+                    imm.showKeyboard()
                     (actionView as SearchView).requestFocus()
                     return true
                 }
@@ -82,7 +84,7 @@ class ExerciseListFragment : Fragment() {
                 override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
                     viewModel.setNameQuery("")
                     (actionView as SearchView).setQuery("", false)
-                    hideKeyboard(imm)
+                    imm.hideKeyboard(requireView().windowToken)
                     return true
                 }
 
@@ -103,7 +105,7 @@ class ExerciseListFragment : Fragment() {
 
     override fun onStop() {
         viewModel.setNameQuery("")
-        hideKeyboard(imm)
+        imm.hideKeyboard(requireView().windowToken)
         super.onStop()
     }
 
@@ -111,20 +113,4 @@ class ExerciseListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    fun hideKeyboard(imm: InputMethodManager) {
-        imm.hideSoftInputFromWindow(
-                requireView().windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
-        )
-    }
-
-    fun showKeyboard(imm: InputMethodManager) {
-        imm.toggleSoftInputFromWindow(
-                requireView().windowToken,
-                InputMethodManager.SHOW_IMPLICIT,
-                InputMethodManager.HIDE_NOT_ALWAYS
-        )
-    }
-
 }

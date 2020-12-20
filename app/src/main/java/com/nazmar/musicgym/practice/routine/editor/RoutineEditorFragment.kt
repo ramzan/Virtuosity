@@ -14,10 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.nazmar.musicgym.R
+import com.nazmar.musicgym.*
 import com.nazmar.musicgym.databinding.FragmentRoutineEditorBinding
-import com.nazmar.musicgym.hideBottomNavBar
-import com.nazmar.musicgym.showBottomNavBar
 
 
 class RoutineEditorFragment : Fragment() {
@@ -132,10 +130,7 @@ class RoutineEditorFragment : Fragment() {
             } else {
                 saveButton.isVisible = true
                 // Show the keyboard.
-                imm.toggleSoftInput(
-                        InputMethodManager.SHOW_IMPLICIT,
-                        InputMethodManager.HIDE_IMPLICIT_ONLY
-                )
+                imm.showKeyboard()
             }
 
             exerciseSpinner.apply {
@@ -171,7 +166,7 @@ class RoutineEditorFragment : Fragment() {
     }
 
     private fun goBack() {
-        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+        imm.hideKeyboard(requireView().windowToken)
         requireActivity().onBackPressed()
         requireActivity().showBottomNavBar()
     }
