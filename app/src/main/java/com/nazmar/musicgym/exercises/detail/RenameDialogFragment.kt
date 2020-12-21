@@ -40,19 +40,13 @@ class RenameDialogFragment : DialogFragment() {
                 .create()
 
         text.addTextChangedListener(object : TextWatcher {
-            private fun handleText() {
-                val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                okButton.isEnabled = text.text.isNotEmpty()
-            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                handleText()
+                val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                okButton.isEnabled = text.text.isNotEmpty()
             }
         })
         return dialog
