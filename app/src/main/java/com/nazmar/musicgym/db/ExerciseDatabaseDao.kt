@@ -84,4 +84,15 @@ interface ExerciseDatabaseDao {
         WHERE routineId = :routineId ORDER BY `order`
         """)
     fun getRoutineExerciseNames(routineId: Long): LiveData<List<RoutineExerciseName>>
+
+    @Query("""
+        SELECT routine_exercise_table.exerciseId, name, MAX(bpm) AS bpm, duration
+        FROM routine_exercise_table 
+        JOIN exercise_table ON routine_exercise_table.exerciseId = exercise_table.id 
+        LEFT OUTER JOIN history_table ON routine_exercise_table.exerciseId = history_table.exerciseId 
+        WHERE routineId = :routineId 
+        GROUP BY routine_exercise_table.exerciseId
+        ORDER BY `order`
+        """)
+    fun getSessionExercises(routineId: Long): LiveData<List<SessionExercise>>
 }

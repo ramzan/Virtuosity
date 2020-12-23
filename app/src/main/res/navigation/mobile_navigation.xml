@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_practiceFragment_to_routineEditor"
             app:destination="@id/routineEditorGraph" />
+        <action
+            android:id="@+id/action_routineListFragment_to_sessionFragment"
+            app:destination="@id/sessionFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -103,4 +106,12 @@
         android:id="@+id/newExerciseDialogFragment"
         android:name="com.nazmar.musicgym.exercises.list.NewExerciseDialogFragment"
         android:label="NewExerciseDialogFragment" />
+    <fragment
+        android:id="@+id/sessionFragment"
+        android:name="com.nazmar.musicgym.practice.session.SessionFragment"
+        android:label="SessionFragment" >
+        <argument
+            android:name="routineId"
+            app:argType="long" />
+    </fragment>
 </navigation>

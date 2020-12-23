@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/session_current_exercise_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Exercise Name" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        tools:text="120"
+        android:autofillHints="@string/bpm"
+        android:hint="@string/bpm"/>
+
+    <Button
+        android:id="@+id/next_exercise_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next" />
+
+    <Button
+        android:id="@+id/previous_exercise_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back" />
+
+
+</LinearLayout>

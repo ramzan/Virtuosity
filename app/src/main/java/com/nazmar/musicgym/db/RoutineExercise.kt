@@ -45,3 +45,13 @@ data class RoutineExerciseName(
 ) {
     fun getDuration() = this.minutes * 60 + this.seconds
 }
+
+data class SessionExercise(
+        val exerciseId: Long,
+
+        val name: String,
+
+        val bpm: Int,
+
+        val duration: Long
+)

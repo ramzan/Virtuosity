@@ -23,4 +23,7 @@
     <string name="add_an_exercise">Add an exercise</string>
     <string name="edit">Edit</string>
     <string name="start">Start</string>
+    <string name="bpm">BPM</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
 </resources>
