@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -28,8 +29,11 @@ class RoutineListFragment : Fragment() {
 
         _binding = FragmentRoutineListBinding.inflate(inflater)
 
-        val adapter = RoutineAdapter(RoutineAdapter.OnClickListener {
-            showRoutineEditor(it.id)
+        val adapter = RoutineAdapter(
+                RoutineAdapter.OnClickListener {
+                    showRoutineEditor(it.id)
+                }, RoutineAdapter.OnClickListener {
+            startRoutine(it.id)
         })
 
 
@@ -53,6 +57,10 @@ class RoutineListFragment : Fragment() {
     private fun showRoutineEditor(id: Long) {
         val action = RoutineListFragmentDirections.actionPracticeFragmentToRoutineEditor(id)
         findNavController().navigate(action)
+    }
+
+    private fun startRoutine(id: Long) {
+        Toast.makeText(requireContext(), "Starting routine $id", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

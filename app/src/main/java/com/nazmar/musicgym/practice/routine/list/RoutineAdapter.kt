@@ -9,15 +9,12 @@ import com.nazmar.musicgym.databinding.ListItemRoutineBinding
 import com.nazmar.musicgym.db.Routine
 
 
-class RoutineAdapter(private val onClickListener: OnClickListener) :
+class RoutineAdapter(private val onEditListener: OnClickListener, private val onStartListener: OnClickListener) :
         ListAdapter<Routine, RoutineAdapter.ViewHolder>(RoutineDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.itemView.setOnClickListener {
-            onClickListener.onClick(item)
-        }
-        holder.bind(item)
+        holder.bind(item, onEditListener, onStartListener)
     }
 
     class OnClickListener(val clickListener: (routine: Routine) -> Unit) {
@@ -31,8 +28,14 @@ class RoutineAdapter(private val onClickListener: OnClickListener) :
     class ViewHolder private constructor(private val binding: ListItemRoutineBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Routine) {
+        fun bind(item: Routine, onEditListener: OnClickListener, onStartListener: OnClickListener) {
             binding.routineTitle.text = item.name
+            binding.editRoutineButton.setOnClickListener {
+                onEditListener.onClick(item)
+            }
+            binding.startRoutineButton.setOnClickListener {
+                onStartListener.onClick(item)
+            }
         }
 
         companion object {
