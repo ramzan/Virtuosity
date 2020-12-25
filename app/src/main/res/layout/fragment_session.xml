@@ -23,6 +23,8 @@
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         tools:text="120"
+        android:digits="0123456789"
+        android:maxLength="3"
         android:autofillHints="@string/bpm"
         android:hint="@string/bpm"/>
 
