@@ -1,14 +1,23 @@
 package com.nazmar.musicgym.practice.session
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.core.text.isDigitsOnly
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
 import com.nazmar.musicgym.hideBottomNavBar
+import com.nazmar.musicgym.hideKeyboard
+import com.nazmar.musicgym.showBottomNavBar
 
 class SessionFragment : Fragment() {
 
@@ -17,25 +26,66 @@ class SessionFragment : Fragment() {
 
     private val viewModel: SessionViewModel by viewModels {
         SessionViewModelFactory(
-            arguments?.get(
-                "routineId"
-            ) as Long, requireNotNull(this.activity).application
+                arguments?.get(
+                        "routineId"
+                ) as Long, requireNotNull(this.activity).application
         )
     }
 
+    private lateinit var imm: InputMethodManager
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
         requireActivity().hideBottomNavBar()
 
+        imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
         _binding = FragmentSessionBinding.inflate(inflater)
 
-        viewModel.exercises.observe(viewLifecycleOwner) {
-            Log.d("zoop", it.size.toString())
+        viewModel.exercisesLoaded.observeOnce(viewLifecycleOwner) {
+            viewModel.createBpmList(binding.bpmInput.text)
+            viewModel.nextExercise()
+        }
+
+        viewModel.currentIndex.observe(viewLifecycleOwner) {
+            binding.sessionCurrentExerciseName.text = viewModel.getCurrentExerciseName()
+            binding.bpmInput.hint = viewModel.getCurrentExerciseBpmRecord()
+            binding.bpmInput.text = viewModel.getNewExerciseBpm()
+            binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled()
+            when (viewModel.nextButtonEnabled()) {
+                 true -> {
+                     binding.nextExerciseButton.visibility = View.VISIBLE
+                     binding.doneButton.visibility = View.GONE
+                 }
+                else -> {
+                    binding.nextExerciseButton.visibility = View.GONE
+                    binding.doneButton.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        binding.nextExerciseButton.setOnClickListener {
+            viewModel.nextExercise()
+        }
+
+        binding.previousExerciseButton.setOnClickListener {
+            viewModel.previousExercise()
+        }
+
+        binding.bpmInput.doOnTextChanged { text, _, _, _ ->
+            text?.let {
+                if (it.isDigitsOnly()) viewModel.updateBpm(it as Editable)
+            }
+        }
+
+        binding.doneButton.setOnClickListener {
+            viewModel.saveSession()
+            goBack()
         }
 
         return binding.root
@@ -45,4 +95,19 @@ class SessionFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun goBack() {
+        imm.hideKeyboard(requireView().windowToken)
+        requireActivity().onBackPressed()
+        requireActivity().showBottomNavBar()
+    }
+}
+
+fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+    observe(lifecycleOwner, object : Observer<T> {
+        override fun onChanged(t: T?) {
+            observer.onChanged(t)
+            removeObserver(this)
+        }
+    })
 }

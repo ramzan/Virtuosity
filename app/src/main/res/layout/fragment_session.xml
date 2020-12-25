@@ -12,12 +12,20 @@
         tools:text="Exercise Name" />
 
     <EditText
+        android:id="@+id/bpm_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         tools:text="120"
         android:autofillHints="@string/bpm"
         android:hint="@string/bpm"/>
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/done"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/next_exercise_button"
@@ -30,6 +38,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/back" />
-
 
 </LinearLayout>
