@@ -11,10 +11,6 @@ import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.navGraphViewModels
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
@@ -50,16 +46,18 @@ class SessionFragment : Fragment() {
 
         _binding = FragmentSessionBinding.inflate(inflater)
 
-        viewModel.exercisesLoaded.observeOnce(viewLifecycleOwner) {
-            viewModel.createBpmList(binding.bpmInput.text)
-            viewModel.nextExercise()
+        viewModel.exercises.observe(viewLifecycleOwner) {
+            if (!viewModel.exercisesLoaded) {
+                viewModel.createBpmList()
+                viewModel.nextExercise()
+            }
         }
 
         viewModel.currentIndex.observe(viewLifecycleOwner) {
             if (it > -1) {
                 binding.sessionCurrentExerciseName.text = viewModel.getCurrentExerciseName()
                 binding.bpmInput.hint = viewModel.getCurrentExerciseBpmRecord()
-                binding.bpmInput.text = viewModel.getNewExerciseBpm()
+                binding.bpmInput.text = Editable.Factory.getInstance().newEditable(viewModel.getNewExerciseBpm())
                 binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled()
                 when (viewModel.nextButtonEnabled()) {
                     true -> {
@@ -85,7 +83,7 @@ class SessionFragment : Fragment() {
 
         binding.bpmInput.doOnTextChanged { text, _, _, _ ->
             text?.let {
-                if (it.isDigitsOnly()) viewModel.updateBpm(it as Editable)
+                if (it.isDigitsOnly()) viewModel.updateBpm(it.toString())
             }
         }
 
@@ -106,6 +104,7 @@ class SessionFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        viewModel.stopTimer()
         super.onDestroyView()
         _binding = null
     }
@@ -116,13 +115,4 @@ class SessionFragment : Fragment() {
         requireActivity().onBackPressed()
         requireActivity().showBottomNavBar()
     }
-}
-
-fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
-    observe(lifecycleOwner, object : Observer<T> {
-        override fun onChanged(t: T?) {
-            observer.onChanged(t)
-            removeObserver(this)
-        }
-    })
 }
