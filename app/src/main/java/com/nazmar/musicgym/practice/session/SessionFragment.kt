@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -14,6 +15,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.navGraphViewModels
+import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
 import com.nazmar.musicgym.hideBottomNavBar
 import com.nazmar.musicgym.hideKeyboard
@@ -24,7 +27,7 @@ class SessionFragment : Fragment() {
     private var _binding: FragmentSessionBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: SessionViewModel by viewModels {
+    private val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
         SessionViewModelFactory(
                 arguments?.get(
                         "routineId"
@@ -53,19 +56,22 @@ class SessionFragment : Fragment() {
         }
 
         viewModel.currentIndex.observe(viewLifecycleOwner) {
-            binding.sessionCurrentExerciseName.text = viewModel.getCurrentExerciseName()
-            binding.bpmInput.hint = viewModel.getCurrentExerciseBpmRecord()
-            binding.bpmInput.text = viewModel.getNewExerciseBpm()
-            binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled()
-            when (viewModel.nextButtonEnabled()) {
-                 true -> {
-                     binding.nextExerciseButton.visibility = View.VISIBLE
-                     binding.doneButton.visibility = View.GONE
-                 }
-                else -> {
-                    binding.nextExerciseButton.visibility = View.GONE
-                    binding.doneButton.visibility = View.VISIBLE
+            if (it > -1) {
+                binding.sessionCurrentExerciseName.text = viewModel.getCurrentExerciseName()
+                binding.bpmInput.hint = viewModel.getCurrentExerciseBpmRecord()
+                binding.bpmInput.text = viewModel.getNewExerciseBpm()
+                binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled()
+                when (viewModel.nextButtonEnabled()) {
+                    true -> {
+                        binding.nextExerciseButton.visibility = View.VISIBLE
+                        binding.doneButton.visibility = View.GONE
+                    }
+                    else -> {
+                        binding.nextExerciseButton.visibility = View.GONE
+                        binding.doneButton.visibility = View.VISIBLE
+                    }
                 }
+                viewModel.setTimer()
             }
         }
 
@@ -88,6 +94,14 @@ class SessionFragment : Fragment() {
             goBack()
         }
 
+        viewModel.time.observe(viewLifecycleOwner) {
+            binding.timer.text = it
+        }
+
+        viewModel.timeUp.observe(viewLifecycleOwner) {
+            if (it) Toast.makeText(requireContext(), "Time up!", Toast.LENGTH_SHORT).show()
+        }
+
         return binding.root
     }
 
@@ -97,6 +111,7 @@ class SessionFragment : Fragment() {
     }
 
     private fun goBack() {
+        viewModel.stopTimer()
         imm.hideKeyboard(requireView().windowToken)
         requireActivity().onBackPressed()
         requireActivity().showBottomNavBar()

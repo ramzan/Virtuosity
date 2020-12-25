@@ -1,6 +1,7 @@
 package com.nazmar.musicgym.practice.session
 
 import android.app.Application
+import android.os.CountDownTimer
 import android.text.Editable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -8,8 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.nazmar.musicgym.db.ExerciseDatabase
 import com.nazmar.musicgym.db.HistoryItem
-import com.nazmar.musicgym.db.Routine
-import com.nazmar.musicgym.db.RoutineExercise
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -87,9 +86,46 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
             for (i in 0 until newBpms.size) {
                 val bpm = newBpms[i].toString()
                 if (bpm.isNotEmpty()) {
-                    dao.insert(HistoryItem(exercises.value!![i].exerciseId,bpm.toInt() ))
+                    dao.insert(HistoryItem(exercises.value!![i].exerciseId, bpm.toInt()))
                 }
             }
         }
+    }
+
+    private fun currentExerciseDuration(): Long {
+        return exercises.value!!.get(currentIndex.value!!).duration * 1000
+    }
+
+    private var timer: CountDownTimer? = null
+
+    private var _timeUp = MutableLiveData(false)
+
+    val timeUp: LiveData<Boolean>
+        get() = _timeUp
+
+    private var _time = MutableLiveData("0:00")
+
+    val time: LiveData<String>
+        get() = _time
+
+    fun setTimer() {
+        timer?.cancel()
+        currentExerciseDuration().let {
+            timer = object : CountDownTimer(it, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    _time.value = "${(millisUntilFinished / 60000) % 60}:${(millisUntilFinished / 1000) % 60}"
+                }
+
+                override fun onFinish() {
+                    _time.value = "0:00"
+                    _timeUp.value = true
+                }
+            }
+        }
+        (timer as CountDownTimer).start()
+    }
+
+    fun stopTimer() {
+        timer?.cancel()
     }
 }

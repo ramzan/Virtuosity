@@ -11,6 +11,12 @@
         android:layout_height="wrap_content"
         tools:text="Exercise Name" />
 
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="10:12" />
+
     <EditText
         android:id="@+id/bpm_input"
         android:layout_width="wrap_content"

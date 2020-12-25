@@ -59,7 +59,7 @@ class RoutineListFragment : Fragment() {
     }
 
     private fun startRoutine(id: Long) {
-        val action = RoutineListFragmentDirections.actionRoutineListFragmentToSessionFragment(id)
+        val action = RoutineListFragmentDirections.actionPracticeFragmentToSessionFragment(id)
         findNavController().navigate(action)
     }
 
