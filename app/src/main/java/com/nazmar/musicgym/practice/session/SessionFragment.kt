@@ -96,8 +96,9 @@ class SessionFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        viewModel.stopTimer()
         super.onDestroyView()
+        viewModel.stopTimer()
+        requireActivity().showBottomNavBar()
         _binding = null
     }
 

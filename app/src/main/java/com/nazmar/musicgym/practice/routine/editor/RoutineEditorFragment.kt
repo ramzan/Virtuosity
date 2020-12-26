@@ -173,6 +173,7 @@ class RoutineEditorFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        requireActivity().showBottomNavBar()
         _binding = null
     }
 }

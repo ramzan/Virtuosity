@@ -104,6 +104,7 @@ class ExerciseDetailFragment : DialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        requireActivity().showBottomNavBar()
         _binding = null
     }
 
