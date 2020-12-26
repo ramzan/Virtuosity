@@ -113,7 +113,7 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     private var savedTime: Long? = null
 
     fun startTimer() {
-        if (timer == null) {
+        if (timer == null && savedTime != 0L && currentExerciseDuration() != 0L) {
             timer = object : CountDownTimer(savedTime ?: currentExerciseDuration(), 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     savedTime = millisUntilFinished
@@ -127,6 +127,11 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
             }
             (timer as CountDownTimer).start()
         }
+    }
+
+    fun onTimeUp() {
+        savedTime = 0L
+        _timeUp.value = false
     }
 
     fun stopTimer() {
