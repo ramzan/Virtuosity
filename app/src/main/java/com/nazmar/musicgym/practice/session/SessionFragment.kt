@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.navGraphViewModels
@@ -59,17 +58,8 @@ class SessionFragment : Fragment() {
                 binding.bpmInput.hint = viewModel.getCurrentExerciseBpmRecord()
                 binding.bpmInput.text = Editable.Factory.getInstance().newEditable(viewModel.getNewExerciseBpm())
                 binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled()
-                when (viewModel.nextButtonEnabled()) {
-                    true -> {
-                        binding.nextExerciseButton.visibility = View.VISIBLE
-                        binding.doneButton.visibility = View.GONE
-                    }
-                    else -> {
-                        binding.nextExerciseButton.visibility = View.GONE
-                        binding.doneButton.visibility = View.VISIBLE
-                    }
-                }
-                viewModel.setTimer()
+                setButtonVisibility()
+                viewModel.startTimer()
             }
         }
 
@@ -83,7 +73,7 @@ class SessionFragment : Fragment() {
 
         binding.bpmInput.doOnTextChanged { text, _, _, _ ->
             text?.let {
-                if (it.isDigitsOnly()) viewModel.updateBpm(it.toString())
+                viewModel.updateBpm(it.toString())
             }
         }
 
@@ -92,12 +82,14 @@ class SessionFragment : Fragment() {
             goBack()
         }
 
-        viewModel.time.observe(viewLifecycleOwner) {
+        viewModel.timeString.observe(viewLifecycleOwner) {
             binding.timer.text = it
         }
 
         viewModel.timeUp.observe(viewLifecycleOwner) {
-            if (it) Toast.makeText(requireContext(), "Time up!", Toast.LENGTH_SHORT).show()
+            if (it) {
+                Toast.makeText(requireContext(), "Time up!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         return binding.root
@@ -114,5 +106,18 @@ class SessionFragment : Fragment() {
         imm.hideKeyboard(requireView().windowToken)
         requireActivity().onBackPressed()
         requireActivity().showBottomNavBar()
+    }
+
+    private fun setButtonVisibility() {
+        when (viewModel.nextButtonEnabled()) {
+            true -> {
+                binding.nextExerciseButton.visibility = View.VISIBLE
+                binding.doneButton.visibility = View.GONE
+            }
+            else -> {
+                binding.nextExerciseButton.visibility = View.GONE
+                binding.doneButton.visibility = View.VISIBLE
+            }
+        }
     }
 }

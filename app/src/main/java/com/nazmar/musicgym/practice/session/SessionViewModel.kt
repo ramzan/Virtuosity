@@ -11,6 +11,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+const val emptyTimeString = "0:00"
+
 class SessionViewModel(routineId: Long, application: Application) : AndroidViewModel(application) {
 
     private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
@@ -37,12 +39,12 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     }
 
     fun nextExercise() {
-        stopTimer()
+        resetTimer()
         _currentIndex.value = _currentIndex.value!! + 1
     }
 
     fun previousExercise() {
-        stopTimer()
+        resetTimer()
         _currentIndex.value = _currentIndex.value!! - 1
     }
 
@@ -103,24 +105,23 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     val timeUp: LiveData<Boolean>
         get() = _timeUp
 
-    private var _time = MutableLiveData("0:00")
+    private var _timeString = MutableLiveData(emptyTimeString)
 
-    val time: LiveData<String>
-        get() = _time
+    val timeString: LiveData<String>
+        get() = _timeString
 
     private var savedTime: Long? = null
 
-
-    fun setTimer() {
+    fun startTimer() {
         if (timer == null) {
             timer = object : CountDownTimer(savedTime ?: currentExerciseDuration(), 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     savedTime = millisUntilFinished
-                    _time.value = "${(millisUntilFinished / 60000) % 60}:${(millisUntilFinished / 1000) % 60}"
+                    _timeString.value = "${(millisUntilFinished / 60000) % 60}:" + "${(millisUntilFinished / 1000) % 60}".padStart(2, '0')
                 }
 
                 override fun onFinish() {
-                    _time.value = "0:00"
+                    _timeString.value = emptyTimeString
                     _timeUp.value = true
                 }
             }
@@ -131,6 +132,13 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     fun stopTimer() {
         timer?.cancel()
         timer = null
+    }
+
+    private fun resetTimer() {
+        stopTimer()
+        savedTime = null
+        _timeUp.value = false
+        _timeString.value = emptyTimeString
     }
 
 }
