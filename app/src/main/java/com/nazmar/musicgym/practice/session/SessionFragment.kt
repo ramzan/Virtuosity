@@ -59,36 +59,61 @@ class SessionFragment : Fragment() {
                 binding.bpmInput.text = Editable.Factory.getInstance().newEditable(viewModel.getNewExerciseBpm())
                 binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled()
                 setButtonVisibility()
-                viewModel.startTimer()
+                viewModel.setUpTimer()
             }
-        }
-
-        binding.nextExerciseButton.setOnClickListener {
-            viewModel.nextExercise()
-        }
-
-        binding.previousExerciseButton.setOnClickListener {
-            viewModel.previousExercise()
-        }
-
-        binding.bpmInput.doOnTextChanged { text, _, _, _ ->
-            text?.let {
-                viewModel.updateBpm(it.toString())
-            }
-        }
-
-        binding.doneButton.setOnClickListener {
-            viewModel.saveSession()
-            goBack()
         }
 
         viewModel.timeString.observe(viewLifecycleOwner) {
             binding.timer.text = it
         }
 
-        viewModel.timeUp.observe(viewLifecycleOwner) {
-            if (it) {
-                Toast.makeText(requireContext(), "Time up!", Toast.LENGTH_SHORT).show()
+        viewModel.timerStatus.observe(viewLifecycleOwner) {
+            it?.let {
+                when (it) {
+                    TimerState.RUNNING -> {
+                        binding.pauseTimerButton.visibility = View.VISIBLE
+                        binding.startTimerButton.visibility = View.GONE
+                    }
+                    TimerState.PAUSED -> {
+                        binding.pauseTimerButton.visibility = View.GONE
+                        binding.startTimerButton.visibility = View.VISIBLE
+                    }
+                    TimerState.FINISHED -> {
+                        Toast.makeText(requireContext(), "Time up!", Toast.LENGTH_SHORT).show()
+                        viewModel.onAlarmRung()
+                    }
+                    TimerState.COMPLETED -> binding.pauseTimerButton.isEnabled = false
+                    TimerState.STOPPED -> binding.pauseTimerButton.isEnabled = true
+                }
+            }
+        }
+
+        binding.apply {
+            nextExerciseButton.setOnClickListener {
+                viewModel.nextExercise()
+            }
+
+            previousExerciseButton.setOnClickListener {
+                viewModel.previousExercise()
+            }
+
+            bpmInput.doOnTextChanged { text, _, _, _ ->
+                text?.let {
+                    viewModel.updateBpm(it.toString())
+                }
+            }
+
+            doneButton.setOnClickListener {
+                viewModel.saveSession()
+                goBack()
+            }
+
+            pauseTimerButton.setOnClickListener {
+                viewModel.pauseTimer()
+            }
+
+            startTimerButton.setOnClickListener {
+                viewModel.startTimer()
             }
         }
 
@@ -97,13 +122,12 @@ class SessionFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.stopTimer()
         requireActivity().showBottomNavBar()
         _binding = null
     }
 
     private fun goBack() {
-        viewModel.stopTimer()
+        viewModel.clearTimer()
         imm.hideKeyboard(requireView().windowToken)
         requireActivity().onBackPressed()
         requireActivity().showBottomNavBar()

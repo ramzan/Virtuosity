@@ -2,6 +2,7 @@ package com.nazmar.musicgym.practice.session
 
 import android.app.Application
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +13,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 const val emptyTimeString = "0:00"
+
+enum class TimerState {
+    STOPPED, // Timer has not been created
+    RUNNING, // Timer is counting down
+    PAUSED, // Pause button pressed, time still remaining
+    FINISHED, // Timer has reached 0, sound the alarm
+    COMPLETED // Timer at 0 and alarm has been rung
+}
 
 class SessionViewModel(routineId: Long, application: Application) : AndroidViewModel(application) {
 
@@ -39,12 +48,12 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     }
 
     fun nextExercise() {
-        resetTimer()
+        clearTimer()
         _currentIndex.value = _currentIndex.value!! + 1
     }
 
     fun previousExercise() {
-        resetTimer()
+        clearTimer()
         _currentIndex.value = _currentIndex.value!! - 1
     }
 
@@ -98,52 +107,73 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
         return exercises.value!![currentIndex.value!!].duration * 1000
     }
 
+    /************************** Timer **********************************/
+
     private var timer: CountDownTimer? = null
-
-    private var _timeUp = MutableLiveData(false)
-
-    val timeUp: LiveData<Boolean>
-        get() = _timeUp
 
     private var _timeString = MutableLiveData(emptyTimeString)
 
     val timeString: LiveData<String>
         get() = _timeString
 
-    private var savedTime: Long? = null
+    private var timeLeft: Long? = null
 
-    fun startTimer() {
-        if (timer == null && savedTime != 0L && currentExerciseDuration() != 0L) {
-            timer = object : CountDownTimer(savedTime ?: currentExerciseDuration(), 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    savedTime = millisUntilFinished
-                    _timeString.value = "${(millisUntilFinished / 60000) % 60}:" + "${(millisUntilFinished / 1000) % 60}".padStart(2, '0')
-                }
+    private var _timerStatus = MutableLiveData(TimerState.STOPPED)
 
-                override fun onFinish() {
-                    _timeString.value = emptyTimeString
-                    _timeUp.value = true
-                }
+    val timerStatus: LiveData<TimerState>
+        get() = _timerStatus
+
+    private fun createTimer() {
+        timer = object : CountDownTimer(timeLeft ?: currentExerciseDuration(), 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timeLeft = millisUntilFinished
+                _timeString.value = "${(millisUntilFinished / 60000) % 60}:" + "${(millisUntilFinished / 1000) % 60}".padStart(2, '0')
             }
-            (timer as CountDownTimer).start()
+
+            override fun onFinish() {
+                _timeString.value = emptyTimeString
+                _timerStatus.value = TimerState.FINISHED
+                timeLeft = null
+            }
         }
     }
 
-    fun onTimeUp() {
-        savedTime = 0L
-        _timeUp.value = false
+    fun setUpTimer() {
+        if (timerStatus.value == TimerState.STOPPED) {
+            createTimer()
+            startTimer()
+        }
+    }
+
+    fun startTimer() {
+        if (timerStatus.value == TimerState.PAUSED) {
+            createTimer()
+        }
+        timer?.start()
+        _timerStatus.value = TimerState.RUNNING
+    }
+
+    fun pauseTimer() {
+        if (timerStatus.value != TimerState.FINISHED) {
+            timer?.cancel()
+            timer = null
+            _timerStatus.value = TimerState.PAUSED
+        }
+    }
+
+    fun onAlarmRung() {
+        _timerStatus.value = TimerState.COMPLETED
     }
 
     fun stopTimer() {
         timer?.cancel()
         timer = null
+        _timerStatus.value = TimerState.STOPPED
     }
 
-    private fun resetTimer() {
+    fun clearTimer() {
         stopTimer()
-        savedTime = null
-        _timeUp.value = false
-        _timeString.value = emptyTimeString
+        timeLeft = null
     }
-
 }
+

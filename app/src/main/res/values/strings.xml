@@ -27,4 +27,7 @@
     <string name="next">Next</string>
     <string name="back">Back</string>
     <string name="done">Done</string>
+    <string name="start_timer">Start timer</string>
+    <string name="pause_timer">Pause timer</string>
+    <string name="restart_timer">Restart timer</string>
 </resources>

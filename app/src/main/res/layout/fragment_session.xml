@@ -11,22 +11,50 @@
         android:layout_height="wrap_content"
         tools:text="Exercise Name" />
 
-    <TextView
-        android:id="@+id/timer"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="10:12" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="10:12" />
+
+        <ImageButton
+            android:id="@+id/start_timer_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_play_arrow_24"
+            android:contentDescription="@string/start_timer" />
+
+        <ImageButton
+            android:id="@+id/pause_timer_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_pause_24"
+            android:contentDescription="@string/pause_timer" />
+
+        <ImageButton
+            android:id="@+id/restart_timer_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_replay_24"
+            android:contentDescription="@string/restart_timer" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/bpm_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        tools:text="120"
-        android:digits="0123456789"
-        android:maxLength="3"
         android:autofillHints="@string/bpm"
-        android:hint="@string/bpm"/>
+        android:digits="0123456789"
+        android:hint="@string/bpm"
+        android:inputType="numberDecimal"
+        android:maxLength="3"
+        tools:text="120" />
 
     <Button
         android:id="@+id/done_button"
