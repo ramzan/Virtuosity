@@ -22,6 +22,16 @@
             android:layout_height="wrap_content"
             tools:text="10:12" />
 
+        <EditText
+            android:id="@+id/timer_editor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:focusable="false"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="10:12" />
+
         <ImageButton
             android:id="@+id/start_timer_button"
             android:layout_width="wrap_content"

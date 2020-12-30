@@ -1,6 +1,8 @@
 package com.nazmar.musicgym.practice.session
 
 import android.content.Context
+import android.media.MediaPlayer
+import android.media.RingtoneManager
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -10,12 +12,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
 import com.nazmar.musicgym.hideBottomNavBar
 import com.nazmar.musicgym.hideKeyboard
 import com.nazmar.musicgym.showBottomNavBar
+
 
 class SessionFragment : Fragment() {
 
@@ -65,7 +69,11 @@ class SessionFragment : Fragment() {
 
         viewModel.timeString.observe(viewLifecycleOwner) {
             binding.timer.text = it
+            binding.timerEditor.setText(it)
         }
+
+        val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val mp = MediaPlayer.create(requireContext(), notification)
 
         viewModel.timerStatus.observe(viewLifecycleOwner) {
             it?.let {
@@ -73,18 +81,28 @@ class SessionFragment : Fragment() {
                     TimerState.RUNNING -> {
                         binding.pauseTimerButton.visibility = View.VISIBLE
                         binding.startTimerButton.visibility = View.GONE
+
+                        binding.timerEditor.visibility = View.GONE
+                        binding.timer.visibility = View.VISIBLE
                     }
                     TimerState.PAUSED -> {
                         binding.pauseTimerButton.visibility = View.GONE
                         binding.startTimerButton.visibility = View.VISIBLE
+
+                        binding.timerEditor.visibility = View.VISIBLE
+                        binding.timer.visibility = View.GONE
                     }
                     TimerState.FINISHED -> {
                         Toast.makeText(requireContext(), "Time up!", Toast.LENGTH_SHORT).show()
+                        mp.start()
                         viewModel.onAlarmRung()
                     }
                     TimerState.COMPLETED -> {
                         binding.pauseTimerButton.visibility = View.GONE
                         binding.startTimerButton.visibility = View.VISIBLE
+
+                        binding.timerEditor.visibility = View.VISIBLE
+                        binding.timer.visibility = View.GONE
                     }
                     TimerState.STOPPED -> {
                     }
@@ -119,8 +137,13 @@ class SessionFragment : Fragment() {
             startTimerButton.setOnClickListener {
                 viewModel.startTimer()
             }
+
             restartTimerButton.setOnClickListener {
                 viewModel.restartTimer()
+            }
+
+            timerEditor.setOnClickListener {
+                showTimerEditor()
             }
         }
 
@@ -151,5 +174,15 @@ class SessionFragment : Fragment() {
                 binding.doneButton.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun showTimerEditor() {
+        val action =
+                SessionFragmentDirections.actionSessionFragmentToTimerEditorDialogFragment(
+                        arguments?.get(
+                                "routineId"
+                        ) as Long,
+                )
+        findNavController().navigate(action)
     }
 }

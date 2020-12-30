@@ -10,6 +10,7 @@ import com.nazmar.musicgym.db.HistoryItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Long.min
 
 const val emptyTimeString = "0:00"
 
@@ -115,7 +116,7 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     val timeString: LiveData<String>
         get() = _timeString
 
-    private var timeLeft: Long? = null
+    var timeLeft: Long? = null
 
     private var _timerStatus = MutableLiveData(TimerState.STOPPED)
 
@@ -135,6 +136,7 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
                 timeLeft = null
             }
         }
+        timeLeft = timeLeft ?: currentExerciseDuration()
     }
 
     fun setUpTimer() {
@@ -185,7 +187,13 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     }
 
     fun timeToText(millisUntilFinished: Long): String {
-        return "${(millisUntilFinished / 60000) % 60}:" + "${(millisUntilFinished / 1000) % 60}".padStart(2, '0')
+        return "${millisUntilFinished / 60000}:" + "${(millisUntilFinished / 1000) % 60}".padStart(2, '0')
+    }
+
+    fun updateTimeLeft(newTime: Long) {
+        timeLeft = newTime
+        _timeString.value = timeToText(newTime)
+        createTimer()
     }
 }
 

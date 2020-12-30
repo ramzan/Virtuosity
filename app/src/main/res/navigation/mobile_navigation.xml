@@ -118,6 +118,17 @@
             <argument
                 android:name="routineId"
                 app:argType="long" />
+            <action
+                android:id="@+id/action_sessionFragment_to_timerEditorDialogFragment"
+                app:destination="@id/timerEditorDialog" />
         </fragment>
+        <dialog
+            android:id="@+id/timerEditorDialog"
+            android:name="com.nazmar.musicgym.practice.routine.list.TimerEditorDialogFragment"
+            android:label="TimerEditorDialogFragment" >
+            <argument
+                android:name="routineId"
+                app:argType="long" />
+        </dialog>
     </navigation>
 </navigation>
