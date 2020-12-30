@@ -167,9 +167,9 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
 
     fun restartTimer() {
         timer?.cancel()
-        createTimer()
-        timeLeft = currentExerciseDuration()
+        timeLeft = null
         _timeString.value = timeToText(currentExerciseDuration())
+        createTimer()
         if (timerStatus.value == TimerState.RUNNING) {
             startTimer()
         } else {
