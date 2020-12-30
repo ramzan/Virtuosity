@@ -82,8 +82,12 @@ class SessionFragment : Fragment() {
                         Toast.makeText(requireContext(), "Time up!", Toast.LENGTH_SHORT).show()
                         viewModel.onAlarmRung()
                     }
-                    TimerState.COMPLETED -> binding.pauseTimerButton.isEnabled = false
-                    TimerState.STOPPED -> binding.pauseTimerButton.isEnabled = true
+                    TimerState.COMPLETED -> {
+                        binding.pauseTimerButton.visibility = View.GONE
+                        binding.startTimerButton.visibility = View.VISIBLE
+                    }
+                    TimerState.STOPPED -> {
+                    }
                 }
             }
         }
@@ -114,6 +118,9 @@ class SessionFragment : Fragment() {
 
             startTimerButton.setOnClickListener {
                 viewModel.startTimer()
+            }
+            restartTimerButton.setOnClickListener {
+                viewModel.restartTimer()
             }
         }
 

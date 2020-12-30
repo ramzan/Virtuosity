@@ -2,7 +2,6 @@ package com.nazmar.musicgym.practice.session
 
 import android.app.Application
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -127,7 +126,7 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
         timer = object : CountDownTimer(timeLeft ?: currentExerciseDuration(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeft = millisUntilFinished
-                _timeString.value = "${(millisUntilFinished / 60000) % 60}:" + "${(millisUntilFinished / 1000) % 60}".padStart(2, '0')
+                _timeString.value = timeToText(millisUntilFinished)
             }
 
             override fun onFinish() {
@@ -139,41 +138,54 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     }
 
     fun setUpTimer() {
-        if (timerStatus.value == TimerState.STOPPED) {
+        if (timerStatus.value == TimerState.STOPPED && currentExerciseDuration() != 0L) {
             createTimer()
             startTimer()
         }
     }
 
     fun startTimer() {
-        if (timerStatus.value == TimerState.PAUSED) {
-            createTimer()
+        timer?.let {
+            it.start()
+            _timerStatus.value = TimerState.RUNNING
         }
-        timer?.start()
-        _timerStatus.value = TimerState.RUNNING
     }
 
     fun pauseTimer() {
         if (timerStatus.value != TimerState.FINISHED) {
             timer?.cancel()
-            timer = null
+            createTimer()
             _timerStatus.value = TimerState.PAUSED
         }
     }
 
     fun onAlarmRung() {
+        timer = null
+        timeLeft = null
         _timerStatus.value = TimerState.COMPLETED
     }
 
-    fun stopTimer() {
+    fun restartTimer() {
         timer?.cancel()
-        timer = null
-        _timerStatus.value = TimerState.STOPPED
+        createTimer()
+        timeLeft = currentExerciseDuration()
+        _timeString.value = timeToText(currentExerciseDuration())
+        if (timerStatus.value == TimerState.RUNNING) {
+            startTimer()
+        } else {
+            _timerStatus.value = TimerState.PAUSED
+        }
     }
 
     fun clearTimer() {
-        stopTimer()
+        timer?.cancel()
+        timer = null
+        _timerStatus.value = TimerState.STOPPED
         timeLeft = null
+    }
+
+    fun timeToText(millisUntilFinished: Long): String {
+        return "${(millisUntilFinished / 60000) % 60}:" + "${(millisUntilFinished / 1000) % 60}".padStart(2, '0')
     }
 }
 
