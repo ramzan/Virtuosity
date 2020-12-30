@@ -25,7 +25,8 @@ class DurationPickerDialogFragment : DialogFragment() {
         return TimeDurationPickerDialog(
                 requireContext(),
                 { _: TimeDurationPicker, l: Long ->
-                    viewModel.updateDuration(exerciseIndex, l / 1000 / 60, l / 1000 % 60)
+                    viewModel.updateDuration(exerciseIndex, l / 1000 / 60,
+                            (l / 1000 % 60).coerceAtMost(59))
 
                 },
                 viewModel.getItemDuration(exerciseIndex) * 1000,
