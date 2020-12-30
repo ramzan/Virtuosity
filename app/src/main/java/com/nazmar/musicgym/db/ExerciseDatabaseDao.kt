@@ -91,7 +91,7 @@ interface ExerciseDatabaseDao {
         JOIN exercise_table ON routine_exercise_table.exerciseId = exercise_table.id 
         LEFT OUTER JOIN history_table ON routine_exercise_table.exerciseId = history_table.exerciseId 
         WHERE routineId = :routineId 
-        GROUP BY routine_exercise_table.exerciseId
+        GROUP BY `order`
         ORDER BY `order`
         """)
     fun getSessionExercises(routineId: Long): LiveData<List<SessionExercise>>
