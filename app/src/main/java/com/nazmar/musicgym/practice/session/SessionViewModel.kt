@@ -5,14 +5,12 @@ import android.os.CountDownTimer
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.nazmar.musicgym.db.ExerciseDatabase
 import com.nazmar.musicgym.db.HistoryItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Long.min
-
-const val emptyTimeString = "0:00"
 
 enum class TimerState {
     STOPPED, // Timer has not been created
@@ -111,12 +109,14 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
 
     private var timer: CountDownTimer? = null
 
-    private var _timeString = MutableLiveData(emptyTimeString)
+    private var _timeLeft = MutableLiveData<Long>(null)
 
-    val timeString: LiveData<String>
-        get() = _timeString
+    val timeLeft: LiveData<Long>
+        get() = _timeLeft
 
-    var timeLeft: Long? = null
+    val timeString = Transformations.map(timeLeft) { time ->
+        (time ?: 0L).let { "${it / 60000}:" + "${(it / 1000) % 60}".padStart(2, '0') }
+    }
 
     private var _timerStatus = MutableLiveData(TimerState.STOPPED)
 
@@ -124,19 +124,17 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
         get() = _timerStatus
 
     private fun createTimer() {
-        timer = object : CountDownTimer(timeLeft ?: currentExerciseDuration(), 1000) {
+        timer = object : CountDownTimer(timeLeft.value ?: currentExerciseDuration(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                timeLeft = millisUntilFinished
-                _timeString.value = timeToText(millisUntilFinished)
+                _timeLeft.value = millisUntilFinished
             }
 
             override fun onFinish() {
-                _timeString.value = emptyTimeString
                 _timerStatus.value = TimerState.FINISHED
-                timeLeft = null
+                _timeLeft.value = null
             }
         }
-        timeLeft = timeLeft ?: currentExerciseDuration()
+        _timeLeft.value = timeLeft.value ?: currentExerciseDuration()
     }
 
     fun setUpTimer() {
@@ -163,19 +161,22 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
 
     fun onAlarmRung() {
         timer = null
-        timeLeft = null
+        _timeLeft.value = null
         _timerStatus.value = TimerState.COMPLETED
     }
 
     fun restartTimer() {
         timer?.cancel()
-        timeLeft = null
-        _timeString.value = timeToText(currentExerciseDuration())
-        createTimer()
-        if (timerStatus.value == TimerState.RUNNING) {
-            startTimer()
+        _timeLeft.value = null
+        if (currentExerciseDuration() != 0L) {
+            createTimer()
+            if (timerStatus.value == TimerState.RUNNING) {
+                startTimer()
+            } else {
+                _timerStatus.value = TimerState.PAUSED
+            }
         } else {
-            _timerStatus.value = TimerState.PAUSED
+            _timerStatus.value = TimerState.STOPPED
         }
     }
 
@@ -183,17 +184,13 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
         timer?.cancel()
         timer = null
         _timerStatus.value = TimerState.STOPPED
-        timeLeft = null
-    }
-
-    fun timeToText(millisUntilFinished: Long): String {
-        return "${millisUntilFinished / 60000}:" + "${(millisUntilFinished / 1000) % 60}".padStart(2, '0')
+        _timeLeft.value = null
     }
 
     fun updateTimeLeft(newTime: Long) {
-        timeLeft = newTime
-        _timeString.value = timeToText(newTime)
-        createTimer()
+        timer?.cancel()
+        _timeLeft.value = newTime
+        if (newTime != 0L) createTimer()
+
     }
 }
-

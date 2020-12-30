@@ -26,7 +26,7 @@ class TimerEditorDialogFragment : DialogFragment() {
                 { _: TimeDurationPicker, l: Long ->
                     viewModel.updateTimeLeft(l.coerceAtMost(5999000L))
                 },
-                viewModel.timeLeft ?: 0,
+                viewModel.timeLeft.value ?: 0,
                 TimeDurationPicker.MM_SS
         )
     }
