@@ -7,16 +7,14 @@ import android.view.inputmethod.InputMethodManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 fun Activity.hideBottomNavBar() {
-    val bar = this.findViewById<BottomNavigationView>(R.id.nav_view)
-    if (bar != null) {
-        bar.visibility = View.GONE
+    this.findViewById<BottomNavigationView>(R.id.nav_view)?.let {
+        it.visibility = View.GONE
     }
 }
 
 fun Activity.showBottomNavBar() {
-    val bar = this.findViewById<BottomNavigationView>(R.id.nav_view)
-    if (bar != null) {
-        bar.visibility = View.VISIBLE
+    this.findViewById<BottomNavigationView>(R.id.nav_view)?.let {
+        it.visibility = View.VISIBLE
     }
 }
 
