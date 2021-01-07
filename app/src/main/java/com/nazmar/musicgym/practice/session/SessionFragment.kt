@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.text.Editable
@@ -140,7 +141,11 @@ class SessionFragment : Fragment() {
         super.onStart()
         // Bind to TimerService
         Intent(requireContext(), TimerService::class.java).also { intent ->
-            requireContext().startService(intent)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                requireContext().startForegroundService(intent)
+            } else {
+                requireContext().startService(intent)
+            }
             requireContext().bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
     }
