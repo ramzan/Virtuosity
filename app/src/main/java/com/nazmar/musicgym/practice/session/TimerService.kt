@@ -74,10 +74,7 @@ class TimerService : Service() {
             get() = _timeLeft
 
         val timeString = Transformations.map(timeLeft) { time ->
-            (time ?: 0L).let { "${it / 60000}:" + "${(it / 1000) % 60}".padStart(2, '0') }.also {
-                notification.setContentText("Time remaining: $it")
-                updateTimerNotification()
-            }
+            timeToString((time ?: 0L))
         }
 
         private var _timerStatus = MutableLiveData(TimerState.STOPPED)
@@ -91,10 +88,16 @@ class TimerService : Service() {
 
         private var exerciseIndex = -1
 
+        private fun timeToString(time: Long): String {
+            return "${time / 60000}:" + "${(time / 1000) % 60}".padStart(2, '0')
+        }
+
         private fun createTimer() {
             timer = object : CountDownTimer(timeLeft.value ?: currentExerciseDuration, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     _timeLeft.value = millisUntilFinished
+                    notification.setContentText("Time remaining: ${timeToString(millisUntilFinished)}")
+                    updateTimerNotification()
                 }
 
                 override fun onFinish() {
