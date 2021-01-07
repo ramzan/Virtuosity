@@ -1,6 +1,7 @@
 package com.nazmar.musicgym.practice.session
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -11,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.nazmar.musicgym.MainActivity
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.TimerState
 
@@ -30,10 +32,18 @@ class TimerService : Service() {
         mediaPlayer = MediaPlayer.create(this, sound)
         notificationManager = application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        val contentPendingIntent = PendingIntent.getActivity(
+                this.applicationContext,
+                TIMER_NOTIFICATION_ID,
+                Intent(this.applicationContext, MainActivity::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         notification = NotificationCompat.Builder(this, application.getString(R.string.timer_notification_channel_id))
                 .setTicker(application.getString(R.string.app_name))
                 .setSmallIcon(R.drawable.ic_baseline_music_note_24)
                 .setOngoing(true)
+                .setContentIntent(contentPendingIntent)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
