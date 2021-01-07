@@ -1,5 +1,8 @@
 package com.nazmar.musicgym
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -15,5 +18,30 @@ class MainActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment)
         navView.setupWithNavController(navController)
+
+        createChannel(
+            getString(R.string.timer_notification_channel_id),
+            getString(R.string.timer_notification_channel_name)
+        )
+        createChannel(
+            getString(R.string.metronome_notification_channel_id),
+            getString(R.string.metronome_notification_channel_name)
+        )
+    }
+
+    private fun createChannel(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager = this.getSystemService(NotificationManager::class.java)
+            NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                setShowBadge(false)
+                description = channelName
+            }.also {
+                notificationManager.createNotificationChannel(it)
+            }
+        }
     }
 }
