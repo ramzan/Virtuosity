@@ -1,24 +1,14 @@
 package com.nazmar.musicgym.practice.session
 
 import android.app.Application
-import android.os.CountDownTimer
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.nazmar.musicgym.db.ExerciseDatabase
 import com.nazmar.musicgym.db.HistoryItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-enum class TimerState {
-    STOPPED, // Timer has not been created
-    RUNNING, // Timer is counting down
-    PAUSED, // Pause button pressed, time still remaining
-    FINISHED, // Timer has reached 0, sound the alarm
-    COMPLETED // Timer at 0 and alarm has been rung
-}
 
 class SessionViewModel(routineId: Long, application: Application) : AndroidViewModel(application) {
 
@@ -46,12 +36,10 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     }
 
     fun nextExercise() {
-        clearTimer()
         _currentIndex.value = _currentIndex.value!! + 1
     }
 
     fun previousExercise() {
-        clearTimer()
         _currentIndex.value = _currentIndex.value!! - 1
     }
 
@@ -101,96 +89,22 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
         }
     }
 
-    private fun currentExerciseDuration(): Long {
-        return exercises.value!![currentIndex.value!!].duration * 1000
+    fun currentExerciseDuration(): Long {
+        return (currentIndex.value?.let { exercises.value?.get(it)?.duration } ?: 0L) * 1000
     }
 
-    /************************** Timer **********************************/
+    // Timer editor
 
-    private var timer: CountDownTimer? = null
+    private var _editorTIme = MutableLiveData<Long?>(null)
 
-    private var _timeLeft = MutableLiveData<Long>(null)
+    val editorTime: LiveData<Long?>
+        get() = _editorTIme
 
-    val timeLeft: LiveData<Long>
-        get() = _timeLeft
-
-    val timeString = Transformations.map(timeLeft) { time ->
-        (time ?: 0L).let { "${it / 60000}:" + "${(it / 1000) % 60}".padStart(2, '0') }
+    fun updateEditorTIme(time: Long) {
+        _editorTIme.value = time
     }
 
-    private var _timerStatus = MutableLiveData(TimerState.STOPPED)
-
-    val timerStatus: LiveData<TimerState>
-        get() = _timerStatus
-
-    private fun createTimer() {
-        timer = object : CountDownTimer(timeLeft.value ?: currentExerciseDuration(), 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                _timeLeft.value = millisUntilFinished
-            }
-
-            override fun onFinish() {
-                _timerStatus.value = TimerState.FINISHED
-                _timeLeft.value = null
-            }
-        }
-        _timeLeft.value = timeLeft.value ?: currentExerciseDuration()
-    }
-
-    fun setUpTimer() {
-        if (timerStatus.value == TimerState.STOPPED && currentExerciseDuration() != 0L) {
-            createTimer()
-            startTimer()
-        }
-    }
-
-    fun startTimer() {
-        timer?.let {
-            it.start()
-            _timerStatus.value = TimerState.RUNNING
-        }
-    }
-
-    fun pauseTimer() {
-        if (timerStatus.value != TimerState.FINISHED) {
-            timer?.cancel()
-            createTimer()
-            _timerStatus.value = TimerState.PAUSED
-        }
-    }
-
-    fun onAlarmRung() {
-        timer = null
-        _timeLeft.value = null
-        _timerStatus.value = TimerState.COMPLETED
-    }
-
-    fun restartTimer() {
-        timer?.cancel()
-        _timeLeft.value = null
-        if (currentExerciseDuration() != 0L) {
-            createTimer()
-            if (timerStatus.value == TimerState.RUNNING) {
-                startTimer()
-            } else {
-                _timerStatus.value = TimerState.PAUSED
-            }
-        } else {
-            _timerStatus.value = TimerState.STOPPED
-        }
-    }
-
-    fun clearTimer() {
-        timer?.cancel()
-        timer = null
-        _timerStatus.value = TimerState.STOPPED
-        _timeLeft.value = null
-    }
-
-    fun updateTimeLeft(newTime: Long) {
-        timer?.cancel()
-        _timeLeft.value = newTime
-        if (newTime != 0L) createTimer()
-
+    fun clearEditorTime() {
+        _editorTIme.value = null
     }
 }

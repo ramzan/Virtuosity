@@ -30,4 +30,8 @@
     <string name="start_timer">Start timer</string>
     <string name="pause_timer">Pause timer</string>
     <string name="restart_timer">Restart timer</string>
+    <string name="timer_notification_channel_name">Timer</string>
+    <string name="metronome_notification_channel_name">Metronome</string>
+    <string name="timer_notification_channel_id">timer_channel</string>
+    <string name="metronome_notification_channel_id">metronome_channel</string>
 </resources>

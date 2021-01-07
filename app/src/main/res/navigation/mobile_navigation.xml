@@ -129,6 +129,9 @@
             <argument
                 android:name="routineId"
                 app:argType="long" />
+            <argument
+                android:name="timeLeft"
+                app:argType="long" />
         </dialog>
     </navigation>
 </navigation>
