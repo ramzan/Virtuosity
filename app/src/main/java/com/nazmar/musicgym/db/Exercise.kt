@@ -11,4 +11,8 @@ data class Exercise(
         var name: String
 ) {
     constructor(name: String) : this(0, name)
+
+    override fun toString(): String {
+        return this.name
+    }
 }

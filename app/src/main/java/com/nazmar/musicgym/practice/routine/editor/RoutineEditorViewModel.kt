@@ -4,10 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.nazmar.musicgym.db.ExerciseDatabase
-import com.nazmar.musicgym.db.Routine
-import com.nazmar.musicgym.db.RoutineExercise
-import com.nazmar.musicgym.db.RoutineExerciseName
+import com.nazmar.musicgym.db.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -127,10 +124,8 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
         }
     }
 
-    fun addExercise(index: Int) {
-        exercises.value!![index].apply {
-            currentExercises.add(RoutineExerciseName(this.id, this.name, 5, 0))
-        }
+    fun addExercise(exercise: Exercise) {
+            currentExercises.add(RoutineExerciseName(exercise.id, exercise.name, 5, 0))
     }
 
     fun getItemDuration(index: Int): Long {

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.*
 import com.nazmar.musicgym.databinding.FragmentRoutineEditorBinding
+import com.nazmar.musicgym.db.Exercise
 
 
 class RoutineEditorFragment : Fragment() {
@@ -129,25 +130,24 @@ class RoutineEditorFragment : Fragment() {
                 }
             } else {
                 saveButton.isVisible = true
-                // Show the keyboard.
                 imm.showKeyboard()
             }
 
             exerciseSpinner.apply {
                 onItemClickListener = AdapterView.OnItemClickListener { _, _, pos, _ ->
-                    viewModel.addExercise(pos)
+                    viewModel.addExercise(this.adapter.getItem(pos) as Exercise)
                     binding.routineExerciseList.adapter?.notifyItemInserted(viewModel.currentExercises.size)
                     setText("")
                 }
             }
 
-            // Populate tag autocomplete with all preexisting tags
+            // Populate exercise autocomplete
             viewModel.exercises.observe(viewLifecycleOwner, {
                 exerciseSpinner.setAdapter(
                         ArrayAdapter(
                                 requireContext(),
                                 R.layout.list_item_exercise_spinner,
-                                it.map { e -> e.name }
+                                it
                         )
                 )
             })
