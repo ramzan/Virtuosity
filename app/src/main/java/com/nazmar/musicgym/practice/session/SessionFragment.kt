@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -44,7 +45,8 @@ class SessionFragment : Fragment() {
             mTimer = (service as TimerService.TimerBinder).getTimer()
             mBound = true
 
-            mTimer.setUpTimer(viewModel.currentIndex.value ?: -1, viewModel.currentExerciseDuration(), viewModel.getCurrentExerciseName())
+            mTimer.setUpTimer(viewModel.currentIndex.value
+                    ?: -1, viewModel.currentExerciseDuration(), viewModel.getCurrentExerciseName())
 
             mTimer.timeString.observe(viewLifecycleOwner) {
                 binding.timer.text = it
@@ -86,7 +88,7 @@ class SessionFragment : Fragment() {
                 }
             }
 
-            viewModel.editorTime.observe(viewLifecycleOwner)  {
+            viewModel.editorTime.observe(viewLifecycleOwner) {
                 it?.let {
                     mTimer.updateTimeLeft(it)
                     viewModel.clearEditorTime()
@@ -136,7 +138,6 @@ class SessionFragment : Fragment() {
         }
     }
 
-
     override fun onStart() {
         super.onStart()
         // Bind to TimerService
@@ -156,7 +157,13 @@ class SessionFragment : Fragment() {
         mBound = false
     }
 
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+                object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() = goBack()
+                })
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -202,7 +209,7 @@ class SessionFragment : Fragment() {
     private fun goBack() {
         requireContext().stopService(Intent(requireContext(), TimerService::class.java))
         imm.hideKeyboard(requireView().windowToken)
-        requireActivity().onBackPressed()
+        findNavController().popBackStack()
         requireActivity().showBottomNavBar()
     }
 
