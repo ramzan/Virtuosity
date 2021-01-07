@@ -14,6 +14,8 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
 
     private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
 
+    val session = dao.getRoutine(routineId)
+
     val exercises = dao.getSessionExercises(routineId)
 
     private var newBpms = mutableListOf<String>()

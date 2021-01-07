@@ -185,6 +185,14 @@ class SessionFragment : Fragment() {
             }
         }
 
+        viewModel.session.observe(viewLifecycleOwner) {
+            binding.sessionToolbar.title = it?.name ?: ""
+        }
+
+        binding.sessionToolbar.setNavigationOnClickListener {
+            goBack()
+        }
+
         viewModel.currentIndex.observe(viewLifecycleOwner) {
             if (it > -1) {
                 binding.sessionCurrentExerciseName.text = viewModel.getCurrentExerciseName()
