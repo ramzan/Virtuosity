@@ -16,6 +16,7 @@ import androidx.lifecycle.Transformations
 import com.nazmar.musicgym.MainActivity
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.TimerState
+import java.text.SimpleDateFormat
 import java.util.*
 import androidx.media.app.NotificationCompat as MediaNotificationCompat
 
@@ -159,6 +160,8 @@ class TimerService : Service() {
 
         private var notification = runningNotification
 
+        private val timeFormatter = SimpleDateFormat("mm:ss", Locale.US)
+
         private fun updateTimerNotification() {
             notification.setContentTitle(currentExerciseName)
             notification.setContentText("Time remaining: ${timeString.value}")
@@ -194,7 +197,7 @@ class TimerService : Service() {
         private var exerciseIndex = -1
 
         private fun timeToString(time: Long): String {
-            return "${time / 60000}:" + "${(time / 1000) % 60}".padStart(2, '0')
+            return timeFormatter.format(time)
         }
 
         private fun createTimer() {
