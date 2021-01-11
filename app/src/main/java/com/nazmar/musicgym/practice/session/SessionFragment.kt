@@ -42,7 +42,8 @@ class SessionFragment : Fragment() {
     private val connection = object : ServiceConnection {
 
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            mTimer = (service as TimerService.TimerBinder).getTimer()
+            val timerService = service as TimerService.TimerBinder
+            mTimer = timerService.getTimer()
             mBound = true
 
             mTimer.setUpTimer(viewModel.currentIndex.value
@@ -85,6 +86,13 @@ class SessionFragment : Fragment() {
                             binding.timer.visibility = View.GONE
                         }
                     }
+                }
+            }
+
+            viewModel.session.observe(viewLifecycleOwner) {
+                it?.name?.let {routineName ->
+                    binding.sessionToolbar.title = routineName
+                    timerService.updateRoutineName(routineName)
                 }
             }
 
@@ -183,10 +191,6 @@ class SessionFragment : Fragment() {
                 viewModel.createBpmList()
                 viewModel.nextExercise()
             }
-        }
-
-        viewModel.session.observe(viewLifecycleOwner) {
-            binding.sessionToolbar.title = it?.name ?: ""
         }
 
         binding.sessionToolbar.setNavigationOnClickListener {

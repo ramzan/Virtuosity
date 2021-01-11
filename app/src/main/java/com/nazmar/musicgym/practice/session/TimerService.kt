@@ -93,7 +93,6 @@ class TimerService : Service() {
                 .setSmallIcon(R.drawable.ic_baseline_music_note_24)
                 .setOngoing(true)
                 .setContentIntent(contentPendingIntent)
-                .setSubText("Routine Name")
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .addAction(pauseAction)
                 .addAction(restartAction)
@@ -106,7 +105,6 @@ class TimerService : Service() {
                 .setSmallIcon(R.drawable.ic_baseline_music_note_24)
                 .setOngoing(true)
                 .setContentIntent(contentPendingIntent)
-                .setSubText("Routine Name")
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .addAction(resumeAction)
                 .addAction(restartAction)
@@ -151,6 +149,10 @@ class TimerService : Service() {
 
     inner class TimerBinder : Binder() {
         fun getTimer(): Timer = this@TimerService.timer
+        fun updateRoutineName(name: String) {
+            runningNotification.setSubText(name)
+            pausedNotification.setSubText(name)
+        }
     }
 
     inner class Timer {
