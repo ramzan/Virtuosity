@@ -12,7 +12,6 @@ import android.os.*
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.nazmar.musicgym.MainActivity
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.TimerState
@@ -202,23 +201,26 @@ class TimerService : Service() {
         }
 
         private fun createTimer() {
-            timer = object : CountDownTimer(timeLeft.value ?: currentExerciseDuration, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    _timeLeft.value = millisUntilFinished
-                    _timeString.value = timeToString(millisUntilFinished)
-                    updateTimerNotification()
-                }
+            with(timeLeft.value ?: currentExerciseDuration) {
+                timer = object : CountDownTimer(this, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        _timeLeft.value = millisUntilFinished
+                        _timeString.value = timeToString(millisUntilFinished)
+                        updateTimerNotification()
+                    }
 
-                override fun onFinish() {
-                    timer = null
-                    _timeLeft.value = null
-                    notification = pausedNotification
-                    showTimeUpNotification()
-                    mediaPlayer.start()
-                    _timerStatus.value = TimerState.COMPLETED
+                    override fun onFinish() {
+                        timer = null
+                        _timeLeft.value = null
+                        notification = pausedNotification
+                        showTimeUpNotification()
+                        mediaPlayer.start()
+                        _timerStatus.value = TimerState.COMPLETED
+                    }
                 }
+                _timeString.value = timeToString(this)
+                _timeLeft.value = this
             }
-            _timeLeft.value = timeLeft.value ?: currentExerciseDuration
             updateTimerNotification()
         }
 
@@ -259,7 +261,6 @@ class TimerService : Service() {
                     startTimer()
                 } else {
                     _timerStatus.value = TimerState.PAUSED
-                    updateTimerNotification()
                 }
             } else {
                 _timerStatus.value = TimerState.STOPPED
@@ -271,6 +272,9 @@ class TimerService : Service() {
             timer = null
             _timerStatus.value = TimerState.STOPPED
             _timeLeft.value = null
+            _timeString.value = timeToString(0)
+            notification = pausedNotification
+            updateTimerNotification()
         }
 
         fun updateTimeLeft(newTime: Long) {
