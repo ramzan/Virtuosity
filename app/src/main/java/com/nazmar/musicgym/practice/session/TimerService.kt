@@ -181,9 +181,10 @@ class TimerService : Service() {
         val timeLeft: LiveData<Long>
             get() = _timeLeft
 
-        val timeString = Transformations.map(timeLeft) { time ->
-            timeToString((time ?: 0L))
-        }
+        private val _timeString = MutableLiveData("")
+
+        val timeString: LiveData<String>
+            get() = _timeString
 
         private var _timerStatus = MutableLiveData(TimerState.STOPPED)
 
@@ -204,6 +205,7 @@ class TimerService : Service() {
             timer = object : CountDownTimer(timeLeft.value ?: currentExerciseDuration, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     _timeLeft.value = millisUntilFinished
+                    _timeString.value = timeToString(millisUntilFinished)
                     updateTimerNotification()
                 }
 
