@@ -182,12 +182,9 @@ class TimerService : Service() {
                     }
 
                     override fun onFinish() {
-                        timer = null
-                        _timeLeft.value = null
-                        notification = pausedNotification
+                        clearTimer()
                         showTimeUpNotification()
                         mediaPlayer.start()
-                        _timerStatus.value = TimerState.COMPLETED
                     }
                 }
                 _timeString.value = timeToString(this)

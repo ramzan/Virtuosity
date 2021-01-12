@@ -14,7 +14,6 @@ enum class TimerState {
     STOPPED, // Timer has not been created
     RUNNING, // Timer is counting down
     PAUSED, // Pause button pressed, time still remaining
-    COMPLETED // Timer at 0 and alarm has been rung
 }
 
 fun Activity.hideBottomNavBar() {
