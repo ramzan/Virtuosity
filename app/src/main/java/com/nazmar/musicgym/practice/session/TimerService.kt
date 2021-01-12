@@ -12,15 +12,14 @@ import android.os.*
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.nazmar.musicgym.MainActivity
 import com.nazmar.musicgym.R
+import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.TimerState
+import com.nazmar.musicgym.getTimerNotificationBuilder
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.media.app.NotificationCompat as MediaNotificationCompat
 
 
-const val TIMER_NOTIFICATION_ID = 0
 const val RESUME_TIMER = "resume_timer"
 const val PAUSE_TIMER = "pause_timer"
 const val RESTART_TIMER = "restart_timer"
@@ -46,13 +45,6 @@ class TimerService : Service() {
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         mediaPlayer = MediaPlayer.create(this, sound)
         notificationManager = application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val contentPendingIntent: PendingIntent = PendingIntent.getActivity(
-                this,
-                TIMER_NOTIFICATION_ID,
-                Intent(this, MainActivity::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
 
         val restartPendingIntent: PendingIntent = PendingIntent.getBroadcast(
                 this,
@@ -88,29 +80,9 @@ class TimerService : Service() {
                 getString(R.string.start_timer),
                 resumePendingIntent).build()
 
-        runningNotification = NotificationCompat.Builder(this, application.getString(R.string.timer_notification_channel_id))
-                .setTicker(application.getString(R.string.app_name))
-                .setSmallIcon(R.drawable.ic_baseline_music_note_24)
-                .setOngoing(true)
-                .setContentIntent(contentPendingIntent)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .addAction(pauseAction)
-                .addAction(restartAction)
-                .setStyle(MediaNotificationCompat.MediaStyle()
-                        .setShowActionsInCompactView(0, 1)
-                )
+        runningNotification = getTimerNotificationBuilder(this, pauseAction, restartAction)
 
-        pausedNotification = NotificationCompat.Builder(this, application.getString(R.string.timer_notification_channel_id))
-                .setTicker(application.getString(R.string.app_name))
-                .setSmallIcon(R.drawable.ic_baseline_music_note_24)
-                .setOngoing(true)
-                .setContentIntent(contentPendingIntent)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .addAction(resumeAction)
-                .addAction(restartAction)
-                .setStyle(MediaNotificationCompat.MediaStyle()
-                        .setShowActionsInCompactView(0, 1)
-                )
+        pausedNotification = getTimerNotificationBuilder(this, resumeAction, restartAction)
 
         timer = Timer()
         timerReceiver = TimerReceiver(timer)
