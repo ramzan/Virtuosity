@@ -3,6 +3,7 @@ package com.nazmar.musicgym
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -71,4 +72,8 @@ fun getTimerNotificationBuilder(
             .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
                     .setShowActionsInCompactView(0, 1)
             )
+}
+
+fun isOreoOrAbove(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 }

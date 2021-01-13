@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.text.Editable
@@ -83,7 +82,7 @@ class SessionFragment : Fragment() {
             }
 
             viewModel.session.observe(viewLifecycleOwner) {
-                it?.name?.let {routineName ->
+                it?.name?.let { routineName ->
                     binding.sessionToolbar.title = routineName
                     timerService.updateRoutineName(routineName)
                 }
@@ -141,9 +140,8 @@ class SessionFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        // Bind to TimerService
         Intent(requireContext(), TimerService::class.java).also { intent ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (isOreoOrAbove()) {
                 requireContext().startForegroundService(intent)
             } else {
                 requireContext().startService(intent)
