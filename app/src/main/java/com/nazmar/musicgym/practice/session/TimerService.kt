@@ -3,7 +3,6 @@ package com.nazmar.musicgym.practice.session
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.MediaPlayer
@@ -44,7 +43,7 @@ class TimerService : Service() {
 
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         mediaPlayer = MediaPlayer.create(this, sound)
-        notificationManager = application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager = application.getSystemService(NotificationManager::class.java)
 
         val restartPendingIntent: PendingIntent = PendingIntent.getBroadcast(
                 this,
@@ -104,7 +103,7 @@ class TimerService : Service() {
         super.onDestroy()
         unregisterReceiver(timerReceiver)
         timer.clearTimer()
-        notificationManager.cancelAll()
+        notificationManager.cancel(TIMER_NOTIFICATION_ID)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
