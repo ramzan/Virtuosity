@@ -109,7 +109,6 @@ class TimerService : Service() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        unregisterReceiver(timerReceiver)
         stopSelf()
     }
 
