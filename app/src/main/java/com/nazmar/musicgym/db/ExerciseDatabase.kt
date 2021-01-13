@@ -108,11 +108,11 @@ abstract class ExerciseDatabase : RoomDatabase() {
         )
 
         val PREPOPULATE_ROUTINE_EXERCISES = listOf(
-                RoutineExercise(1, 1, 1, 81),
-                RoutineExercise(1, 2, 2, 72),
-                RoutineExercise(1, 3, 3, 63),
-                RoutineExercise(1, 4, 10, 54),
-                RoutineExercise(1, 5, 2, 45)
+                RoutineExercise(1, 1, 1, 81000),
+                RoutineExercise(1, 2, 2, 72000),
+                RoutineExercise(1, 3, 3, 63000),
+                RoutineExercise(1, 4, 10, 54000),
+                RoutineExercise(1, 5, 2, 45000)
         )
     }
 }

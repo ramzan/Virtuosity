@@ -79,7 +79,7 @@ interface ExerciseDatabaseDao {
     fun getRoutineExercises(routineId: Long): List<RoutineExercise>
 
     @Query("""
-        SELECT exerciseId, name, duration / 60 as minutes, duration % 60 AS seconds 
+        SELECT exerciseId, name, duration
         FROM routine_exercise_table JOIN exercise_table ON exerciseId = exercise_table.id 
         WHERE routineId = :routineId ORDER BY `order`
         """)

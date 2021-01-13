@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.ListItemRoutineExerciseBinding
 import com.nazmar.musicgym.db.RoutineExerciseName
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class RoutineExerciseAdapter(private val onClickListener: (exerciseIndex: Int, duration: Long) -> Unit) :
@@ -20,16 +22,16 @@ class RoutineExerciseAdapter(private val onClickListener: (exerciseIndex: Int, d
         return ViewHolder.from(parent)
     }
 
-
     class ViewHolder private constructor(private val binding: ListItemRoutineExerciseBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
+
         fun bind(item: RoutineExerciseName, onClickListener: (exerciseIndex: Int, duration: Long) -> Unit) {
             binding.exerciseName.text = item.name
-            val duration = "${item.minutes}:${item.seconds.toString().padStart(2, '0')}"
+            val duration = timeFormatter.format(item.duration)
             binding.duration.text = duration
             binding.duration.setOnClickListener {
-                onClickListener(bindingAdapterPosition, item.getDuration())
+                onClickListener(bindingAdapterPosition, item.duration)
             }
         }
 
@@ -42,6 +44,8 @@ class RoutineExerciseAdapter(private val onClickListener: (exerciseIndex: Int, d
 
                 return ViewHolder(binding)
             }
+
+            val timeFormatter = SimpleDateFormat("mm:ss", Locale.US)
         }
     }
 }
@@ -51,7 +55,7 @@ class RoutineDiffCallback : DiffUtil.ItemCallback<RoutineExerciseName>() {
             oldItem: RoutineExerciseName,
             newItem: RoutineExerciseName
     ): Boolean {
-        return oldItem.name == newItem.name && oldItem.getDuration() == newItem.getDuration()
+        return oldItem.name == newItem.name && oldItem.duration == newItem.duration
     }
 
     override fun areContentsTheSame(

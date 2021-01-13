@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.nazmar.musicgym.DEFAULT_TIMER_DURATION
 import com.nazmar.musicgym.db.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,7 +63,7 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
                                     routineId,
                                     i + 1,
                                     updatedExercise.exerciseId,
-                                    updatedExercise.getDuration()
+                                    updatedExercise.duration
                             )
                     )
                 }
@@ -73,7 +74,7 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
                                     routineId,
                                     i + 1,
                                     newExercise.exerciseId,
-                                    newExercise.getDuration()
+                                    newExercise.duration
                             )
                     )
                 }
@@ -85,7 +86,7 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
                                     routineId,
                                     i + 1,
                                     updatedExercise.exerciseId,
-                                    updatedExercise.getDuration()
+                                    updatedExercise.duration
                             )
                     )
                 }
@@ -102,7 +103,7 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
             var order = 1
 
             dao.insertRoutineExercises(currentExercises.map {
-                RoutineExercise(newRoutineId, order++, it.exerciseId, it.getDuration())
+                RoutineExercise(newRoutineId, order++, it.exerciseId, it.duration)
             })
         }
     }
@@ -116,19 +117,18 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
         _currentExercises.removeAt(index)
     }
 
-    fun updateDuration(exerciseIndex: Int, minutes: Long, seconds: Long) {
+    fun updateDuration(exerciseIndex: Int, newDuration: Long) {
         with(currentExercises[exerciseIndex]) {
-            this.minutes = minutes
-            this.seconds = seconds
+            this.duration = newDuration
             _updatedIndex.value = exerciseIndex
         }
     }
 
     fun addExercise(exercise: Exercise) {
-            currentExercises.add(RoutineExerciseName(exercise.id, exercise.name, 5, 0))
+            currentExercises.add(RoutineExerciseName(exercise.id, exercise.name, DEFAULT_TIMER_DURATION))
     }
 
     fun getItemDuration(index: Int): Long {
-        return currentExercises[index].getDuration()
+        return currentExercises[index].duration
     }
 }

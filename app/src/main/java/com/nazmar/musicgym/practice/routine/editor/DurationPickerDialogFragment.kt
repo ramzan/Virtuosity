@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.navGraphViewModels
+import com.nazmar.musicgym.MAX_TIMER_DURATION
 import com.nazmar.musicgym.R
 import mobi.upod.timedurationpicker.TimeDurationPicker
 import mobi.upod.timedurationpicker.TimeDurationPickerDialog
@@ -25,11 +26,10 @@ class DurationPickerDialogFragment : DialogFragment() {
         return TimeDurationPickerDialog(
                 requireContext(),
                 { _: TimeDurationPicker, l: Long ->
-                    viewModel.updateDuration(exerciseIndex, l / 1000 / 60,
-                            (l / 1000 % 60).coerceAtMost(59))
+                    viewModel.updateDuration(exerciseIndex, l.coerceAtMost(MAX_TIMER_DURATION))
 
                 },
-                viewModel.getItemDuration(exerciseIndex) * 1000,
+                viewModel.getItemDuration(exerciseIndex),
                 TimeDurationPicker.MM_SS
         )
     }

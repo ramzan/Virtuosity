@@ -16,6 +16,9 @@ enum class TimerState {
     PAUSED, // Pause button pressed, time still remaining
 }
 
+const val MAX_TIMER_DURATION = 5999000L
+const val DEFAULT_TIMER_DURATION = 300000L
+
 fun Activity.hideBottomNavBar() {
     this.findViewById<BottomNavigationView>(R.id.nav_view)?.let {
         it.visibility = View.GONE

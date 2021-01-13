@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.navGraphViewModels
+import com.nazmar.musicgym.MAX_TIMER_DURATION
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.practice.session.SessionViewModel
 import com.nazmar.musicgym.practice.session.SessionViewModelFactory
@@ -24,7 +25,7 @@ class TimerEditorDialogFragment : DialogFragment() {
 
         return TimeDurationPickerDialog(requireContext(),
                 { _: TimeDurationPicker, l: Long ->
-                    viewModel.updateEditorTIme(l.coerceAtMost(5999000L))
+                    viewModel.updateEditorTime(l.coerceAtMost(MAX_TIMER_DURATION))
                 },
                 arguments?.getLong("timeLeft") ?: 0L,
                 TimeDurationPicker.MM_SS

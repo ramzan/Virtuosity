@@ -33,18 +33,13 @@ data class RoutineExercise(
         val duration: Long
 )
 
-
 data class RoutineExerciseName(
         val exerciseId: Long,
 
         val name: String,
 
-        var minutes: Long,
-
-        var seconds: Long
-) {
-    fun getDuration() = this.minutes * 60 + this.seconds
-}
+        var duration: Long
+)
 
 data class SessionExercise(
         val exerciseId: Long,

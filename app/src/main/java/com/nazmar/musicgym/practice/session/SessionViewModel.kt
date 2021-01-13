@@ -92,21 +92,21 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     }
 
     fun currentExerciseDuration(): Long {
-        return (currentIndex.value?.let { exercises.value?.get(it)?.duration } ?: 0L) * 1000
+        return (currentIndex.value?.let { exercises.value?.get(it)?.duration } ?: 0L)
     }
 
     // Timer editor
 
-    private var _editorTIme = MutableLiveData<Long?>(null)
+    private var _editorTime = MutableLiveData<Long?>(null)
 
     val editorTime: LiveData<Long?>
-        get() = _editorTIme
+        get() = _editorTime
 
-    fun updateEditorTIme(time: Long) {
-        _editorTIme.value = time
+    fun updateEditorTime(time: Long) {
+        _editorTime.value = time
     }
 
     fun clearEditorTime() {
-        _editorTIme.value = null
+        _editorTime.value = null
     }
 }
