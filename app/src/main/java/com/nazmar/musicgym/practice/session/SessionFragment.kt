@@ -173,7 +173,7 @@ class SessionFragment : Fragment() {
 
         requireActivity().hideBottomNavBar()
 
-        imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm = requireActivity().getInputMethodManager()
 
         _binding = FragmentSessionBinding.inflate(inflater)
 

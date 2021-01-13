@@ -1,6 +1,5 @@
 package com.nazmar.musicgym.practice.routine.editor
 
-import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -43,7 +42,7 @@ class RoutineEditorFragment : Fragment() {
 
         requireActivity().hideBottomNavBar()
 
-        imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm = requireActivity().getInputMethodManager()
 
         _binding = FragmentRoutineEditorBinding.inflate(inflater)
 

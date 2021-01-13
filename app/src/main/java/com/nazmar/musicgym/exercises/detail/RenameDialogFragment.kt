@@ -2,16 +2,15 @@ package com.nazmar.musicgym.exercises.detail
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
+import com.nazmar.musicgym.getInputMethodManager
 import com.nazmar.musicgym.showKeyboard
 
 class RenameDialogFragment : DialogFragment() {
@@ -54,8 +53,7 @@ class RenameDialogFragment : DialogFragment() {
         })
 
         dialog.setOnShowListener {
-            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showKeyboard()
+            requireActivity().getInputMethodManager().showKeyboard()
             text.requestFocus()
             text.setSelection(text.text.length)
         }

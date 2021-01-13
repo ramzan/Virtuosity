@@ -77,3 +77,7 @@ fun getTimerNotificationBuilder(
 fun isOreoOrAbove(): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 }
+
+fun Activity.getInputMethodManager(): InputMethodManager {
+    return this.getSystemService(InputMethodManager::class.java)
+}
