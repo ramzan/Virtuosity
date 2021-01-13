@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 
-class TimerReceiver(private val timer: TimerService.Timer) : BroadcastReceiver() {
+class TimerReceiver(private val timer: Timer) : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             RESUME_TIMER -> timer.startTimer()

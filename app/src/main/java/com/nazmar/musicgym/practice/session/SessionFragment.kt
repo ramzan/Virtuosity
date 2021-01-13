@@ -35,7 +35,7 @@ class SessionFragment : Fragment() {
 
     private lateinit var imm: InputMethodManager
 
-    private lateinit var mTimer: TimerService.Timer
+    private lateinit var mTimer: Timer
     private var mBound: Boolean = false
 
     private val connection = object : ServiceConnection {
