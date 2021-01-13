@@ -71,8 +71,6 @@
         android:id="@+id/routine_exercise_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="0dp"
-        android:paddingTop="?attr/actionBarSize"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/list_item_routine_exercise" />
 

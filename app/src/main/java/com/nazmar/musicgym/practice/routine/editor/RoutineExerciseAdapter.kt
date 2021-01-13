@@ -29,7 +29,7 @@ class RoutineExerciseAdapter(private val onClickListener: (exerciseIndex: Int, d
         fun bind(item: RoutineExerciseName, onClickListener: (exerciseIndex: Int, duration: Long) -> Unit) {
             binding.exerciseName.text = item.name
             val duration = timeFormatter.format(item.duration)
-            binding.duration.text = duration
+            binding.duration.setText(duration.toString())
             binding.duration.setOnClickListener {
                 onClickListener(bindingAdapterPosition, item.duration)
             }

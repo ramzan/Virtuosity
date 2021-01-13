@@ -38,6 +38,8 @@
             android:id="@+id/timer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline5"
+            android:textColor="?android:attr/textColorSecondary"
             tools:text="10:12" />
 
         <EditText
@@ -48,6 +50,8 @@
             android:focusable="false"
             android:visibility="gone"
             tools:visibility="visible"
+            android:textAppearance="?attr/textAppearanceHeadline5"
+            android:textColor="?android:attr/textColorSecondary"
             tools:text="10:12" />
 
         <ImageButton
