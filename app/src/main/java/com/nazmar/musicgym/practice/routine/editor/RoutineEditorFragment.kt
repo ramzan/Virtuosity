@@ -27,16 +27,16 @@ class RoutineEditorFragment : Fragment() {
 
     private val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
         RoutineEditorViewModelFactory(
-                arguments?.get(
-                        "routineId"
-                ) as Long, requireNotNull(this.activity).application
+            arguments?.get(
+                "routineId"
+            ) as Long, requireNotNull(this.activity).application
         )
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
@@ -49,7 +49,7 @@ class RoutineEditorFragment : Fragment() {
         val adapter = RoutineExerciseAdapter(::showDurationPicker)
 
         adapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         binding.routineExerciseList.adapter = adapter
 
@@ -59,13 +59,13 @@ class RoutineEditorFragment : Fragment() {
         })
 
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
             override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
             ): Boolean {
                 if (viewHolder.itemViewType != target.itemViewType) {
                     return false
@@ -89,9 +89,10 @@ class RoutineEditorFragment : Fragment() {
             adapter.notifyItemChanged(it)
         }
 
+
         binding.apply {
             editorToolbar.title =
-                    getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
+                getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
             editorToolbar.setNavigationOnClickListener {
                 goBack()
             }
@@ -100,8 +101,7 @@ class RoutineEditorFragment : Fragment() {
             val saveButton = editorToolbar.menu.getItem(1)
 
             deleteButton.setOnMenuItemClickListener {
-                viewModel.deleteRoutine()
-                goBack()
+                showDeleteDialog()
                 true
             }
 
@@ -125,7 +125,7 @@ class RoutineEditorFragment : Fragment() {
                         saveButton.isVisible = true
                         nameInput.setText(it.name)
                         nameInput.setSelection(it.name.length)
-                    }
+                    } else if (viewModel.routineDeleted) goBack()
                 }
             } else {
                 saveButton.isVisible = true
@@ -143,11 +143,11 @@ class RoutineEditorFragment : Fragment() {
             // Populate exercise autocomplete
             viewModel.exercises.observe(viewLifecycleOwner, {
                 exerciseSpinner.setAdapter(
-                        ArrayAdapter(
-                                requireContext(),
-                                R.layout.list_item_exercise_spinner,
-                                it
-                        )
+                    ArrayAdapter(
+                        requireContext(),
+                        R.layout.list_item_exercise_spinner,
+                        it
+                    )
                 )
             })
 
@@ -157,11 +157,19 @@ class RoutineEditorFragment : Fragment() {
 
     private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
         val action =
-                RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
-                        exerciseIndex,
-                        duration
-                )
+            RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
+                exerciseIndex,
+                duration
+            )
         findNavController().navigate(action)
+    }
+
+    private fun showDeleteDialog() {
+        findNavController().navigate(
+            RoutineEditorFragmentDirections.actionRoutineEditorToDeleteRoutineDialogFragment(
+                requireArguments().getLong("routineId")
+            )
+        )
     }
 
     private fun goBack() {

@@ -13,7 +13,8 @@
     <string name="exercises_search_hint">Search exercises</string>
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
-    <string name="delete_dialog_message">Delete exercise</string>
+    <string name="delete_exercise_dialog_message">Delete exercise</string>
+    <string name="delete_routine_dialog_message">Delete routine</string>
     <string name="name">Name</string>
     <string name="save">Save</string>
     <string name="editorTitleEdit">Edit Routine</string>

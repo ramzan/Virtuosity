@@ -7,23 +7,23 @@ import androidx.navigation.navGraphViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
 
-class DeleteDialogFragment : DialogFragment() {
+class DeleteExerciseDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
             ExerciseDetailViewModelFactory(
-                    arguments?.get(
-                            "exerciseId"
-                    ) as Long, requireNotNull(this.activity).application
+                arguments?.get(
+                    "exerciseId"
+                ) as Long, requireNotNull(this.activity).application
             )
         }
 
         return MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.delete_dialog_message)
-                .setPositiveButton("OK") { _, _ ->
-                    viewModel.deleteExercise()
-                }
-                .setNegativeButton("CANCEL") { _, _ -> }
-                .show()
+            .setTitle(R.string.delete_exercise_dialog_message)
+            .setPositiveButton("OK") { _, _ ->
+                viewModel.deleteExercise()
+            }
+            .setNegativeButton("CANCEL") { _, _ -> }
+            .show()
     }
 }
