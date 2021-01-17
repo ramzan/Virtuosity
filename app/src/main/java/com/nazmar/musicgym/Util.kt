@@ -46,7 +46,7 @@ fun InputMethodManager.showKeyboard() {
     )
 }
 
-const val TIMER_NOTIFICATION_ID = 0
+const val TIMER_NOTIFICATION_ID = 1
 
 fun getTimerNotificationBuilder(
         context: TimerService,
