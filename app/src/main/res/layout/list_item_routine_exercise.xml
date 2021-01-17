@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/exercise_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceHeadline5"
@@ -21,24 +21,23 @@
             android:layout_weight="1"
             tools:text="C# Melodic Minor Scale" />
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_weight="1"
- />
-
         <EditText
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="none"
             android:focusable="false"
+            android:textAlignment="viewEnd"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textColor="?android:attr/textColorSecondary"
             tools:text="05:00" />
 
+        <ImageView
+            android:id="@+id/drag_handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_drag_handle_24" />
 
     </LinearLayout>
 

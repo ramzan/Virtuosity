@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_IDLE
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.*
 import com.nazmar.musicgym.databinding.FragmentRoutineEditorBinding
@@ -27,16 +28,62 @@ class RoutineEditorFragment : Fragment() {
 
     private val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
         RoutineEditorViewModelFactory(
-            arguments?.get(
-                "routineId"
-            ) as Long, requireNotNull(this.activity).application
+                arguments?.get(
+                        "routineId"
+                ) as Long, requireNotNull(this.activity).application
         )
     }
 
+    private val simpleItemTouchCallback =
+            object : ItemTouchHelper.SimpleCallback(
+                    ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
+                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+                val adapter = RoutineExerciseAdapter(this@RoutineEditorFragment, ::showDurationPicker).also {
+                    it.stateRestorationPolicy =
+                            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                }
+
+                override fun onMove(
+                        recyclerView: RecyclerView,
+                        viewHolder: RecyclerView.ViewHolder,
+                        target: RecyclerView.ViewHolder
+                ): Boolean {
+                    if (viewHolder.itemViewType != target.itemViewType) {
+                        return false
+                    }
+                    val fromPos = viewHolder.bindingAdapterPosition
+                    val toPos = target.bindingAdapterPosition
+                    viewModel.moveItem(fromPos, toPos)
+                    adapter.notifyItemMoved(fromPos, toPos)
+                    return true
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    viewModel.deleteItem(viewHolder.bindingAdapterPosition)
+                    adapter.notifyItemRemoved(viewHolder.bindingAdapterPosition)
+                }
+
+                override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                    super.onSelectedChanged(viewHolder, actionState)
+
+                    if (actionState != ACTION_STATE_IDLE) {
+                        viewHolder?.itemView?.alpha = 0.5f
+                    }
+                }
+
+                override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                    super.clearView(recyclerView, viewHolder)
+                    viewHolder.itemView.alpha = 1.0f
+                }
+            }
+
+    private val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
@@ -46,53 +93,23 @@ class RoutineEditorFragment : Fragment() {
 
         _binding = FragmentRoutineEditorBinding.inflate(inflater)
 
-        val adapter = RoutineExerciseAdapter(::showDurationPicker)
-
-        adapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-
-        binding.routineExerciseList.adapter = adapter
+        binding.routineExerciseList.adapter = simpleItemTouchCallback.adapter
 
         viewModel.oldExercises.observe(viewLifecycleOwner, {
             viewModel.loadOldRoutine()
-            adapter.submitList(viewModel.currentExercises)
-        })
-
-        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                if (viewHolder.itemViewType != target.itemViewType) {
-                    return false
-                }
-                val fromPos = viewHolder.bindingAdapterPosition
-                val toPos = target.bindingAdapterPosition
-                viewModel.moveItem(fromPos, toPos)
-                adapter.notifyItemMoved(fromPos, toPos)
-                return true
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                viewModel.deleteItem(viewHolder.bindingAdapterPosition)
-                adapter.notifyItemRemoved(viewHolder.bindingAdapterPosition)
-            }
+            simpleItemTouchCallback.adapter.submitList(viewModel.currentExercises)
         })
 
         itemTouchHelper.attachToRecyclerView(binding.routineExerciseList)
 
         viewModel.updatedIndex.observe(viewLifecycleOwner) {
-            adapter.notifyItemChanged(it)
+            simpleItemTouchCallback.adapter.notifyItemChanged(it)
         }
 
 
         binding.apply {
             editorToolbar.title =
-                getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
+                    getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
             editorToolbar.setNavigationOnClickListener {
                 goBack()
             }
@@ -143,11 +160,11 @@ class RoutineEditorFragment : Fragment() {
             // Populate exercise autocomplete
             viewModel.exercises.observe(viewLifecycleOwner, {
                 exerciseSpinner.setAdapter(
-                    ArrayAdapter(
-                        requireContext(),
-                        R.layout.list_item_exercise_spinner,
-                        it
-                    )
+                        ArrayAdapter(
+                                requireContext(),
+                                R.layout.list_item_exercise_spinner,
+                                it
+                        )
                 )
             })
 
@@ -157,18 +174,18 @@ class RoutineEditorFragment : Fragment() {
 
     private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
         val action =
-            RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
-                exerciseIndex,
-                duration
-            )
+                RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
+                        exerciseIndex,
+                        duration
+                )
         findNavController().navigate(action)
     }
 
     private fun showDeleteDialog() {
         findNavController().navigate(
-            RoutineEditorFragmentDirections.actionRoutineEditorToDeleteRoutineDialogFragment(
-                requireArguments().getLong("routineId")
-            )
+                RoutineEditorFragmentDirections.actionRoutineEditorToDeleteRoutineDialogFragment(
+                        requireArguments().getLong("routineId")
+                )
         )
     }
 
@@ -182,5 +199,9 @@ class RoutineEditorFragment : Fragment() {
         super.onDestroyView()
         requireActivity().showBottomNavBar()
         _binding = null
+    }
+
+    fun startDragging(viewHolder: RecyclerView.ViewHolder) {
+        itemTouchHelper.startDrag(viewHolder)
     }
 }
