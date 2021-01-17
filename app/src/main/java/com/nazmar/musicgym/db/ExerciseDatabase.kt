@@ -81,7 +81,31 @@ abstract class ExerciseDatabase : RoomDatabase() {
                 Exercise("F Major Scale"),
                 Exercise("F# Major Scale"),
                 Exercise("G Major Scale"),
-                Exercise("G# Major Scale")
+                Exercise("G# Major Scale"),
+                Exercise("A Minor Scale"),
+                Exercise("A# Minor Scale"),
+                Exercise("B Minor Scale"),
+                Exercise("C Minor Scale"),
+                Exercise("C# Minor Scale"),
+                Exercise("D Minor Scale"),
+                Exercise("D# Minor Scale"),
+                Exercise("E Minor Scale"),
+                Exercise("F Minor Scale"),
+                Exercise("F# Minor Scale"),
+                Exercise("G Minor Scale"),
+                Exercise("G# Minor Scale"),
+                Exercise("A Harmonic Minor Scale"),
+                Exercise("A# Harmonic Minor Scale"),
+                Exercise("B Harmonic Minor Scale"),
+                Exercise("C Harmonic Minor Scale"),
+                Exercise("C# Harmonic Minor Scale"),
+                Exercise("D Harmonic Minor Scale"),
+                Exercise("D# Harmonic Minor Scale"),
+                Exercise("E Harmonic Minor Scale"),
+                Exercise("F Harmonic Minor Scale"),
+                Exercise("F# Harmonic Minor Scale"),
+                Exercise("G Harmonic Minor Scale"),
+                Exercise("G# Harmonic Minor Scale")
         )
 
         val PREPOPULATE_HISTORY = listOf(
@@ -105,6 +129,20 @@ abstract class ExerciseDatabase : RoomDatabase() {
                 Routine("C"),
                 Routine("D"),
                 Routine("E"),
+                Routine("F"),
+                Routine("G"),
+                Routine("H"),
+                Routine("I"),
+                Routine("J"),
+                Routine("L"),
+                Routine("M"),
+                Routine("N"),
+                Routine("O"),
+                Routine("p"),
+                Routine("Q"),
+                Routine("r"),
+                Routine("s"),
+                Routine("T"),
         )
 
         val PREPOPULATE_ROUTINE_EXERCISES = listOf(
