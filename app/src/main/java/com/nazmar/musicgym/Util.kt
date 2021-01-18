@@ -9,6 +9,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.NotificationCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.nazmar.musicgym.practice.session.PAUSE_TIMER
+import com.nazmar.musicgym.practice.session.RESTART_TIMER
+import com.nazmar.musicgym.practice.session.RESUME_TIMER
 import com.nazmar.musicgym.practice.session.TimerService
 
 enum class TimerState {
@@ -32,6 +35,10 @@ fun Activity.showBottomNavBar() {
     }
 }
 
+fun Activity.getInputMethodManager(): InputMethodManager {
+    return this.getSystemService(InputMethodManager::class.java)
+}
+
 fun InputMethodManager.hideKeyboard(windowToken: IBinder) {
     this.hideSoftInputFromWindow(
             windowToken,
@@ -48,11 +55,12 @@ fun InputMethodManager.showKeyboard() {
 
 const val TIMER_NOTIFICATION_ID = 1
 
-fun getTimerNotificationBuilder(
-        context: TimerService,
-        playAction: NotificationCompat.Action?,
-        restartAction: NotificationCompat.Action?
-): NotificationCompat.Builder {
+const val REQUEST_CODE_RESTART = 0
+const val REQUEST_CODE_PAUSE = 1
+const val REQUEST_CODE_RESUME = 2
+
+
+fun getTimerNotificationBuilder(context: TimerService, timerState: TimerState): NotificationCompat.Builder {
 
     val contentPendingIntent: PendingIntent = PendingIntent.getActivity(
             context,
@@ -61,28 +69,65 @@ fun getTimerNotificationBuilder(
             PendingIntent.FLAG_UPDATE_CURRENT
     )
 
-    return NotificationCompat.Builder(context, context.application.getString(R.string.timer_notification_channel_id))
+    val builder = NotificationCompat.Builder(context, context.application.getString(R.string.timer_notification_channel_id))
             .setTicker(context.application.getString(R.string.app_name))
             .setSmallIcon(R.drawable.ic_baseline_music_note_24)
             .setOngoing(true)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(contentPendingIntent)
             .setContentText("Practice in session")
-            .apply {
-                if (playAction != null && restartAction != null) {
-                    this.addAction(playAction)
-                    this.addAction(restartAction)
-                    this.setStyle(androidx.media.app.NotificationCompat.MediaStyle()
-                            .setShowActionsInCompactView(0, 1)
-                    )
-                }
+
+    if (timerState != TimerState.STOPPED) {
+
+        val playAction = if (timerState == TimerState.PAUSED) {
+            PendingIntent.getBroadcast(
+                    context,
+                    REQUEST_CODE_RESUME,
+                    Intent(RESUME_TIMER),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            ).let { resumePendingIntent ->
+                NotificationCompat.Action.Builder(
+                        R.drawable.ic_baseline_play_arrow_24,
+                        context.getString(R.string.start_timer),
+                        resumePendingIntent).build()
             }
+        } else {
+            PendingIntent.getBroadcast(
+                    context,
+                    REQUEST_CODE_PAUSE,
+                    Intent(PAUSE_TIMER),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            ).let { pausePendingIntent ->
+                NotificationCompat.Action.Builder(
+                        R.drawable.ic_baseline_pause_24,
+                        context.getString(R.string.pause_timer),
+                        pausePendingIntent).build()
+            }
+        }
+
+        val restartAction = PendingIntent.getBroadcast(
+                context,
+                REQUEST_CODE_RESTART,
+                Intent(RESTART_TIMER),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        ).let { restartPendingIntent ->
+            NotificationCompat.Action.Builder(
+                    R.drawable.ic_baseline_replay_24,
+                    context.getString(R.string.restart_timer),
+                    restartPendingIntent).build()
+        }
+
+        builder.apply {
+            addAction(playAction)
+            addAction(restartAction)
+            setStyle(androidx.media.app.NotificationCompat.MediaStyle()
+                    .setShowActionsInCompactView(0, 1)
+            )
+        }
+    }
+    return builder
 }
 
 fun isOreoOrAbove(): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-}
-
-fun Activity.getInputMethodManager(): InputMethodManager {
-    return this.getSystemService(InputMethodManager::class.java)
 }

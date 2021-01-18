@@ -1,7 +1,6 @@
 package com.nazmar.musicgym.practice.session
 
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.IntentFilter
@@ -9,8 +8,8 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.*
 import androidx.core.app.NotificationCompat
-import com.nazmar.musicgym.R
 import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
+import com.nazmar.musicgym.TimerState
 import com.nazmar.musicgym.getTimerNotificationBuilder
 import java.util.*
 
@@ -43,45 +42,9 @@ class TimerService : Service() {
         mediaPlayer = MediaPlayer.create(this, sound)
         notificationManager = application.getSystemService(NotificationManager::class.java)
 
-        val restartPendingIntent: PendingIntent = PendingIntent.getBroadcast(
-                this,
-                0,
-                Intent(RESTART_TIMER),
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val pausePendingIntent: PendingIntent = PendingIntent.getBroadcast(
-                this,
-                1,
-                Intent(PAUSE_TIMER),
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val resumePendingIntent: PendingIntent = PendingIntent.getBroadcast(
-                this,
-                2,
-                Intent(RESUME_TIMER),
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val restartAction = NotificationCompat.Action.Builder(
-                R.drawable.ic_baseline_replay_24,
-                getString(R.string.restart_timer),
-                restartPendingIntent).build()
-        val pauseAction = NotificationCompat.Action.Builder(
-                R.drawable.ic_baseline_pause_24,
-                getString(R.string.pause_timer),
-                pausePendingIntent).build()
-        val resumeAction = NotificationCompat.Action.Builder(
-                R.drawable.ic_baseline_play_arrow_24,
-                getString(R.string.start_timer),
-                resumePendingIntent).build()
-
-        runningNotification = getTimerNotificationBuilder(this, pauseAction, restartAction)
-
-        pausedNotification = getTimerNotificationBuilder(this, resumeAction, restartAction)
-
-        stoppedNotification = getTimerNotificationBuilder(this, null, null)
+        runningNotification = getTimerNotificationBuilder(this, TimerState.RUNNING)
+        pausedNotification = getTimerNotificationBuilder(this, TimerState.PAUSED)
+        stoppedNotification = getTimerNotificationBuilder(this, TimerState.STOPPED)
 
         timer = Timer(runningNotification, pausedNotification, stoppedNotification, notificationManager, mediaPlayer)
         timerReceiver = TimerReceiver(timer)
