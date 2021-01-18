@@ -9,16 +9,17 @@ import com.nazmar.musicgym.databinding.ListItemRoutineBinding
 import com.nazmar.musicgym.db.Routine
 
 
-class RoutineAdapter(private val onEditListener: OnClickListener, private val onStartListener: OnClickListener) :
+class RoutineAdapter(private val onClickListener: OnClickListener) :
         ListAdapter<Routine, RoutineAdapter.ViewHolder>(RoutineDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, onEditListener, onStartListener)
+        holder.bind(item, onClickListener)
     }
 
-    class OnClickListener(val clickListener: (routine: Routine) -> Unit) {
-        fun onClick(routine: Routine) = clickListener(routine)
+    abstract class OnClickListener {
+        abstract fun onEdit(routine: Routine)
+        abstract fun onStart(routine: Routine)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,13 +29,13 @@ class RoutineAdapter(private val onEditListener: OnClickListener, private val on
     class ViewHolder private constructor(private val binding: ListItemRoutineBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Routine, onEditListener: OnClickListener, onStartListener: OnClickListener) {
+        fun bind(item: Routine, onClickListener: OnClickListener) {
             binding.routineTitle.text = item.name
             binding.editRoutineButton.setOnClickListener {
-                onEditListener.onClick(item)
+                onClickListener.onEdit(item)
             }
             binding.startRoutineButton.setOnClickListener {
-                onStartListener.onClick(item)
+                onClickListener.onStart(item)
             }
         }
 
@@ -53,7 +54,7 @@ class RoutineAdapter(private val onEditListener: OnClickListener, private val on
 
 class RoutineDiffCallback : DiffUtil.ItemCallback<Routine>() {
     override fun areItemsTheSame(oldItem: Routine, newItem: Routine): Boolean {
-        return oldItem.name == newItem.name
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: Routine, newItem: Routine): Boolean {

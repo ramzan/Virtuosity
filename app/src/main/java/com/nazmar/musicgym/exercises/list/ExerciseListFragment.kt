@@ -39,18 +39,18 @@ class ExerciseListFragment : Fragment() {
     ): View {
         _binding = FragmentExerciseListBinding.inflate(inflater)
 
-        val adapter = ExerciseAdapter(ExerciseAdapter.OnClickListener {
+        ExerciseAdapter(ExerciseAdapter.OnClickListener {
             showExerciseView(it.id)
-        })
+        }).run {
+            this.stateRestorationPolicy =
+                    RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
-        adapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            binding.exerciseList.adapter = this
 
-        binding.exerciseList.adapter = adapter
-
-        viewModel.exercises.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-        })
+            viewModel.exercises.observe(viewLifecycleOwner, {
+                this.submitList(it)
+            })
+        }
 
         binding.fab.setOnClickListener {
             showNewExerciseDialog()

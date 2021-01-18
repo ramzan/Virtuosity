@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
+import com.nazmar.musicgym.db.Routine
 
 class RoutineListFragment : Fragment() {
 
@@ -28,23 +29,22 @@ class RoutineListFragment : Fragment() {
 
         _binding = FragmentRoutineListBinding.inflate(inflater)
 
-        val adapter = RoutineAdapter(
-                RoutineAdapter.OnClickListener {
-                    showRoutineEditor(it.id)
-                }, RoutineAdapter.OnClickListener {
-            startRoutine(it.id)
-        })
+        RoutineAdapter(
+                object : RoutineAdapter.OnClickListener() {
+                    override fun onEdit(routine: Routine) = showRoutineEditor(routine.id)
 
+                    override fun onStart(routine: Routine) = startRoutine(routine.id)
+                }
+        ).run {
+            this.stateRestorationPolicy =
+                    RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
-        adapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            binding.routineList.adapter = this
 
-
-        binding.routineList.adapter = adapter
-
-        viewModel.routines.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-        })
+            viewModel.routines.observe(viewLifecycleOwner, {
+                this.submitList(it)
+            })
+        }
 
         binding.fab.setOnClickListener {
             showRoutineEditor(0)
