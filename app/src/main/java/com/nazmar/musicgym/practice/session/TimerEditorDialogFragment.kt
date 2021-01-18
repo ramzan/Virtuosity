@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice.routine.list
+package com.nazmar.musicgym.practice.session
 
 import android.app.Dialog
 import android.os.Bundle
@@ -6,8 +6,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.navGraphViewModels
 import com.nazmar.musicgym.MAX_TIMER_DURATION
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.practice.session.SessionViewModel
-import com.nazmar.musicgym.practice.session.SessionViewModelFactory
 import mobi.upod.timedurationpicker.TimeDurationPicker
 import mobi.upod.timedurationpicker.TimeDurationPickerDialog
 
