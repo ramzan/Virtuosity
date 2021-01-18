@@ -62,16 +62,12 @@ class Timer(private val runningNotification: NotificationCompat.Builder,
 
     private var exerciseIndex = -1
 
-    private fun timeToString(time: Long): String {
-        return timeFormatter.format(time)
-    }
-
     private fun createTimer() {
         with(timeLeft.value ?: currentExerciseDuration) {
             timer = object : CountDownTimer(this, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     _timeLeft.value = millisUntilFinished
-                    _timeString.value = timeToString(millisUntilFinished)
+                    _timeString.value = timeFormatter.format(millisUntilFinished)
                     updateTimerNotification()
                 }
 
@@ -81,7 +77,7 @@ class Timer(private val runningNotification: NotificationCompat.Builder,
                     mediaPlayer.start()
                 }
             }
-            _timeString.value = timeToString(this)
+            _timeString.value = timeFormatter.format(this)
             _timeLeft.value = this
         }
         updateTimerNotification()
@@ -135,7 +131,7 @@ class Timer(private val runningNotification: NotificationCompat.Builder,
         timer = null
         _timerStatus.value = TimerState.STOPPED
         _timeLeft.value = null
-        _timeString.value = timeToString(0)
+        _timeString.value = timeFormatter.format(0)
         notification = pausedNotification
         showStoppedNotification()
     }
