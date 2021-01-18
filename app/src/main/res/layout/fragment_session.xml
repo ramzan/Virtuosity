@@ -23,6 +23,14 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <LinearLayout
+        android:id="@+id/exercise_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:orientation="vertical">
+
     <TextView
         android:id="@+id/session_current_exercise_name"
         android:layout_width="match_parent"
@@ -89,6 +97,8 @@
         android:maxLength="3"
         tools:text="120" />
 
+    </LinearLayout>
+
     <Button
         android:id="@+id/done_button"
         android:layout_width="wrap_content"
@@ -107,5 +117,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/back" />
+
+    <LinearLayout
+        tools:visibility="gone"
+        android:id="@+id/summary_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline5"
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="Summary" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

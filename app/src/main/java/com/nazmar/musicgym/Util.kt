@@ -50,8 +50,8 @@ const val TIMER_NOTIFICATION_ID = 1
 
 fun getTimerNotificationBuilder(
         context: TimerService,
-        playAction: NotificationCompat.Action,
-        restartAction: NotificationCompat.Action
+        playAction: NotificationCompat.Action?,
+        restartAction: NotificationCompat.Action?
 ): NotificationCompat.Builder {
 
     val contentPendingIntent: PendingIntent = PendingIntent.getActivity(
@@ -67,11 +67,15 @@ fun getTimerNotificationBuilder(
             .setOngoing(true)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(contentPendingIntent)
-            .addAction(playAction)
-            .addAction(restartAction)
-            .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
-                    .setShowActionsInCompactView(0, 1)
-            )
+            .apply {
+                if (playAction != null && restartAction != null) {
+                    this.addAction(playAction)
+                    this.addAction(restartAction)
+                    this.setStyle(androidx.media.app.NotificationCompat.MediaStyle()
+                            .setShowActionsInCompactView(0, 1)
+                    )
+                }
+            }
 }
 
 fun isOreoOrAbove(): Boolean {

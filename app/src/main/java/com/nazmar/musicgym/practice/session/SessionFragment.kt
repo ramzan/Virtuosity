@@ -45,8 +45,13 @@ class SessionFragment : Fragment() {
             mTimer = timerService.getTimer()
             mBound = true
 
-            mTimer.setUpTimer(viewModel.currentIndex.value
-                    ?: -1, viewModel.currentExerciseDuration(), viewModel.getCurrentExerciseName())
+            if (viewModel.currentIndex.value!! > -1) {
+                mTimer.setUpTimer(viewModel.currentIndex.value!!,
+                        viewModel.currentExerciseDuration(), viewModel.getCurrentExerciseName())
+            } else {
+                mTimer.clearTimer()
+            }
+
 
             mTimer.timeString.observe(viewLifecycleOwner) {
                 binding.timer.text = it
@@ -189,14 +194,20 @@ class SessionFragment : Fragment() {
         }
 
         viewModel.currentIndex.observe(viewLifecycleOwner) {
-            if (it > -1) {
+            binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled()
+            setButtonVisibility()
+            if (it == viewModel.exercises.value?.size) {
+                if (mBound) mTimer.clearTimer()
+                binding.summaryView.visibility = View.VISIBLE
+                binding.exerciseView.visibility = View.GONE
+            }
+            else if (it > -1) {
+                binding.summaryView.visibility = View.GONE
+                binding.exerciseView.visibility = View.VISIBLE
                 binding.sessionCurrentExerciseName.text = viewModel.getCurrentExerciseName()
                 binding.bpmInput.hint = viewModel.getCurrentExerciseBpmRecord()
                 binding.bpmInput.text = Editable.Factory.getInstance().newEditable(viewModel.getNewExerciseBpm())
-                binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled()
-                setButtonVisibility()
                 if (mBound) mTimer.setUpTimer(it, viewModel.currentExerciseDuration(), viewModel.getCurrentExerciseName())
-
             }
         }
 

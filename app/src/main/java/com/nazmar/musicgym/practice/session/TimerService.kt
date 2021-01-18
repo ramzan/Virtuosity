@@ -33,6 +33,8 @@ class TimerService : Service() {
 
     private lateinit var runningNotification: NotificationCompat.Builder
 
+    private lateinit var stoppedNotification: NotificationCompat.Builder
+
 
     override fun onCreate() {
         super.onCreate()
@@ -79,7 +81,9 @@ class TimerService : Service() {
 
         pausedNotification = getTimerNotificationBuilder(this, resumeAction, restartAction)
 
-        timer = Timer(runningNotification, pausedNotification, notificationManager, mediaPlayer)
+        stoppedNotification = getTimerNotificationBuilder(this, null, null)
+
+        timer = Timer(runningNotification, pausedNotification, stoppedNotification, notificationManager, mediaPlayer)
         timerReceiver = TimerReceiver(timer)
         IntentFilter().apply {
             addAction(RESUME_TIMER)
@@ -118,6 +122,7 @@ class TimerService : Service() {
         fun updateRoutineName(name: String) {
             runningNotification.setSubText(name)
             pausedNotification.setSubText(name)
+            stoppedNotification.setSubText(name)
         }
     }
 }

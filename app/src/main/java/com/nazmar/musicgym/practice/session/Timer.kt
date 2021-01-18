@@ -13,11 +13,12 @@ import java.util.*
 
 class Timer(private val runningNotification: NotificationCompat.Builder,
             private val pausedNotification: NotificationCompat.Builder,
+            private val stoppedNotification: NotificationCompat.Builder,
             private val notificationManager: NotificationManager,
             private val mediaPlayer: MediaPlayer
 ) {
 
-    private var notification = runningNotification
+    private var notification = stoppedNotification
 
     private val timeFormatter = SimpleDateFormat("mm:ss", Locale.US)
 
@@ -31,6 +32,11 @@ class Timer(private val runningNotification: NotificationCompat.Builder,
         notification.setContentTitle(currentExerciseName)
         notification.setContentText("Time's up!")
         notificationManager.notify(TIMER_NOTIFICATION_ID, notification.build())
+    }
+
+    private fun showStoppedNotification() {
+        stoppedNotification.setContentText("Practice in session")
+        notificationManager.notify(TIMER_NOTIFICATION_ID, stoppedNotification.build())
     }
 
     private var timer: CountDownTimer? = null
@@ -131,7 +137,7 @@ class Timer(private val runningNotification: NotificationCompat.Builder,
         _timeLeft.value = null
         _timeString.value = timeToString(0)
         notification = pausedNotification
-        updateTimerNotification()
+        showStoppedNotification()
     }
 
     fun updateTimeLeft(newTime: Long) {

@@ -34,11 +34,13 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
         exercises.value?.forEach { _ ->
             newBpms.add("")
         }
-        _exercisesLoaded = true
+        if (newBpms.size > 0) _exercisesLoaded = true
     }
 
     fun nextExercise() {
-        _currentIndex.value = _currentIndex.value!! + 1
+        if (exercisesLoaded) {
+            _currentIndex.value = _currentIndex.value!! + 1
+        }
     }
 
     fun previousExercise() {
@@ -67,7 +69,7 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     }
 
     fun nextButtonEnabled(): Boolean {
-        return exercisesLoaded && currentIndex.value!! < exercises.value!!.size - 1
+        return exercisesLoaded && currentIndex.value!! < exercises.value!!.size
     }
 
     fun previousButtonEnabled(): Boolean {
