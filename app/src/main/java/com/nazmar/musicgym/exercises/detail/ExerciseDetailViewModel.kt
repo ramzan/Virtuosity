@@ -20,6 +20,8 @@ class ExerciseDetailViewModel(exerciseId: Long, application: Application) :
     val exerciseDeleted: Boolean
         get() = _exerciseDeleted
 
+    var nameInputText: String? = null
+
     fun deleteExercise() {
         CoroutineScope(Dispatchers.IO).launch {
             dao.delete(exercise.value!!)
@@ -27,10 +29,10 @@ class ExerciseDetailViewModel(exerciseId: Long, application: Application) :
         _exerciseDeleted = true
     }
 
-    fun renameExercise(newName: String) {
-        if (newName != exercise.value!!.name) {
+    fun renameExercise() {
+        if (nameInputText != exercise.value!!.name) {
             CoroutineScope(Dispatchers.IO).launch {
-                dao.update(Exercise(exercise.value!!.id, newName))
+                dao.update(Exercise(exercise.value!!.id, nameInputText!!))
             }
         }
     }

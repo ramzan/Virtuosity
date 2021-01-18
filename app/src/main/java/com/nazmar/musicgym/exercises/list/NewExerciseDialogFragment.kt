@@ -42,13 +42,13 @@ class NewExerciseDialogFragment : DialogFragment() {
 
             override fun afterTextChanged(p0: Editable?) {
                 val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                okButton.isEnabled = text.text.isNotEmpty()
+                okButton.isEnabled = text.text.trim().isNotEmpty()
             }
         })
 
         dialog.setOnShowListener {
             val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            okButton.isEnabled = text.text.isNotEmpty()
+            okButton.isEnabled = text.text.trim().isNotEmpty()
 
             requireActivity().getInputMethodManager().showKeyboard()
             text.requestFocus()

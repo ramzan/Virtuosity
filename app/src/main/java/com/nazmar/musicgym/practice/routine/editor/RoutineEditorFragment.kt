@@ -1,13 +1,13 @@
 package com.nazmar.musicgym.practice.routine.editor
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -123,25 +123,31 @@ class RoutineEditorFragment : Fragment() {
             }
 
             saveButton.setOnMenuItemClickListener {
-                if (TextUtils.isEmpty(nameInput.text?.trim())) {
+                if (nameInput.text?.trim().isNullOrEmpty()) {
                     nameInput.setText("")
                     nameInputLayout.isErrorEnabled = true
                     nameInputLayout.error = getString(R.string.empty_name_error_msg)
                 } else {
-                    viewModel.updateRoutine(nameInput.text.toString())
+                    viewModel.updateRoutine()
                     goBack()
                 }
                 true
             }
 
+            nameInput.doOnTextChanged { text, _, _, _ ->
+                viewModel.nameInputText = text.toString().trim().replace('\n', ' ')
+            }
 
             if (!viewModel.newRoutine) {
                 viewModel.routine.observe(viewLifecycleOwner) {
                     if (it != null) {
                         deleteButton.isVisible = true
                         saveButton.isVisible = true
-                        nameInput.setText(it.name)
-                        nameInput.setSelection(it.name.length)
+                        if (viewModel.nameInputText == null) {
+                            nameInput.setText(it.name)
+                            viewModel.nameInputText = it.name
+                        }
+                        nameInput.setSelection(viewModel.nameInputText!!.length)
                     } else if (viewModel.routineDeleted) goBack()
                 }
             } else {

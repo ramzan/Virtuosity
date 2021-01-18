@@ -21,9 +21,9 @@ class ExerciseDetailFragment : DialogFragment() {
 
     private val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
         ExerciseDetailViewModelFactory(
-            arguments?.get(
-                "exerciseId"
-            ) as Long, requireNotNull(this.activity).application
+                arguments?.get(
+                        "exerciseId"
+                ) as Long, requireNotNull(this.activity).application
         )
     }
 
@@ -44,8 +44,8 @@ class ExerciseDetailFragment : DialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
 
         requireActivity().hideBottomNavBar()
@@ -86,17 +86,17 @@ class ExerciseDetailFragment : DialogFragment() {
 
     private fun showDeleteDialog() {
         findNavController().navigate(
-            ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToDeleteDialogFragment(
-                requireArguments().getLong("exerciseId")
-            )
+                ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToDeleteDialogFragment(
+                        requireArguments().getLong("exerciseId")
+                )
         )
     }
 
     private fun showRenameDialog() {
         findNavController().navigate(
-            ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToRenameDialogFragment(
-                requireArguments().getLong("exerciseId")
-            )
+                ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToRenameDialogFragment(
+                        requireArguments().getLong("exerciseId")
+                )
         )
     }
 

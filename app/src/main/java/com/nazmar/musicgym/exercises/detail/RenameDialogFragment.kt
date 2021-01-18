@@ -26,17 +26,16 @@ class RenameDialogFragment : DialogFragment() {
                     ) as Long, requireNotNull(this.activity).application
             )
         }
-        viewModel.exercise.observe(this) {
-            if (it != null) {
-                text.setText(it.name)
-            }
+        if (viewModel.nameInputText == null) {
+            viewModel.nameInputText = viewModel.exercise.value?.name
         }
+        text.setText(viewModel.nameInputText)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.rename)
                 .setView(layout)
                 .setPositiveButton("OK") { _, _ ->
-                    viewModel.renameExercise(text.text.toString().trim())
+                    viewModel.renameExercise()
                 }
                 .setNegativeButton("CANCEL") { _, _ -> }
                 .create()
@@ -48,7 +47,10 @@ class RenameDialogFragment : DialogFragment() {
 
             override fun afterTextChanged(p0: Editable?) {
                 val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                okButton.isEnabled = text.text.isNotEmpty()
+                with(text.text.trim()) {
+                    okButton.isEnabled = this.isNotEmpty()
+                    viewModel.nameInputText = this.toString().replace('\n', ' ')
+                }
             }
         })
 
