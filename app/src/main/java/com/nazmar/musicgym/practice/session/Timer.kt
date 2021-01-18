@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.TimerState
+import com.nazmar.musicgym.db.SessionExercise
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -56,11 +57,13 @@ class Timer(private val runningNotification: NotificationCompat.Builder,
     val timerStatus: LiveData<TimerState>
         get() = _timerStatus
 
-    private var currentExerciseDuration = 0L
+    private var currentExercise: SessionExercise? = SessionExercise(-1, "", -1, -1)
 
-    private var currentExerciseName = ""
+    private val currentExerciseDuration
+        get() = currentExercise?.duration ?: 0L
 
-    private var exerciseIndex = -1
+    private val currentExerciseName
+        get() = currentExercise?.name ?: ""
 
     private fun createTimer() {
         with(timeLeft.value ?: currentExerciseDuration) {
@@ -83,11 +86,9 @@ class Timer(private val runningNotification: NotificationCompat.Builder,
         updateTimerNotification()
     }
 
-    fun setUpTimer(newIndex: Int, newExerciseDuration: Long, newExerciseName: String) {
-        if (newIndex != exerciseIndex) {
-            currentExerciseName = newExerciseName
-            exerciseIndex = newIndex
-            currentExerciseDuration = newExerciseDuration
+    fun setUpTimer(newExercise: SessionExercise?) {
+        if (newExercise != currentExercise) {
+            currentExercise = newExercise
             clearTimer()
             if (currentExerciseDuration != 0L) {
                 createTimer()

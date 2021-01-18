@@ -45,13 +45,7 @@ class SessionFragment : Fragment() {
             mTimer = timerService.getTimer()
             mBound = true
 
-            if (viewModel.currentIndex.value!! > -1) {
-                mTimer.setUpTimer(viewModel.currentIndex.value!!,
-                        viewModel.currentExerciseDuration(), viewModel.getCurrentExerciseName())
-            } else {
-                mTimer.clearTimer()
-            }
-
+            mTimer.setUpTimer(viewModel.currentExercise.value)
 
             mTimer.timeString.observe(viewLifecycleOwner) {
                 binding.timer.text = it
@@ -183,7 +177,7 @@ class SessionFragment : Fragment() {
         _binding = FragmentSessionBinding.inflate(inflater)
 
         viewModel.exercises.observe(viewLifecycleOwner) {
-            if (!viewModel.exercisesLoaded) {
+            if (viewModel.currentIndex.value == -1) {
                 viewModel.createBpmList()
                 viewModel.nextExercise()
             }
@@ -193,24 +187,23 @@ class SessionFragment : Fragment() {
             goBack()
         }
 
-        viewModel.currentIndex.observe(viewLifecycleOwner) {
-            binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled()
+        viewModel.currentExercise.observe(viewLifecycleOwner) {
+            binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled
             setButtonVisibility()
-            if (it == viewModel.exercises.value?.size) {
+            if (mBound) mTimer.setUpTimer(viewModel.currentExercise.value)
+
+            if (it == null) {
                 if (mBound) mTimer.clearTimer()
                 binding.summaryView.visibility = View.VISIBLE
                 binding.exerciseView.visibility = View.GONE
-            }
-            else if (it > -1) {
+            } else {
                 binding.summaryView.visibility = View.GONE
                 binding.exerciseView.visibility = View.VISIBLE
-                binding.sessionCurrentExerciseName.text = viewModel.getCurrentExerciseName()
-                binding.bpmInput.hint = viewModel.getCurrentExerciseBpmRecord()
-                binding.bpmInput.text = Editable.Factory.getInstance().newEditable(viewModel.getNewExerciseBpm())
-                if (mBound) mTimer.setUpTimer(it, viewModel.currentExerciseDuration(), viewModel.getCurrentExerciseName())
+                binding.sessionCurrentExerciseName.text = viewModel.currentExerciseName
+                binding.bpmInput.hint = viewModel.currentExerciseBpmRecord
+                binding.bpmInput.text = Editable.Factory.getInstance().newEditable(viewModel.newExerciseBpm)
             }
         }
-
         return binding.root
     }
 
@@ -228,7 +221,7 @@ class SessionFragment : Fragment() {
     }
 
     private fun setButtonVisibility() {
-        when (viewModel.nextButtonEnabled()) {
+        when (viewModel.nextButtonEnabled) {
             true -> {
                 binding.nextExerciseButton.visibility = View.VISIBLE
                 binding.doneButton.visibility = View.GONE

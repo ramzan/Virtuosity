@@ -67,6 +67,7 @@ fun getTimerNotificationBuilder(
             .setOngoing(true)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(contentPendingIntent)
+            .setContentText("Practice in session")
             .apply {
                 if (playAction != null && restartAction != null) {
                     this.addAction(playAction)

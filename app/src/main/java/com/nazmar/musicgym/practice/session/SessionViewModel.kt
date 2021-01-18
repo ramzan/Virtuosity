@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.nazmar.musicgym.db.ExerciseDatabase
 import com.nazmar.musicgym.db.HistoryItem
 import kotlinx.coroutines.CoroutineScope
@@ -20,66 +21,57 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
 
     private var newBpms = mutableListOf<String>()
 
-    private var _exercisesLoaded = newBpms.size != 0
-
-    val exercisesLoaded: Boolean
-        get() = _exercisesLoaded
-
     private var _currentIndex = MutableLiveData(-1)
 
     val currentIndex: LiveData<Int>
         get() = _currentIndex
 
     fun createBpmList() {
-        exercises.value?.forEach { _ ->
+        if (newBpms.size == 0) {
+            exercises.value?.forEach { _ ->
+                newBpms.add("")
+            }
             newBpms.add("")
         }
-        if (newBpms.size > 0) _exercisesLoaded = true
     }
 
     fun nextExercise() {
-        if (exercisesLoaded) {
-            _currentIndex.value = _currentIndex.value!! + 1
-        }
+        _currentIndex.value = _currentIndex.value!! + 1
     }
 
     fun previousExercise() {
         _currentIndex.value = _currentIndex.value!! - 1
     }
 
-    fun getCurrentExerciseName(): String {
-        return when (exercisesLoaded && currentIndex.value!! > -1) {
-            true -> exercises.value!![currentIndex.value!!].name
-            else -> ""
+    val currentExercise = Transformations.map(currentIndex) {
+        exercises.value?.let { exercises ->
+            when (it) {
+                exercises.size -> null
+                -1 -> null
+                else -> exercises[it]
+            }
         }
     }
 
-    fun getCurrentExerciseBpmRecord(): String {
-        return when (exercisesLoaded && currentIndex.value!! > -1) {
-            true -> exercises.value!![currentIndex.value!!].bpm.toString()
-            else -> ""
-        }
-    }
+    val currentExerciseName: String
+        get() = currentExercise.value?.name ?: ""
 
-    fun getNewExerciseBpm(): String? {
-        return when (exercisesLoaded && currentIndex.value!! > -1) {
-            true -> newBpms[currentIndex.value!!]
-            else -> null
-        }
-    }
+    val currentExerciseBpmRecord: String
+        get() = (currentExercise.value?.bpm ?: 0).toString()
 
-    fun nextButtonEnabled(): Boolean {
-        return exercisesLoaded && currentIndex.value!! < exercises.value!!.size
-    }
+    val newExerciseBpm: String
+        get() = newBpms[currentIndex.value!!]
 
-    fun previousButtonEnabled(): Boolean {
-        return exercisesLoaded && currentIndex.value!! > 0
-    }
+    val nextButtonEnabled: Boolean
+        get() = currentIndex.value!! > -1 && currentIndex.value!! < exercises.value!!.size
+
+
+    val previousButtonEnabled: Boolean
+        get() = currentIndex.value!! > 0
+
 
     fun updateBpm(bpm: String) {
-        if (exercisesLoaded) {
-            currentIndex.value?.let { newBpms[it] = bpm }
-        }
+        currentIndex.value?.let { newBpms[it] = bpm }
     }
 
     fun saveSession() {
@@ -91,10 +83,6 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
                 }
             }
         }
-    }
-
-    fun currentExerciseDuration(): Long {
-        return (currentIndex.value?.let { exercises.value?.get(it)?.duration } ?: 0L)
     }
 
     // Timer editor
