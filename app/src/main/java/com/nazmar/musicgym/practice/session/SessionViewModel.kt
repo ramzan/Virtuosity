@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.nazmar.musicgym.db.ExerciseDatabase
 import com.nazmar.musicgym.db.HistoryItem
+import com.nazmar.musicgym.updateBpm
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +22,12 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
 
     private var newBpms = mutableListOf<String>()
 
+    private var _summaryList = MutableLiveData(mutableListOf<SummaryExercise>())
+
+    val summaryList = Transformations.map(_summaryList) {
+        it.filter { e -> e.newBpm != 0 }
+    }
+
     private var _currentIndex = MutableLiveData(-1)
 
     val currentIndex: LiveData<Int>
@@ -28,8 +35,10 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
 
     fun createBpmList() {
         if (newBpms.size == 0) {
-            exercises.value?.forEach { _ ->
+            var i = 0
+            exercises.value?.forEach { e ->
                 newBpms.add("")
+                _summaryList.value?.add(SummaryExercise(i++, e.name, e.bpm, 0))
             }
             newBpms.add("")
         }
@@ -65,13 +74,14 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     val nextButtonEnabled: Boolean
         get() = currentIndex.value!! > -1 && currentIndex.value!! < exercises.value!!.size
 
-
     val previousButtonEnabled: Boolean
         get() = currentIndex.value!! > 0
 
-
     fun updateBpm(bpm: String) {
-        currentIndex.value?.let { newBpms[it] = bpm }
+        currentIndex.value?.let {
+            newBpms[it] = bpm
+            _summaryList.updateBpm(it, bpm)
+        }
     }
 
     fun saveSession() {

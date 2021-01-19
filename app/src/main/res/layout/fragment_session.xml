@@ -132,6 +132,15 @@
             android:textColor="?android:attr/textColorSecondary"
             android:text="Summary" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/summary_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="0dp"
+            android:paddingTop="?attr/actionBarSize"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/list_item_summary" />
+
     </LinearLayout>
 
 

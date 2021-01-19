@@ -16,6 +16,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.*
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
 
@@ -27,9 +28,9 @@ class SessionFragment : Fragment() {
 
     private val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
         SessionViewModelFactory(
-                arguments?.get(
-                        "routineId"
-                ) as Long, requireNotNull(this.activity).application
+            arguments?.get(
+                "routineId"
+            ) as Long, requireNotNull(this.activity).application
         )
     }
 
@@ -158,15 +159,15 @@ class SessionFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(this,
-                object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() = goBack()
-                })
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() = goBack()
+            })
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
@@ -187,6 +188,17 @@ class SessionFragment : Fragment() {
             goBack()
         }
 
+        SummaryExerciseAdapter().let { adapter ->
+            adapter.stateRestorationPolicy =
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
+            binding.summaryList.adapter = adapter
+
+            viewModel.summaryList.observe(viewLifecycleOwner) {
+                adapter.submitList(it)
+            }
+        }
+
         viewModel.currentExercise.observe(viewLifecycleOwner) {
             binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled
             setButtonVisibility()
@@ -201,7 +213,8 @@ class SessionFragment : Fragment() {
                 binding.exerciseView.visibility = View.VISIBLE
                 binding.sessionCurrentExerciseName.text = viewModel.currentExerciseName
                 binding.bpmInput.hint = viewModel.currentExerciseBpmRecord
-                binding.bpmInput.text = Editable.Factory.getInstance().newEditable(viewModel.newExerciseBpm)
+                binding.bpmInput.text =
+                    Editable.Factory.getInstance().newEditable(viewModel.newExerciseBpm)
             }
         }
         return binding.root
@@ -235,12 +248,12 @@ class SessionFragment : Fragment() {
 
     private fun showTimerEditor() {
         val action =
-                SessionFragmentDirections.actionSessionFragmentToTimerEditorDialogFragment(
-                        arguments?.get(
-                                "routineId"
-                        ) as Long,
-                        mTimer.timeLeft.value ?: 0L
-                )
+            SessionFragmentDirections.actionSessionFragmentToTimerEditorDialogFragment(
+                arguments?.get(
+                    "routineId"
+                ) as Long,
+                mTimer.timeLeft.value ?: 0L
+            )
         findNavController().navigate(action)
     }
 }
