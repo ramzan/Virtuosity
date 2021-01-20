@@ -31,6 +31,8 @@ class ExerciseListFragment : Fragment() {
         )
     }
 
+    private lateinit var searchView: SearchView
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -57,7 +59,7 @@ class ExerciseListFragment : Fragment() {
         }
 
         binding.exercisesToolbar.menu.findItem(R.id.search).apply {
-            (actionView as SearchView).apply {
+            searchView = (actionView as SearchView).apply {
                 isIconified = false
                 queryHint = getString(R.string.exercises_search_hint)
                 setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -111,6 +113,7 @@ class ExerciseListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        searchView.setOnQueryTextListener(null)
         _binding = null
     }
 }
