@@ -151,7 +151,7 @@ class RoutineEditorFragment : Fragment() {
                             nameInput.setText(it.name)
                             viewModel.nameInputText = it.name
                         }
-                        nameInput.setSelection(viewModel.nameInputText!!.length)
+                        nameInput.setSelection(viewModel.nameInputText?.length ?: 0)
                     } else if (viewModel.routineDeleted) goBack()
                 }
             } else {

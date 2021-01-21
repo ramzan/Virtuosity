@@ -13,6 +13,8 @@ import com.nazmar.musicgym.R
 import com.nazmar.musicgym.getInputMethodManager
 import com.nazmar.musicgym.showKeyboard
 
+const val FIRST_RUN_KEY = "FIRST_RUN_KEY"
+
 class RenameDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -26,9 +28,13 @@ class RenameDialogFragment : DialogFragment() {
                 ) as Long, requireNotNull(this.activity).application
             )
         }
-        if (viewModel.nameInputText == null) {
-            viewModel.nameInputText = viewModel.exercise.value?.name
+
+        val firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
+
+        if (firstRun) {
+            viewModel.nameInputText = viewModel.exercise.value?.name ?: ""
         }
+
         text.setText(viewModel.nameInputText)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
@@ -62,4 +68,9 @@ class RenameDialogFragment : DialogFragment() {
         return dialog
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putBoolean(FIRST_RUN_KEY, false)
+    }
 }

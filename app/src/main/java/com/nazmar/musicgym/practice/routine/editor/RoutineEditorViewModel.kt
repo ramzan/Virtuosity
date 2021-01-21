@@ -44,8 +44,10 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
 
     fun loadOldRoutine() {
         if (!currentExercisesLoaded) {
-            _currentExercises = oldExercises.value!!.toMutableList()
-            currentExercisesLoaded = true
+            oldExercises.value?.let {
+                _currentExercises = it.toMutableList()
+                currentExercisesLoaded = true
+            }
         }
     }
 

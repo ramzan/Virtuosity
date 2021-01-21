@@ -20,20 +20,25 @@ class ExerciseDetailViewModel(exerciseId: Long, application: Application) :
     val exerciseDeleted: Boolean
         get() = _exerciseDeleted
 
-    var nameInputText: String? = null
+    var nameInputText: String = ""
 
     fun deleteExercise() {
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.delete(exercise.value!!)
+        exercise.value?.let {
+            CoroutineScope(Dispatchers.IO).launch {
+                dao.delete(it)
+            }
+            _exerciseDeleted = true
         }
-        _exerciseDeleted = true
     }
 
     fun renameExercise() {
-        if (nameInputText != exercise.value!!.name) {
-            CoroutineScope(Dispatchers.IO).launch {
-                dao.update(Exercise(nameInputText!!, exercise.value!!.id))
+        exercise.value?.let { exercise ->
+            if (nameInputText != exercise.name) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    dao.update(Exercise(nameInputText, exercise.id))
+                }
             }
+
         }
     }
 }
