@@ -40,7 +40,7 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
     val updatedIndex: LiveData<Int>
         get() = _updatedIndex
 
-    var nameInputText: String? = null
+    var nameInputText: String = ""
 
     fun loadOldRoutine() {
         if (!currentExercisesLoaded) {
@@ -52,17 +52,19 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
     }
 
     fun deleteRoutine() {
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.delete(routine.value!!)
+        routine.value?.let {
+            CoroutineScope(Dispatchers.IO).launch {
+                dao.delete(it)
+            }
+            _routineDeleted = true
         }
-        _routineDeleted = true
     }
 
     fun updateRoutine() {
         if (newRoutine) return createRoutine()
 
         CoroutineScope(Dispatchers.IO).launch {
-            dao.update(Routine(nameInputText!!, routineId))
+            dao.update(Routine(nameInputText, routineId))
             val oldExercises = dao.getRoutineExercises(routineId)
 
             if (oldExercises.size <= currentExercises.size) {
@@ -109,7 +111,7 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
 
     private fun createRoutine() {
         CoroutineScope(Dispatchers.IO).launch {
-            val newRoutineId = dao.insert(Routine(nameInputText!!))
+            val newRoutineId = dao.insert(Routine(nameInputText))
             var order = 1
 
             dao.insertRoutineExercises(currentExercises.map {

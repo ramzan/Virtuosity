@@ -93,6 +93,8 @@ class RoutineEditorFragment : Fragment() {
 
         requireActivity().hideBottomNavBar()
 
+        val firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
+
         imm = requireActivity().getInputMethodManager()
 
         _binding = FragmentRoutineEditorBinding.inflate(inflater)
@@ -147,11 +149,11 @@ class RoutineEditorFragment : Fragment() {
                     if (it != null) {
                         deleteButton.isVisible = true
                         saveButton.isVisible = true
-                        if (viewModel.nameInputText == null) {
+                        if (firstRun) {
                             nameInput.setText(it.name)
                             viewModel.nameInputText = it.name
                         }
-                        nameInput.setSelection(viewModel.nameInputText?.length ?: 0)
+                        nameInput.setSelection(viewModel.nameInputText.length)
                     } else if (viewModel.routineDeleted) goBack()
                 }
             } else {
@@ -213,5 +215,11 @@ class RoutineEditorFragment : Fragment() {
 
     fun startDragging(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(FIRST_RUN_KEY, false)
     }
 }

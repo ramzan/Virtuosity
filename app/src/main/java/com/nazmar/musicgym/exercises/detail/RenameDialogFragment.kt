@@ -9,11 +9,10 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.nazmar.musicgym.FIRST_RUN_KEY
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.getInputMethodManager
 import com.nazmar.musicgym.showKeyboard
-
-const val FIRST_RUN_KEY = "FIRST_RUN_KEY"
 
 class RenameDialogFragment : DialogFragment() {
 
@@ -70,7 +69,6 @@ class RenameDialogFragment : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
         outState.putBoolean(FIRST_RUN_KEY, false)
     }
 }

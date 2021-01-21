@@ -18,6 +18,8 @@ enum class TimerState {
     PAUSED, // Pause button pressed, time still remaining
 }
 
+const val FIRST_RUN_KEY = "FIRST_RUN_KEY"
+
 const val MAX_TIMER_DURATION = 5999000L
 const val DEFAULT_TIMER_DURATION = 300000L
 
@@ -136,9 +138,7 @@ fun getTimerNotificationBuilder(
     return builder
 }
 
-fun isOreoOrAbove(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-}
+fun isOreoOrAbove() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
 fun MutableLiveData<MutableList<SummaryExercise>>.updateBpm(index: Int, updatedBpm: String) {
     val value = this.value?.toMutableList() ?: mutableListOf()
