@@ -208,13 +208,16 @@ class SessionFragment : Fragment() {
                 if (mBound) mTimer.clearTimer()
                 binding.summaryView.visibility = View.VISIBLE
                 binding.exerciseView.visibility = View.GONE
+                binding.bpmInput.isEnabled = false
             } else {
                 binding.summaryView.visibility = View.GONE
                 binding.exerciseView.visibility = View.VISIBLE
                 binding.sessionCurrentExerciseName.text = viewModel.currentExerciseName
-                binding.bpmInput.hint = viewModel.currentExerciseBpmRecord
-                binding.bpmInput.text =
-                    Editable.Factory.getInstance().newEditable(viewModel.newExerciseBpm)
+                binding.bpmInput.apply {
+                    text = Editable.Factory.getInstance().newEditable(viewModel.newExerciseBpm)
+                    hint = viewModel.currentExerciseBpmRecord
+                    isEnabled = true
+                }
             }
         }
         return binding.root
