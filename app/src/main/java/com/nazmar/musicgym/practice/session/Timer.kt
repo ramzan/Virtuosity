@@ -12,11 +12,12 @@ import com.nazmar.musicgym.db.SessionExercise
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Timer(private val runningNotification: NotificationCompat.Builder,
-            private val pausedNotification: NotificationCompat.Builder,
-            private val stoppedNotification: NotificationCompat.Builder,
-            private val notificationManager: NotificationManager,
-            private val mediaPlayer: MediaPlayer
+class Timer(
+    private val runningNotification: NotificationCompat.Builder,
+    private val pausedNotification: NotificationCompat.Builder,
+    private val stoppedNotification: NotificationCompat.Builder,
+    private val notificationManager: NotificationManager,
+    private val mediaPlayer: MediaPlayer
 ) {
 
     private var notification = stoppedNotification

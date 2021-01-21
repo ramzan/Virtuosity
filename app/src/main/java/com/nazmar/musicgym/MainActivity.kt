@@ -19,12 +19,12 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         createChannel(
-                getString(R.string.timer_notification_channel_id),
-                getString(R.string.timer_notification_channel_name)
+            getString(R.string.timer_notification_channel_id),
+            getString(R.string.timer_notification_channel_name)
         )
         createChannel(
-                getString(R.string.metronome_notification_channel_id),
-                getString(R.string.metronome_notification_channel_name)
+            getString(R.string.metronome_notification_channel_id),
+            getString(R.string.metronome_notification_channel_name)
         )
     }
 
@@ -32,9 +32,9 @@ class MainActivity : AppCompatActivity() {
         if (isOreoOrAbove()) {
             val notificationManager = this.getSystemService(NotificationManager::class.java)
             NotificationChannel(
-                    channelId,
-                    channelName,
-                    NotificationManager.IMPORTANCE_HIGH
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 setShowBadge(false)
                 description = channelName

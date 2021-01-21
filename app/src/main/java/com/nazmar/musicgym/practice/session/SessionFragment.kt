@@ -63,14 +63,7 @@ class SessionFragment : Fragment() {
                             binding.timerEditor.visibility = View.GONE
                             binding.timer.visibility = View.VISIBLE
                         }
-                        TimerState.PAUSED -> {
-                            binding.pauseTimerButton.visibility = View.GONE
-                            binding.startTimerButton.visibility = View.VISIBLE
-
-                            binding.timerEditor.visibility = View.VISIBLE
-                            binding.timer.visibility = View.GONE
-                        }
-                        TimerState.STOPPED -> {
+                        TimerState.PAUSED, TimerState.STOPPED -> {
                             binding.pauseTimerButton.visibility = View.GONE
                             binding.startTimerButton.visibility = View.VISIBLE
 

@@ -55,8 +55,7 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
     val currentExercise = Transformations.map(currentIndex) {
         exercises.value?.let { exercises ->
             when (it) {
-                exercises.size -> null
-                -1 -> null
+                exercises.size, -1 -> null
                 else -> exercises[it]
             }
         }

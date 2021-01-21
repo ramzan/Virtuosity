@@ -15,18 +15,19 @@ class TimerEditorDialogFragment : DialogFragment() {
 
         val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
             SessionViewModelFactory(
-                    arguments?.get(
-                            "routineId"
-                    ) as Long, requireNotNull(this.activity).application
+                arguments?.get(
+                    "routineId"
+                ) as Long, requireNotNull(this.activity).application
             )
         }
 
-        return TimeDurationPickerDialog(requireContext(),
-                { _: TimeDurationPicker, l: Long ->
-                    viewModel.updateEditorTime(l.coerceAtMost(MAX_TIMER_DURATION))
-                },
-                arguments?.getLong("timeLeft") ?: 0L,
-                TimeDurationPicker.MM_SS
+        return TimeDurationPickerDialog(
+            requireContext(),
+            { _: TimeDurationPicker, l: Long ->
+                viewModel.updateEditorTime(l.coerceAtMost(MAX_TIMER_DURATION))
+            },
+            arguments?.getLong("timeLeft") ?: 0L,
+            TimeDurationPicker.MM_SS
         )
     }
 }

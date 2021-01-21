@@ -27,7 +27,7 @@ class ExerciseListFragment : Fragment() {
 
     private val viewModel: ExerciseListViewModel by activityViewModels {
         ExerciseListViewModelFactory(
-                requireNotNull(this.activity).application
+            requireNotNull(this.activity).application
         )
     }
 
@@ -35,9 +35,9 @@ class ExerciseListFragment : Fragment() {
 
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentExerciseListBinding.inflate(inflater)
 
@@ -45,7 +45,7 @@ class ExerciseListFragment : Fragment() {
             showExerciseView(it.id)
         }).run {
             this.stateRestorationPolicy =
-                    RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
             binding.exerciseList.adapter = this
 
@@ -74,7 +74,8 @@ class ExerciseListFragment : Fragment() {
                 })
             }
 
-            imm = (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            imm =
+                (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     (actionView as SearchView).onActionViewExpanded()
@@ -101,7 +102,8 @@ class ExerciseListFragment : Fragment() {
     }
 
     private fun showNewExerciseDialog() {
-        val action = ExerciseListFragmentDirections.actionExerciseListFragmentToNewExerciseDialogFragment()
+        val action =
+            ExerciseListFragmentDirections.actionExerciseListFragmentToNewExerciseDialogFragment()
         findNavController().navigate(action)
     }
 

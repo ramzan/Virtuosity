@@ -140,14 +140,9 @@ fun isOreoOrAbove(): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 }
 
-fun MutableLiveData<MutableList<SummaryExercise>>.updateBpm(index: Int, newBpm: String) {
+fun MutableLiveData<MutableList<SummaryExercise>>.updateBpm(index: Int, updatedBpm: String) {
     val value = this.value?.toMutableList() ?: mutableListOf()
-    val bpm = if (newBpm.isBlank()) {
-        0
-    } else {
-        newBpm.toInt()
-    }
-    value[index] = SummaryExercise(value[index].id, value[index].name, value[index].oldBpm, bpm)
+    value[index] = value[index].copy(newBpm = if (updatedBpm.isBlank()) 0 else updatedBpm.toInt())
     this.value = value
 
 }

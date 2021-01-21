@@ -21,9 +21,9 @@ class RenameDialogFragment : DialogFragment() {
 
         val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
             ExerciseDetailViewModelFactory(
-                    arguments?.get(
-                            "exerciseId"
-                    ) as Long, requireNotNull(this.activity).application
+                arguments?.get(
+                    "exerciseId"
+                ) as Long, requireNotNull(this.activity).application
             )
         }
         if (viewModel.nameInputText == null) {
@@ -32,13 +32,13 @@ class RenameDialogFragment : DialogFragment() {
         text.setText(viewModel.nameInputText)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.rename)
-                .setView(layout)
-                .setPositiveButton("OK") { _, _ ->
-                    viewModel.renameExercise()
-                }
-                .setNegativeButton("CANCEL") { _, _ -> }
-                .create()
+            .setTitle(R.string.rename)
+            .setView(layout)
+            .setPositiveButton("OK") { _, _ ->
+                viewModel.renameExercise()
+            }
+            .setNegativeButton("CANCEL") { _, _ -> }
+            .create()
 
         text.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}

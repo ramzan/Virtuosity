@@ -62,11 +62,13 @@ interface ExerciseDatabaseDao {
     @Query("SELECT * FROM exercise_table WHERE id = :key")
     fun getExercise(key: Long): LiveData<Exercise?>
 
-    @Query("""
+    @Query(
+        """
         SELECT id, name, MAX(bpm) AS bpm FROM exercise_table
         LEFT OUTER JOIN history_table ON exerciseId = id
         GROUP BY id ORDER BY name COLLATE NOCASE ASC
-        """)
+        """
+    )
     fun getAllExerciseMaxBPMs(): LiveData<List<ExerciseMaxBpm>>
 
     @Query("SELECT * FROM routine_table ORDER BY name COLLATE NOCASE ASC")
@@ -78,14 +80,17 @@ interface ExerciseDatabaseDao {
     @Query("SELECT * FROM routine_exercise_table WHERE routineId = :routineId ORDER BY `order`")
     fun getRoutineExercises(routineId: Long): List<RoutineExercise>
 
-    @Query("""
+    @Query(
+        """
         SELECT exerciseId, name, duration
         FROM routine_exercise_table JOIN exercise_table ON exerciseId = exercise_table.id 
         WHERE routineId = :routineId ORDER BY `order`
-        """)
+        """
+    )
     fun getRoutineExerciseNames(routineId: Long): LiveData<List<RoutineExerciseName>>
 
-    @Query("""
+    @Query(
+        """
         SELECT routine_exercise_table.exerciseId, name, MAX(bpm) AS bpm, duration
         FROM routine_exercise_table 
         JOIN exercise_table ON routine_exercise_table.exerciseId = exercise_table.id 
@@ -93,6 +98,7 @@ interface ExerciseDatabaseDao {
         WHERE routineId = :routineId 
         GROUP BY `order`
         ORDER BY `order`
-        """)
+        """
+    )
     fun getSessionExercises(routineId: Long): LiveData<List<SessionExercise>>
 }

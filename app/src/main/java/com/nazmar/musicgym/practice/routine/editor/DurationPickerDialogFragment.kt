@@ -15,22 +15,22 @@ class DurationPickerDialogFragment : DialogFragment() {
 
         val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
             RoutineEditorViewModelFactory(
-                    arguments?.get(
-                            "routineId"
-                    ) as Long, requireNotNull(this.activity).application
+                arguments?.get(
+                    "routineId"
+                ) as Long, requireNotNull(this.activity).application
             )
         }
 
         val exerciseIndex = requireArguments().getInt("exerciseIndex")
 
         return TimeDurationPickerDialog(
-                requireContext(),
-                { _: TimeDurationPicker, l: Long ->
-                    viewModel.updateDuration(exerciseIndex, l.coerceAtMost(MAX_TIMER_DURATION))
+            requireContext(),
+            { _: TimeDurationPicker, l: Long ->
+                viewModel.updateDuration(exerciseIndex, l.coerceAtMost(MAX_TIMER_DURATION))
 
-                },
-                viewModel.getItemDuration(exerciseIndex),
-                TimeDurationPicker.MM_SS
+            },
+            viewModel.getItemDuration(exerciseIndex),
+            TimeDurationPicker.MM_SS
         )
     }
 }

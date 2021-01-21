@@ -21,23 +21,23 @@ class RoutineListFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
         _binding = FragmentRoutineListBinding.inflate(inflater)
 
         RoutineAdapter(
-                object : RoutineAdapter.OnClickListener() {
-                    override fun onEdit(routine: Routine) = showRoutineEditor(routine.id)
+            object : RoutineAdapter.OnClickListener {
+                override fun onEdit(routine: Routine) = showRoutineEditor(routine.id)
 
-                    override fun onStart(routine: Routine) = startRoutine(routine.id)
-                }
+                override fun onStart(routine: Routine) = startRoutine(routine.id)
+            }
         ).run {
             this.stateRestorationPolicy =
-                    RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
             binding.routineList.adapter = this
 

@@ -46,7 +46,13 @@ class TimerService : Service() {
         pausedNotification = getTimerNotificationBuilder(this, TimerState.PAUSED)
         stoppedNotification = getTimerNotificationBuilder(this, TimerState.STOPPED)
 
-        timer = Timer(runningNotification, pausedNotification, stoppedNotification, notificationManager, mediaPlayer)
+        timer = Timer(
+            runningNotification,
+            pausedNotification,
+            stoppedNotification,
+            notificationManager,
+            mediaPlayer
+        )
         timerReceiver = TimerReceiver(timer)
         IntentFilter().apply {
             addAction(RESUME_TIMER)

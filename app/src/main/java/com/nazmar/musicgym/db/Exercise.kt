@@ -5,13 +5,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "exercise_table")
 data class Exercise(
-        @PrimaryKey(autoGenerate = true)
-        val id: Long,
+    var name: String,
 
-        var name: String
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0
 ) {
-    constructor(name: String) : this(0, name)
-
     override fun toString(): String {
         return this.name
     }

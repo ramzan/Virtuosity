@@ -32,7 +32,7 @@ class ExerciseDetailViewModel(exerciseId: Long, application: Application) :
     fun renameExercise() {
         if (nameInputText != exercise.value!!.name) {
             CoroutineScope(Dispatchers.IO).launch {
-                dao.update(Exercise(exercise.value!!.id, nameInputText!!))
+                dao.update(Exercise(nameInputText!!, exercise.value!!.id))
             }
         }
     }

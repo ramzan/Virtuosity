@@ -14,8 +14,8 @@ import java.util.*
 
 
 class RoutineExerciseAdapter(
-        private val fragment: RoutineEditorFragment,
-        private val onClickListener: (exerciseIndex: Int, duration: Long) -> Unit
+    private val fragment: RoutineEditorFragment,
+    private val onClickListener: (exerciseIndex: Int, duration: Long) -> Unit
 ) : ListAdapter<RoutineExerciseName, RoutineExerciseAdapter.ViewHolder>(RoutineDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -36,11 +36,14 @@ class RoutineExerciseAdapter(
     }
 
     class ViewHolder private constructor(private val binding: ListItemRoutineExerciseBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
 
         val dragHandle = binding.dragHandle
 
-        fun bind(item: RoutineExerciseName, onClickListener: (exerciseIndex: Int, duration: Long) -> Unit) {
+        fun bind(
+            item: RoutineExerciseName,
+            onClickListener: (exerciseIndex: Int, duration: Long) -> Unit
+        ) {
             binding.apply {
                 exerciseName.text = item.name
                 duration.setText(timeFormatter.format(item.duration))
@@ -55,7 +58,7 @@ class RoutineExerciseAdapter(
                 val layoutInflater = LayoutInflater.from(parent.context)
 
                 val binding =
-                        ListItemRoutineExerciseBinding.inflate(layoutInflater, parent, false)
+                    ListItemRoutineExerciseBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }
@@ -67,15 +70,15 @@ class RoutineExerciseAdapter(
 
 class RoutineDiffCallback : DiffUtil.ItemCallback<RoutineExerciseName>() {
     override fun areItemsTheSame(
-            oldItem: RoutineExerciseName,
-            newItem: RoutineExerciseName
+        oldItem: RoutineExerciseName,
+        newItem: RoutineExerciseName
     ): Boolean {
         return oldItem.name == newItem.name && oldItem.duration == newItem.duration
     }
 
     override fun areContentsTheSame(
-            oldItem: RoutineExerciseName,
-            newItem: RoutineExerciseName
+        oldItem: RoutineExerciseName,
+        newItem: RoutineExerciseName
     ): Boolean {
         return oldItem == newItem
     }

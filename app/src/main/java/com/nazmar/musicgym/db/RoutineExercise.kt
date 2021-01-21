@@ -5,48 +5,48 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 
 @Entity(
-        tableName = "routine_exercise_table",
-        foreignKeys = [
-            ForeignKey(
-                    entity = Routine::class,
-                    parentColumns = ["id"],
-                    childColumns = ["routineId"],
-                    onDelete = ForeignKey.CASCADE
-            ),
-            ForeignKey(
-                    entity = Exercise::class,
-                    parentColumns = ["id"],
-                    childColumns = ["exerciseId"],
-                    onDelete = ForeignKey.CASCADE
-            )
-        ],
-        primaryKeys = ["routineId", "order"]
+    tableName = "routine_exercise_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = Routine::class,
+            parentColumns = ["id"],
+            childColumns = ["routineId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = Exercise::class,
+            parentColumns = ["id"],
+            childColumns = ["exerciseId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    primaryKeys = ["routineId", "order"]
 )
 data class RoutineExercise(
-        val routineId: Long,
+    val routineId: Long,
 
-        val order: Int,
+    val order: Int,
 
-        @ColumnInfo(index = true)
-        val exerciseId: Long,
+    @ColumnInfo(index = true)
+    val exerciseId: Long,
 
-        val duration: Long
+    val duration: Long
 )
 
 data class RoutineExerciseName(
-        val exerciseId: Long,
+    val exerciseId: Long,
 
-        val name: String,
+    val name: String,
 
-        var duration: Long
+    var duration: Long
 )
 
 data class SessionExercise(
-        val exerciseId: Long,
+    val exerciseId: Long,
 
-        val name: String,
+    val name: String,
 
-        val bpm: Int,
+    val bpm: Int,
 
-        val duration: Long
+    val duration: Long
 )

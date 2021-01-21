@@ -18,7 +18,7 @@ class NewExerciseDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val viewModel: ExerciseListViewModel by activityViewModels {
             ExerciseListViewModelFactory(
-                    requireNotNull(this.activity).application
+                requireNotNull(this.activity).application
             )
         }
 
@@ -26,13 +26,13 @@ class NewExerciseDialogFragment : DialogFragment() {
         val text = layout.findViewById<EditText>(R.id.name_input)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.new_exercise)
-                .setView(layout)
-                .setPositiveButton("OK") { _, _ ->
-                    viewModel.addExercise(text.text.toString().trim())
-                }
-                .setNegativeButton("CANCEL") { _, _ -> }
-                .create()
+            .setTitle(R.string.new_exercise)
+            .setView(layout)
+            .setPositiveButton("OK") { _, _ ->
+                viewModel.addExercise(text.text.toString().trim())
+            }
+            .setNegativeButton("CANCEL") { _, _ -> }
+            .create()
 
         text.addTextChangedListener(object : TextWatcher {
 
