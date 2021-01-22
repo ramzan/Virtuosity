@@ -27,9 +27,3 @@ data class HistoryItem(
         @PrimaryKey(autoGenerate = true)
         val itemId: Long = 0
 )
-
-data class ExerciseMaxBpm(
-        val id: Long,
-        val name: String,
-        val bpm: Int?
-)

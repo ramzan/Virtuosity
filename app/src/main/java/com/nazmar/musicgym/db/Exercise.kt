@@ -14,3 +14,9 @@ data class Exercise(
         return this.name
     }
 }
+
+data class ExerciseMaxBpm(
+    val id: Long,
+    val name: String,
+    val bpm: Int?
+)
