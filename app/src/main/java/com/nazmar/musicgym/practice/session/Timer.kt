@@ -3,12 +3,15 @@ package com.nazmar.musicgym.practice.session
 import android.app.NotificationManager
 import android.media.MediaPlayer
 import android.os.CountDownTimer
+import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.TimerState
 import com.nazmar.musicgym.db.SessionExercise
+import com.nazmar.musicgym.vibrate
+import java.security.PrivateKey
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -17,7 +20,8 @@ class Timer(
     private val pausedNotification: NotificationCompat.Builder,
     private val stoppedNotification: NotificationCompat.Builder,
     private val notificationManager: NotificationManager,
-    private val mediaPlayer: MediaPlayer
+    private val mediaPlayer: MediaPlayer,
+    private val vibrator: Vibrator?
 ) {
 
     private var notification = stoppedNotification
@@ -78,6 +82,7 @@ class Timer(
                 override fun onFinish() {
                     clearTimer()
                     showTimeUpNotification()
+                    vibrator?.vibrate()
                     mediaPlayer.start()
                 }
             }

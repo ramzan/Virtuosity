@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:key="theme"
+        app:title="Theme" />
+
+    <PreferenceCategory
+        app:key="timer_group"
+        app:title="Timer">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="timer_vibrate"
+            app:title="Vibrate on complete" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

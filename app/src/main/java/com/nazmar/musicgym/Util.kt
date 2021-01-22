@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.NotificationCompat
@@ -144,5 +146,13 @@ fun MutableLiveData<MutableList<SummaryExercise>>.updateBpm(index: Int, updatedB
     val value = this.value?.toMutableList() ?: mutableListOf()
     value[index] = value[index].copy(newBpm = if (updatedBpm.isBlank()) 0 else updatedBpm.toInt())
     this.value = value
+
+}
+
+@Suppress("DEPRECATION")
+fun Vibrator.vibrate() {
+    if (isOreoOrAbove()) {
+        this.vibrate(VibrationEffect.createWaveform(longArrayOf(200, 250, 200, 250), -1))
+    } else this.vibrate(longArrayOf(200, 250, 200, 250), -10)
 
 }

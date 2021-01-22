@@ -8,6 +8,7 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.*
 import androidx.core.app.NotificationCompat
+import androidx.preference.PreferenceManager
 import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.TimerState
 import com.nazmar.musicgym.getTimerNotificationBuilder
@@ -46,12 +47,19 @@ class TimerService : Service() {
         pausedNotification = getTimerNotificationBuilder(this, TimerState.PAUSED)
         stoppedNotification = getTimerNotificationBuilder(this, TimerState.STOPPED)
 
+        val vibrator =
+            PreferenceManager.getDefaultSharedPreferences(this).getBoolean("timer_vibrate", true)
+                .let {
+                    if (it) getSystemService(Vibrator::class.java) else null
+                }
+
         timer = Timer(
             runningNotification,
             pausedNotification,
             stoppedNotification,
             notificationManager,
-            mediaPlayer
+            mediaPlayer,
+            vibrator
         )
         timerReceiver = TimerReceiver(timer)
         IntentFilter().apply {
