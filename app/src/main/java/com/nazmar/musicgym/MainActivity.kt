@@ -34,12 +34,10 @@ class MainActivity : AppCompatActivity() {
             NotificationChannel(
                 channelId,
                 channelName,
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_LOW
             ).apply {
                 setShowBadge(false)
                 description = channelName
-                vibrationPattern = longArrayOf(0)
-                enableVibration(true)
             }.also {
                 notificationManager.createNotificationChannel(it)
             }
