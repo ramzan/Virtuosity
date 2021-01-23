@@ -11,7 +11,6 @@ import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.TimerState
 import com.nazmar.musicgym.db.SessionExercise
 import com.nazmar.musicgym.vibrate
-import java.security.PrivateKey
 import java.text.SimpleDateFormat
 import java.util.*
 

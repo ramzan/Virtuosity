@@ -5,10 +5,10 @@ import android.app.Service
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.MediaPlayer
-import android.media.RingtoneManager
 import android.os.*
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
+import com.nazmar.musicgym.R
 import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.TimerState
 import com.nazmar.musicgym.getTimerNotificationBuilder
@@ -39,8 +39,7 @@ class TimerService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        mediaPlayer = MediaPlayer.create(this, sound)
+        mediaPlayer = MediaPlayer.create(this, R.raw.bell)
         notificationManager = application.getSystemService(NotificationManager::class.java)
 
         runningNotification = getTimerNotificationBuilder(this, TimerState.RUNNING)
