@@ -172,7 +172,7 @@ class SessionFragment : Fragment() {
 
         viewModel.exercises.observe(viewLifecycleOwner) {
             if (viewModel.currentIndex.value == -1) {
-                viewModel.createBpmList()
+//                viewModel.createBpmList()
                 viewModel.nextExercise()
             }
         }
@@ -193,23 +193,25 @@ class SessionFragment : Fragment() {
         }
 
         viewModel.currentExercise.observe(viewLifecycleOwner) {
-            binding.previousExerciseButton.isEnabled = viewModel.previousButtonEnabled
-            setButtonVisibility()
-            if (mBound) mTimer.setUpTimer(viewModel.currentExercise.value)
+            binding.apply {
+                previousExerciseButton.isEnabled = viewModel.previousButtonEnabled
+                setButtonVisibility()
+                if (mBound) mTimer.setUpTimer(viewModel.currentExercise.value)
 
-            if (it == null) {
-                if (mBound) mTimer.clearTimer()
-                binding.summaryView.visibility = View.VISIBLE
-                binding.exerciseView.visibility = View.GONE
-                binding.bpmInput.isEnabled = false
-            } else {
-                binding.summaryView.visibility = View.GONE
-                binding.exerciseView.visibility = View.VISIBLE
-                binding.sessionCurrentExerciseName.text = viewModel.currentExerciseName
-                binding.bpmInput.apply {
-                    text = Editable.Factory.getInstance().newEditable(viewModel.newExerciseBpm)
-                    hint = viewModel.currentExerciseBpmRecord
-                    isEnabled = true
+                if (it == null) {
+                    if (mBound) mTimer.clearTimer()
+                    summaryView.visibility = View.VISIBLE
+                    exerciseView.visibility = View.GONE
+                    bpmInput.isEnabled = false
+                } else {
+                    summaryView.visibility = View.GONE
+                    exerciseView.visibility = View.VISIBLE
+                    sessionCurrentExerciseName.text = viewModel.currentExerciseName
+                    bpmInput.apply {
+                        text = Editable.Factory.getInstance().newEditable(viewModel.newExerciseBpm)
+                        hint = viewModel.currentExerciseBpmRecord
+                        isEnabled = true
+                    }
                 }
             }
         }

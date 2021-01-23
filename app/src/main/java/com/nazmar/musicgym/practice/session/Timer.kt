@@ -61,7 +61,7 @@ class Timer(
     val timerStatus: LiveData<TimerState>
         get() = _timerStatus
 
-    private var currentExercise: SessionExercise? = SessionExercise(-1, "", -1, -1)
+    private var currentExercise: SessionExercise? = SessionExercise(-1, -1, "", -1, -1)
 
     private val currentExerciseDuration
         get() = currentExercise?.duration ?: 0L

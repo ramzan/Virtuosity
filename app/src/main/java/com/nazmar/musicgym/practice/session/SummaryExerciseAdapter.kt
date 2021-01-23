@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.ListItemSummaryBinding
+import com.nazmar.musicgym.db.SessionExercise
 import kotlin.math.sign
 
 
 class SummaryExerciseAdapter :
-    ListAdapter<SummaryExercise, SummaryExerciseAdapter.ViewHolder>(SummaryExerciseDiffCallback()) {
+    ListAdapter<SessionExercise, SummaryExerciseAdapter.ViewHolder>(SessionExerciseDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -23,11 +24,11 @@ class SummaryExerciseAdapter :
     class ViewHolder private constructor(private val binding: ListItemSummaryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: SummaryExercise) {
+        fun bind(item: SessionExercise) {
             binding.apply {
                 summaryItemName.text = item.name
-                summaryItemBpm.text = item.newBpm.toString()
-                summaryItemBpmDiff.text = (item.newBpm - item.oldBpm).let {
+                summaryItemBpm.text = item.newBpm
+                summaryItemBpmDiff.text = (item.newBpm.toInt() - item.bpmRecord).let {
                     when (it.sign) {
                         1 -> "+$it"
                         else -> ""
@@ -49,22 +50,12 @@ class SummaryExerciseAdapter :
     }
 }
 
-class SummaryExerciseDiffCallback : DiffUtil.ItemCallback<SummaryExercise>() {
-    override fun areItemsTheSame(oldItem: SummaryExercise, newItem: SummaryExercise): Boolean {
-        return oldItem.id == newItem.id
+class SessionExerciseDiffCallback : DiffUtil.ItemCallback<SessionExercise>() {
+    override fun areItemsTheSame(oldItem: SessionExercise, newItem: SessionExercise): Boolean {
+        return oldItem.order == newItem.order
     }
 
-    override fun areContentsTheSame(oldItem: SummaryExercise, newItem: SummaryExercise): Boolean {
+    override fun areContentsTheSame(oldItem: SessionExercise, newItem: SessionExercise): Boolean {
         return oldItem.newBpm == newItem.newBpm
     }
 }
-
-data class SummaryExercise(
-    val id: Int,
-
-    var name: String,
-
-    val oldBpm: Int,
-
-    var newBpm: Int
-)

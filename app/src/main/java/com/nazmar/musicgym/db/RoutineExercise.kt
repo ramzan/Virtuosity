@@ -41,12 +41,17 @@ data class RoutineExerciseName(
     var duration: Long
 )
 
+@Entity(tableName = "saved_session_table")
 data class SessionExercise(
+    val order: Int,
+
     val exerciseId: Long,
 
     val name: String,
 
-    val bpm: Int,
+    val duration: Long,
 
-    val duration: Long
+    val bpmRecord: Int,
+
+    var newBpm: String = ""
 )

@@ -91,7 +91,7 @@ interface ExerciseDatabaseDao {
 
     @Query(
         """
-        SELECT routine_exercise_table.exerciseId, name, MAX(bpm) AS bpm, duration
+        SELECT `order`, routine_exercise_table.exerciseId, name, duration, MAX(bpm) AS bpmRecord, "" AS newBpm
         FROM routine_exercise_table 
         JOIN exercise_table ON routine_exercise_table.exerciseId = exercise_table.id 
         LEFT OUTER JOIN history_table ON routine_exercise_table.exerciseId = history_table.exerciseId 
@@ -100,5 +100,5 @@ interface ExerciseDatabaseDao {
         ORDER BY `order`
         """
     )
-    fun getSessionExercises(routineId: Long): LiveData<List<SessionExercise>>
+    suspend fun getSessionExercises(routineId: Long): MutableList<SessionExercise>
 }

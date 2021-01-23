@@ -1,12 +1,10 @@
 package com.nazmar.musicgym.practice.session
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.nazmar.musicgym.db.ExerciseDatabase
 import com.nazmar.musicgym.db.HistoryItem
+import com.nazmar.musicgym.db.SessionExercise
 import com.nazmar.musicgym.updateBpm
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,31 +16,25 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
 
     val session = dao.getRoutine(routineId)
 
-    val exercises = dao.getSessionExercises(routineId)
+    private var _exercises = MutableLiveData<MutableList<SessionExercise>>()
 
-    private var newBpms = mutableListOf<String>()
+    init {
+        viewModelScope.launch {
+            _exercises.value = dao.getSessionExercises(routineId)
+        }
+    }
 
-    private var _summaryList = MutableLiveData(mutableListOf<SummaryExercise>())
+    val exercises: LiveData<MutableList<SessionExercise>>
+        get() = _exercises
 
-    val summaryList = Transformations.map(_summaryList) {
-        it.filter { e -> e.newBpm != 0 }
+    val summaryList = Transformations.map(exercises) {
+        it.filter { e -> e.newBpm.isNotEmpty() }
     }
 
     private var _currentIndex = MutableLiveData(-1)
 
     val currentIndex: LiveData<Int>
         get() = _currentIndex
-
-    fun createBpmList() {
-        if (newBpms.size == 0) {
-            var i = 0
-            exercises.value?.forEach { e ->
-                newBpms.add("")
-                _summaryList.value?.add(SummaryExercise(i++, e.name, e.bpm, 0))
-            }
-            newBpms.add("")
-        }
-    }
 
     fun nextExercise() {
         _currentIndex.value = _currentIndex.value!! + 1
@@ -65,10 +57,10 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
         get() = currentExercise.value?.name ?: ""
 
     val currentExerciseBpmRecord: String
-        get() = (currentExercise.value?.bpm ?: 0).toString()
+        get() = (currentExercise.value?.bpmRecord ?: 0).toString()
 
     val newExerciseBpm: String
-        get() = newBpms[currentIndex.value!!]
+        get() = currentExercise.value?.newBpm ?: ""
 
     val nextButtonEnabled: Boolean
         get() = currentIndex.value!! > -1 && currentIndex.value!! < exercises.value!!.size
@@ -78,17 +70,17 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
 
     fun updateBpm(bpm: String) {
         currentIndex.value?.let {
-            newBpms[it] = bpm
-            _summaryList.updateBpm(it, bpm)
+            _exercises.updateBpm(it, bpm)
         }
     }
 
     fun saveSession() {
         CoroutineScope(Dispatchers.IO).launch {
-            for (i in 0 until newBpms.size) {
-                val bpm = newBpms[i]
-                if (bpm.isNotEmpty()) {
-                    dao.insert(HistoryItem(exercises.value!![i].exerciseId, bpm.toInt()))
+            for (i in exercises.value!!.indices) {
+                exercises.value?.get(i)?.let { exercise ->
+                    if (exercise.newBpm.isNotEmpty()) {
+                        dao.insert(HistoryItem(exercise.exerciseId, exercise.newBpm.toInt()))
+                    }
                 }
             }
         }

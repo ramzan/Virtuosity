@@ -10,8 +10,10 @@ import android.os.Vibrator
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.nazmar.musicgym.db.SessionExercise
 import com.nazmar.musicgym.practice.session.*
 
 enum class TimerState {
@@ -142,9 +144,9 @@ fun getTimerNotificationBuilder(
 
 fun isOreoOrAbove() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
-fun MutableLiveData<MutableList<SummaryExercise>>.updateBpm(index: Int, updatedBpm: String) {
+fun MutableLiveData<MutableList<SessionExercise>>.updateBpm(index: Int, updatedBpm: String) {
     val value = this.value?.toMutableList() ?: mutableListOf()
-    value[index] = value[index].copy(newBpm = if (updatedBpm.isBlank()) 0 else updatedBpm.toInt())
+    value[index] = value[index].copy(newBpm = updatedBpm)
     this.value = value
 
 }
