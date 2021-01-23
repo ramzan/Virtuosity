@@ -30,7 +30,7 @@ class SummaryExerciseAdapter :
                 summaryItemBpmDiff.text = (item.newBpm - item.oldBpm).let {
                     when (it.sign) {
                         1 -> "+$it"
-                        else -> "$it"
+                        else -> ""
                     }
                 }
             }
