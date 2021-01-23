@@ -14,11 +14,7 @@ class TimerEditorDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
-            SessionViewModelFactory(
-                arguments?.get(
-                    "routineId"
-                ) as Long, requireNotNull(this.activity).application
-            )
+            SessionViewModelFactory(arguments?.get("routineId") as Long)
         }
 
         return TimeDurationPickerDialog(

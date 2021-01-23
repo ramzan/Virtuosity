@@ -29,6 +29,9 @@ interface ExerciseDatabaseDao {
     @Insert
     suspend fun insert(routine: Routine): Long
 
+    @Insert
+    suspend fun createSession(exercises: List<SessionExercise>)
+
     // Update
 
     @Update
@@ -101,4 +104,10 @@ interface ExerciseDatabaseDao {
         """
     )
     suspend fun getSessionExercises(routineId: Long): MutableList<SessionExercise>
+
+    @Query("SELECT * FROM saved_session_table")
+    suspend fun getSavedSession(): MutableList<SessionExercise>
+
+    @Query("DELETE FROM saved_session_table")
+    fun clearSavedSession()
 }

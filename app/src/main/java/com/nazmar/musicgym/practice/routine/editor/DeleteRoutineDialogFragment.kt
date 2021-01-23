@@ -11,11 +11,7 @@ class DeleteRoutineDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
-            RoutineEditorViewModelFactory(
-                arguments?.get(
-                    "routineId"
-                ) as Long, requireNotNull(this.activity).application
-            )
+            RoutineEditorViewModelFactory(arguments?.get("routineId") as Long)
         }
 
         return MaterialAlertDialogBuilder(requireContext())

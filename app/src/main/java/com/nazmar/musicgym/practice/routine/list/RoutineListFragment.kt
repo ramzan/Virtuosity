@@ -17,7 +17,7 @@ class RoutineListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: RoutineListViewModel by viewModels {
-        RoutineListViewModelFactory(requireNotNull(this.activity).application)
+        RoutineListViewModelFactory()
     }
 
     override fun onCreateView(

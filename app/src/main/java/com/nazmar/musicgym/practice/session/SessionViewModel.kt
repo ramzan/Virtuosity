@@ -1,34 +1,28 @@
 package com.nazmar.musicgym.practice.session
 
-import android.app.Application
 import androidx.lifecycle.*
-import com.nazmar.musicgym.db.ExerciseDatabase
-import com.nazmar.musicgym.db.HistoryItem
+import com.nazmar.musicgym.data.Repository
 import com.nazmar.musicgym.db.SessionExercise
 import com.nazmar.musicgym.updateBpm
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SessionViewModel(routineId: Long, application: Application) : AndroidViewModel(application) {
+class SessionViewModel(routineId: Long) : ViewModel() {
 
-    private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
-
-    val session = dao.getRoutine(routineId)
+    val session = Repository.getRoutine(routineId)
 
     private var _exercises = MutableLiveData<MutableList<SessionExercise>>()
-
-    init {
-        viewModelScope.launch {
-            _exercises.value = dao.getSessionExercises(routineId)
-        }
-    }
 
     val exercises: LiveData<MutableList<SessionExercise>>
         get() = _exercises
 
     val summaryList = Transformations.map(exercises) {
         it.filter { e -> e.newBpm.isNotEmpty() }
+    }
+
+    init {
+        viewModelScope.launch {
+            _exercises.value = Repository.getSession(routineId, false)
+        }
     }
 
     private var _currentIndex = MutableLiveData(-1)
@@ -74,17 +68,7 @@ class SessionViewModel(routineId: Long, application: Application) : AndroidViewM
         }
     }
 
-    fun saveSession() {
-        CoroutineScope(Dispatchers.IO).launch {
-            for (i in exercises.value!!.indices) {
-                exercises.value?.get(i)?.let { exercise ->
-                    if (exercise.newBpm.isNotEmpty()) {
-                        dao.insert(HistoryItem(exercise.exerciseId, exercise.newBpm.toInt()))
-                    }
-                }
-            }
-        }
-    }
+    fun completeSession() = exercises.value?.let { Repository.completeSession(it) }
 
     // Timer editor
 

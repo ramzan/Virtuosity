@@ -1,32 +1,27 @@
 package com.nazmar.musicgym.practice.routine.editor
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.nazmar.musicgym.DEFAULT_TIMER_DURATION
-import com.nazmar.musicgym.db.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.nazmar.musicgym.data.Repository
+import com.nazmar.musicgym.db.Exercise
+import com.nazmar.musicgym.db.RoutineExerciseName
 
-class RoutineEditorViewModel(private val routineId: Long, application: Application) :
-    AndroidViewModel(application) {
-
-    private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
+class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
 
     val newRoutine = routineId == 0L
 
-    val routine = dao.getRoutine(routineId)
+    val routine = Repository.getRoutine(routineId)
 
     private var _routineDeleted = false
 
     val routineDeleted: Boolean
         get() = _routineDeleted
 
-    val exercises = dao.getAllExercises()
+    val exercises = Repository.getAllExercises()
 
-    val oldExercises = dao.getRoutineExerciseNames(routineId)
+    val oldExercises = Repository.getRoutineExerciseNames(routineId)
 
     private var _currentExercises = mutableListOf<RoutineExerciseName>()
 
@@ -53,70 +48,15 @@ class RoutineEditorViewModel(private val routineId: Long, application: Applicati
 
     fun deleteRoutine() {
         routine.value?.let {
-            CoroutineScope(Dispatchers.IO).launch {
-                dao.delete(it)
-            }
+            Repository.deleteRoutine(it)
             _routineDeleted = true
         }
     }
 
     fun updateRoutine() {
-        if (newRoutine) return createRoutine()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.update(Routine(nameInputText, routineId))
-            val oldExercises = dao.getRoutineExercises(routineId)
-
-            if (oldExercises.size <= currentExercises.size) {
-                for (i in oldExercises.indices) {
-                    val updatedExercise = currentExercises[i]
-                    dao.update(
-                        RoutineExercise(
-                            routineId,
-                            i + 1,
-                            updatedExercise.exerciseId,
-                            updatedExercise.duration
-                        )
-                    )
-                }
-                for (i in oldExercises.size until currentExercises.size) {
-                    val newExercise = currentExercises[i]
-                    dao.insert(
-                        RoutineExercise(
-                            routineId,
-                            i + 1,
-                            newExercise.exerciseId,
-                            newExercise.duration
-                        )
-                    )
-                }
-            } else {
-                for (i in 0 until currentExercises.size) {
-                    val updatedExercise = currentExercises[i]
-                    dao.update(
-                        RoutineExercise(
-                            routineId,
-                            i + 1,
-                            updatedExercise.exerciseId,
-                            updatedExercise.duration
-                        )
-                    )
-                }
-                for (i in currentExercises.size until oldExercises.size) {
-                    dao.delete(oldExercises[i])
-                }
-            }
-        }
-    }
-
-    private fun createRoutine() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val newRoutineId = dao.insert(Routine(nameInputText))
-            var order = 1
-
-            dao.insertRoutineExercises(currentExercises.map {
-                RoutineExercise(newRoutineId, order++, it.exerciseId, it.duration)
-            })
+        when (newRoutine) {
+            true -> Repository.createRoutine(nameInputText, currentExercises)
+            false -> Repository.updateRoutine(routineId, nameInputText, currentExercises)
         }
     }
 

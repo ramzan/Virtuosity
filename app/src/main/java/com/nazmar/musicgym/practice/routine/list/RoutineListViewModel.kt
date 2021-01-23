@@ -1,12 +1,9 @@
 package com.nazmar.musicgym.practice.routine.list
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import com.nazmar.musicgym.db.ExerciseDatabase
+import androidx.lifecycle.ViewModel
+import com.nazmar.musicgym.data.Repository
 
-class RoutineListViewModel(application: Application) : AndroidViewModel(application) {
+class RoutineListViewModel : ViewModel() {
 
-    private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
-
-    var routines = dao.getAllRoutines()
+    var routines = Repository.getAllRoutines()
 }

@@ -27,11 +27,7 @@ class RoutineEditorFragment : Fragment() {
     private lateinit var imm: InputMethodManager
 
     private val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
-        RoutineEditorViewModelFactory(
-            arguments?.get(
-                "routineId"
-            ) as Long, requireNotNull(this.activity).application
-        )
+        RoutineEditorViewModelFactory(arguments?.get("routineId") as Long)
     }
 
     private val simpleItemTouchCallback =
@@ -185,12 +181,12 @@ class RoutineEditorFragment : Fragment() {
     }
 
     private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
-        val action =
+        findNavController().navigate(
             RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
                 exerciseIndex,
                 duration
             )
-        findNavController().navigate(action)
+        )
     }
 
     private fun showDeleteDialog() {
@@ -203,8 +199,7 @@ class RoutineEditorFragment : Fragment() {
 
     private fun goBack() {
         imm.hideKeyboard(requireView().windowToken)
-        requireActivity().onBackPressed()
-        requireActivity().showBottomNavBar()
+        findNavController().popBackStack(R.id.routineListFragment, false)
     }
 
     override fun onDestroyView() {
@@ -216,7 +211,6 @@ class RoutineEditorFragment : Fragment() {
     fun startDragging(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
     }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

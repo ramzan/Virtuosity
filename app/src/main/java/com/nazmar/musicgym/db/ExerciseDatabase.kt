@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Database(
-    entities = [Exercise::class, HistoryItem::class, Routine::class, RoutineExercise::class],
+    entities = [Exercise::class, HistoryItem::class, Routine::class, RoutineExercise::class, SessionExercise::class],
     version = 1,
     exportSchema = false
 )

@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.*
+import com.nazmar.musicgym.data.Repository
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
 
 
@@ -27,11 +28,7 @@ class SessionFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
-        SessionViewModelFactory(
-            arguments?.get(
-                "routineId"
-            ) as Long, requireNotNull(this.activity).application
-        )
+        SessionViewModelFactory(arguments?.get("routineId") as Long)
     }
 
     private lateinit var imm: InputMethodManager
@@ -104,7 +101,7 @@ class SessionFragment : Fragment() {
                 }
 
                 doneButton.setOnClickListener {
-                    viewModel.saveSession()
+                    viewModel.completeSession()
                     goBack()
                 }
 
@@ -227,8 +224,8 @@ class SessionFragment : Fragment() {
     private fun goBack() {
         requireContext().stopService(Intent(requireContext(), TimerService::class.java))
         imm.hideKeyboard(requireView().windowToken)
-        findNavController().popBackStack()
-        requireActivity().showBottomNavBar()
+        Repository.clearSavedSession()
+        findNavController().popBackStack(R.id.routineListFragment, false)
     }
 
     private fun setButtonVisibility() {

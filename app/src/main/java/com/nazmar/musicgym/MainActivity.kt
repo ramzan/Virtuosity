@@ -7,11 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.nazmar.musicgym.data.Repository
+import com.nazmar.musicgym.db.ExerciseDatabase
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Repository.setDataSource(ExerciseDatabase.getInstance(application).exerciseDatabaseDao)
+
         setContentView(R.layout.activity_main)
         val navView = findViewById<BottomNavigationView>(R.id.nav_view)
 

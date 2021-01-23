@@ -1,6 +1,5 @@
 package com.nazmar.musicgym.exercises.list
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -14,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
+import com.nazmar.musicgym.getInputMethodManager
 import com.nazmar.musicgym.hideKeyboard
 import com.nazmar.musicgym.showKeyboard
 
@@ -26,13 +26,10 @@ class ExerciseListFragment : Fragment() {
     private lateinit var imm: InputMethodManager
 
     private val viewModel: ExerciseListViewModel by activityViewModels {
-        ExerciseListViewModelFactory(
-            requireNotNull(this.activity).application
-        )
+        ExerciseListViewModelFactory()
     }
 
     private lateinit var searchView: SearchView
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,8 +71,8 @@ class ExerciseListFragment : Fragment() {
                 })
             }
 
-            imm =
-                (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            imm = requireActivity().getInputMethodManager()
+
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     (actionView as SearchView).onActionViewExpanded()
@@ -97,14 +94,15 @@ class ExerciseListFragment : Fragment() {
     }
 
     private fun showExerciseView(id: Long) {
-        val action = ExerciseListFragmentDirections.actionExercisesFragmentToExercisesGraph(id)
-        findNavController().navigate(action)
+        findNavController().navigate(
+            ExerciseListFragmentDirections.actionExercisesFragmentToExercisesGraph(id)
+        )
     }
 
     private fun showNewExerciseDialog() {
-        val action =
+        findNavController().navigate(
             ExerciseListFragmentDirections.actionExerciseListFragmentToNewExerciseDialogFragment()
-        findNavController().navigate(action)
+        )
     }
 
     override fun onStop() {

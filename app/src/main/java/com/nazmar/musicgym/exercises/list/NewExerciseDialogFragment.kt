@@ -17,9 +17,7 @@ class NewExerciseDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val viewModel: ExerciseListViewModel by activityViewModels {
-            ExerciseListViewModelFactory(
-                requireNotNull(this.activity).application
-            )
+            ExerciseListViewModelFactory()
         }
 
         val layout = layoutInflater.inflate(R.layout.text_input_dialog, null)

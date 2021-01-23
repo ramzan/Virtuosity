@@ -20,13 +20,8 @@ class ExerciseDetailFragment : DialogFragment() {
     private val binding get() = _binding!!
 
     private val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
-        ExerciseDetailViewModelFactory(
-            arguments?.get(
-                "exerciseId"
-            ) as Long, requireNotNull(this.activity).application
-        )
+        ExerciseDetailViewModelFactory(requireArguments().getLong("exerciseId"))
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,27 +53,22 @@ class ExerciseDetailFragment : DialogFragment() {
             }
 
             viewModel.exercise.observe(viewLifecycleOwner) {
-                binding.apply {
-                    editorToolbar.title = it?.name ?: ""
-                    menu.getItem(0).isEnabled = it !== null
-                    menu.getItem(1).isEnabled = it !== null
-                }
+                title = it?.name ?: ""
+                menu.getItem(0).isEnabled = it !== null
+                menu.getItem(1).isEnabled = it !== null
                 if (viewModel.exerciseDeleted) goBack()
             }
 
-            binding.apply {
+            // Rename button
+            menu.getItem(0).setOnMenuItemClickListener {
+                showRenameDialog()
+                true
+            }
 
-                // Rename button
-                menu.getItem(0).setOnMenuItemClickListener {
-                    showRenameDialog()
-                    true
-                }
-
-                // Delete button
-                menu.getItem(1).setOnMenuItemClickListener {
-                    showDeleteDialog()
-                    true
-                }
+            // Delete button
+            menu.getItem(1).setOnMenuItemClickListener {
+                showDeleteDialog()
+                true
             }
         }
         return binding.root
@@ -101,8 +91,7 @@ class ExerciseDetailFragment : DialogFragment() {
     }
 
     private fun goBack() {
-        requireActivity().onBackPressed()
-        requireActivity().showBottomNavBar()
+        findNavController().popBackStack(R.id.exerciseListFragment, false)
     }
 
     override fun onDestroyView() {
@@ -110,6 +99,4 @@ class ExerciseDetailFragment : DialogFragment() {
         requireActivity().showBottomNavBar()
         _binding = null
     }
-
-
 }

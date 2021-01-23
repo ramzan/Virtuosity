@@ -10,11 +10,13 @@ import android.os.Vibrator
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.nazmar.musicgym.db.SessionExercise
-import com.nazmar.musicgym.practice.session.*
+import com.nazmar.musicgym.practice.session.PAUSE_TIMER
+import com.nazmar.musicgym.practice.session.RESTART_TIMER
+import com.nazmar.musicgym.practice.session.RESUME_TIMER
+import com.nazmar.musicgym.practice.session.TimerService
 
 enum class TimerState {
     STOPPED, // Timer has not been created

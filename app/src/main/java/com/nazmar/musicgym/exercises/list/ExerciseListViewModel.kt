@@ -1,21 +1,14 @@
 package com.nazmar.musicgym.exercises.list
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.nazmar.musicgym.db.Exercise
-import com.nazmar.musicgym.db.ExerciseDatabase
+import androidx.lifecycle.ViewModel
+import com.nazmar.musicgym.data.Repository
 import com.nazmar.musicgym.db.ExerciseMaxBpm
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 
-class ExerciseListViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
+class ExerciseListViewModel : ViewModel() {
 
     private var _query = MutableLiveData("")
 
@@ -25,7 +18,7 @@ class ExerciseListViewModel(application: Application) : AndroidViewModel(applica
         }
 
     private fun getFilteredExerciseMaxBPMs(query: String): LiveData<List<ExerciseMaxBpm>> {
-        return Transformations.map(dao.getAllExerciseMaxBPMs()) {
+        return Transformations.map(Repository.getAllExerciseMaxBPMs()) {
             it.filter { exercise -> exercise.name.toLowerCase(Locale.ROOT).contains(query) }
         }
     }
@@ -35,8 +28,6 @@ class ExerciseListViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun addExercise(name: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.insert(Exercise(name))
-        }
+        Repository.addExercise(name)
     }
 }

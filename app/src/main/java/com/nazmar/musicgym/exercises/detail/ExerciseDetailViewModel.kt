@@ -1,19 +1,11 @@
 package com.nazmar.musicgym.exercises.detail
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import com.nazmar.musicgym.db.Exercise
-import com.nazmar.musicgym.db.ExerciseDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import androidx.lifecycle.ViewModel
+import com.nazmar.musicgym.data.Repository
 
-class ExerciseDetailViewModel(exerciseId: Long, application: Application) :
-    AndroidViewModel(application) {
+class ExerciseDetailViewModel(exerciseId: Long) : ViewModel() {
 
-    private val dao = ExerciseDatabase.getInstance(application).exerciseDatabaseDao
-
-    val exercise = dao.getExercise(exerciseId)
+    val exercise = Repository.getExercise(exerciseId)
 
     private var _exerciseDeleted = false
 
@@ -24,9 +16,7 @@ class ExerciseDetailViewModel(exerciseId: Long, application: Application) :
 
     fun deleteExercise() {
         exercise.value?.let {
-            CoroutineScope(Dispatchers.IO).launch {
-                dao.delete(it)
-            }
+            Repository.deleteExercise(it)
             _exerciseDeleted = true
         }
     }
@@ -34,11 +24,8 @@ class ExerciseDetailViewModel(exerciseId: Long, application: Application) :
     fun renameExercise() {
         exercise.value?.let { exercise ->
             if (nameInputText != exercise.name) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    dao.update(Exercise(nameInputText, exercise.id))
-                }
+                Repository.renameExercise(exercise.id, nameInputText)
             }
-
         }
     }
 }
