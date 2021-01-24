@@ -95,7 +95,7 @@ class SessionFragment : Fragment() {
 
                 bpmInput.doOnTextChanged { text, _, _, _ ->
                     text?.let {
-                        viewModel.updateBpm(it.toString())
+                        viewModel.updateBpm(it.toString().trimStart('0'))
                     }
                 }
 
