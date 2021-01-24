@@ -56,7 +56,9 @@ object Repository {
 
         CoroutineScope(Dispatchers.IO).launch {
             dataSource.completeSession(
-                exercises.map { ExerciseHistory(it.exerciseId, it.newBpm.toInt(), time) },
+                exercises
+                    .filter { dataSource.exerciseExists(it.exerciseId) }
+                    .map { ExerciseHistory(it.exerciseId, it.newBpm.toInt(), time) },
                 SessionHistory(
                     time,
                     title,
@@ -87,6 +89,8 @@ object Repository {
             dataSource.update(sessionExercise)
         }
     }
+
+    fun getSessionHistory() = dataSource.getSessionHistory()
 
     //------------------------------------------------------------------------------------
 
