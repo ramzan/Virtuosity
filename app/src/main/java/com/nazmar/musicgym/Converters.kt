@@ -7,9 +7,7 @@ import com.google.gson.reflect.TypeToken
 class Converters {
 
     @TypeConverter
-    fun listToString(list: List<String>): String {
-        return Gson().toJson(list)
-    }
+    fun listToString(list: List<String>): String = Gson().toJson(list)
 
     @TypeConverter
     fun stringToList(string: String): List<String> {

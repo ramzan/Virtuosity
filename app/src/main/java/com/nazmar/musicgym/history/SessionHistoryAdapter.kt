@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.ListItemHistoryBinding
 import com.nazmar.musicgym.db.SessionHistory
@@ -15,7 +15,7 @@ import java.util.*
 
 
 class SessionHistoryAdapter :
-    ListAdapter<SessionHistory, SessionHistoryAdapter.ViewHolder>(SessionHistoryDiffCallback()) {
+    PagedListAdapter<SessionHistory, SessionHistoryAdapter.ViewHolder>(SessionHistoryDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -28,11 +28,11 @@ class SessionHistoryAdapter :
     class ViewHolder private constructor(private val binding: ListItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: SessionHistory) {
+        fun bind(item: SessionHistory?) {
             binding.apply {
-                historyTitle.text = item.title
-                historyDate.text = Date(item.time).toString()
-                item.run {
+                item?.run {
+                    historyTitle.text = title
+                    historyDate.text = Date(time).toString()
                     historyData.text = buildSpannedString {
                         for (i in exercises.indices) {
                             append("${exercises[i]}: ${bpms[i]} BPM")
@@ -46,6 +46,10 @@ class SessionHistoryAdapter :
                             }
                         }
                     }
+                } ?: run {
+                    historyTitle.text = ""
+                    historyDate.text = ""
+                    historyData.text = ""
                 }
             }
         }

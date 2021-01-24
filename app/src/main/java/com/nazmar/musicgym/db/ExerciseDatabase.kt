@@ -64,6 +64,19 @@ abstract class ExerciseDatabase : RoomDatabase() {
                                             insertHistoryItems(PREPOPULATE_HISTORY)
                                             PREPOPULATE_ROUTINES.forEach { insert(it) }
                                             PREPOPULATE_ROUTINE_EXERCISES.forEach { insert(it) }
+                                            for (i in 1..900) {
+                                                completeSession(
+                                                    listOf(ExerciseHistory(1, i)),
+                                                    SessionHistory(
+                                                        System.currentTimeMillis(),
+                                                        i.toString(),
+                                                        listOf("Name"),
+                                                        listOf(i.toString()),
+                                                        listOf("1")
+                                                    )
+                                                )
+
+                                            }
                                         }
                                     }
                                 }

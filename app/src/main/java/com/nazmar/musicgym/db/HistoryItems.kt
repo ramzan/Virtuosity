@@ -35,9 +35,9 @@ data class SessionHistory(
     val title: String,
 
     val exercises: List<String>,
-    
+
     val bpms: List<String>,
-    
+
     val improvements: List<String>,
 
     @PrimaryKey(autoGenerate = true)

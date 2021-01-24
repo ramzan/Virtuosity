@@ -64,9 +64,6 @@ object Repository {
                     exercises.map { it.name },
                     exercises.map { it.newBpm },
                     exercises.map { it.getBpmDiff() }
-//                    Gson().toJson(exercises.map { it.name }),
-//                    Gson().toJson(exercises.map { it.newBpm }),
-//                    Gson().toJson(exercises.map { it.getBpmDiff()}
                 )
             )
         }
