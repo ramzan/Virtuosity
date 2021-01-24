@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.FragmentHistoryBinding
 
 class HistoryFragment : Fragment() {
@@ -22,6 +23,17 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHistoryBinding.inflate(inflater)
+
+        SessionHistoryAdapter().run {
+            this.stateRestorationPolicy =
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
+            binding.historyList.adapter = this
+
+            viewModel.history.observe(viewLifecycleOwner, {
+                this.submitList(it)
+            })
+        }
 
         return binding.root
     }

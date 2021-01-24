@@ -129,7 +129,7 @@ interface ExerciseDatabaseDao {
     @Query("DELETE FROM saved_session_table")
     fun clearSavedSession()
 
-    @Query("SELECT * FROM session_history_table")
+    @Query("SELECT * FROM session_history_table ORDER BY id DESC")
     fun getSessionHistory(): LiveData<List<SessionHistory>>
 
     @Query("SELECT EXISTS(SELECT * FROM exercise_table WHERE id = :exerciseId)")

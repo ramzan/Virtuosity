@@ -34,11 +34,11 @@ data class SessionHistory(
 
     val title: String,
 
-    val exercises: String,
+    val exercises: List<String>,
     
-    val bpms: String,
+    val bpms: List<String>,
     
-    val improvements: String,
+    val improvements: List<String>,
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0

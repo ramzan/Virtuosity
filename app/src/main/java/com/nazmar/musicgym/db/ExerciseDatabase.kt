@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.nazmar.musicgym.Converters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,6 +24,7 @@ import kotlinx.coroutines.withContext
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class ExerciseDatabase : RoomDatabase() {
 
     abstract val exerciseDatabaseDao: ExerciseDatabaseDao

@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
 import com.nazmar.musicgym.SAVED_SESSION_ID
 import com.nazmar.musicgym.SAVED_SESSION_NAME
 import com.nazmar.musicgym.SAVED_SESSION_TIME
@@ -62,10 +61,12 @@ object Repository {
                 SessionHistory(
                     time,
                     title,
-                    Gson().toJson(exercises.map { it.name }),
-                    Gson().toJson(exercises.map { it.newBpm }),
-                    Gson().toJson(exercises.map { it.getBpmDiff() }
-                    )
+                    exercises.map { it.name },
+                    exercises.map { it.newBpm },
+                    exercises.map { it.getBpmDiff() }
+//                    Gson().toJson(exercises.map { it.name }),
+//                    Gson().toJson(exercises.map { it.newBpm }),
+//                    Gson().toJson(exercises.map { it.getBpmDiff()}
                 )
             )
         }
