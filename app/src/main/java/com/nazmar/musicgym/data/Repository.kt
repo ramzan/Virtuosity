@@ -49,7 +49,7 @@ object Repository {
         }
     }
 
-    fun completeSession(exercises: MutableList<SessionExercise>) {
+    fun completeSession(exercises: List<SessionExercise>) {
         val time = prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
         CoroutineScope(Dispatchers.IO).launch {
             dataSource.insertHistoryItems(

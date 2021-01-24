@@ -16,7 +16,7 @@ class SessionViewModel(routineId: Long) : ViewModel() {
         get() = _exercises
 
     val summaryList = Transformations.map(exercises) {
-        it.filter { e -> e.newBpm.isNotEmpty() }
+        it.filter { e -> e.newBpm.isNotEmpty() && e.newBpm != "0" }
     }
 
     init {
@@ -72,7 +72,7 @@ class SessionViewModel(routineId: Long) : ViewModel() {
         }
     }
 
-    fun completeSession() = exercises.value?.let { Repository.completeSession(it) }
+    fun completeSession() = summaryList.value?.let { Repository.completeSession(it) }
 
     // Timer editor
 
