@@ -102,7 +102,7 @@ object Repository {
 
     fun getAllExerciseMaxBPMs() = dataSource.getAllExerciseMaxBPMs()
 
-    fun getAllExercises() = dataSource.getAllRoutines()
+    fun getAllExercises() = dataSource.getAllExercises()
 
     //------------------------------------------------------------------------------------
 
