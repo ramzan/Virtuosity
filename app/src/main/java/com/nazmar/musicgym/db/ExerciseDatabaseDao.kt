@@ -32,6 +32,18 @@ interface ExerciseDatabaseDao {
     @Insert
     suspend fun createSession(exercises: List<SessionExercise>)
 
+    @Insert
+    suspend fun insert(sessionHistory: SessionHistory)
+
+    @Transaction
+    suspend fun completeSession(
+        exerciseHistories: List<ExerciseHistory>,
+        sessionHistory: SessionHistory
+    ) {
+        insertHistoryItems(exerciseHistories)
+        insert(sessionHistory)
+    }
+
     // Update
 
     @Update

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlin.math.sign
 
 @Entity(
     tableName = "routine_exercise_table",
@@ -56,4 +57,11 @@ data class SessionExercise(
     val bpmRecord: Int,
 
     var newBpm: String = ""
-)
+) {
+    fun getBpmDiff() = (newBpm.toInt() - bpmRecord).let { diff ->
+        when (diff.sign) {
+            1 -> "+$diff"
+            else -> ""
+        }
+    }
+}

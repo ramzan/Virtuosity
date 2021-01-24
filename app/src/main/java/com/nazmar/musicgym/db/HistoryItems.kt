@@ -30,8 +30,16 @@ data class ExerciseHistory(
 
 @Entity(tableName = "session_history_table")
 data class SessionHistory(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val time: Long,
 
-    val history: String
+    val title: String,
+
+    val exercises: String,
+    
+    val bpms: String,
+    
+    val improvements: String,
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0
 )

@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
 import com.nazmar.musicgym.SAVED_SESSION_ID
 import com.nazmar.musicgym.SAVED_SESSION_NAME
 import com.nazmar.musicgym.SAVED_SESSION_TIME
@@ -51,11 +52,19 @@ object Repository {
 
     fun completeSession(exercises: List<SessionExercise>) {
         val time = prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
+        val title = prefs.getString(SAVED_SESSION_NAME, "") as String
+
         CoroutineScope(Dispatchers.IO).launch {
-            dataSource.insertHistoryItems(
-                exercises
-                    .filter { it.newBpm.isNotEmpty() }
-                    .map { ExerciseHistory(it.exerciseId, it.newBpm.toInt(), time) }
+            dataSource.completeSession(
+                exercises.map { ExerciseHistory(it.exerciseId, it.newBpm.toInt(), time) },
+                SessionHistory(
+                    time,
+                    title,
+                    Gson().toJson(exercises.map { it.name }),
+                    Gson().toJson(exercises.map { it.newBpm }),
+                    Gson().toJson(exercises.map { it.getBpmDiff() }
+                    )
+                )
             )
         }
         clearSavedSession()
@@ -72,6 +81,7 @@ object Repository {
             dataSource.clearSavedSession()
         }
     }
+
     fun updateSessionState(sessionExercise: SessionExercise) {
         CoroutineScope(Dispatchers.IO).launch {
             dataSource.update(sessionExercise)

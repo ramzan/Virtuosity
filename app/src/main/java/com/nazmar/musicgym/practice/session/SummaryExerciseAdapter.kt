@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.ListItemSummaryBinding
 import com.nazmar.musicgym.db.SessionExercise
-import kotlin.math.sign
 
 
 class SummaryExerciseAdapter :
@@ -28,12 +27,7 @@ class SummaryExerciseAdapter :
             binding.apply {
                 summaryItemName.text = item.name
                 summaryItemBpm.text = item.newBpm
-                summaryItemBpmDiff.text = (item.newBpm.toInt() - item.bpmRecord).let {
-                    when (it.sign) {
-                        1 -> "+$it"
-                        else -> ""
-                    }
-                }
+                summaryItemBpmDiff.text = item.getBpmDiff()
             }
         }
 
