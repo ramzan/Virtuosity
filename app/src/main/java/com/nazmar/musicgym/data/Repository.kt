@@ -50,11 +50,12 @@ object Repository {
     }
 
     fun completeSession(exercises: MutableList<SessionExercise>) {
+        val time = prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
         CoroutineScope(Dispatchers.IO).launch {
             dataSource.insertHistoryItems(
                 exercises
                     .filter { it.newBpm.isNotEmpty() }
-                    .map { HistoryItem(it.exerciseId, it.newBpm.toInt()) }
+                    .map { ExerciseHistory(it.exerciseId, it.newBpm.toInt(), time) }
             )
         }
         clearSavedSession()

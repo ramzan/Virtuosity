@@ -11,7 +11,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Database(
-    entities = [Exercise::class, HistoryItem::class, Routine::class, RoutineExercise::class, SessionExercise::class],
+    entities = [
+        Exercise::class,
+        ExerciseHistory::class,
+        Routine::class,
+        RoutineExercise::class,
+        SessionExercise::class,
+        SessionHistory::class
+    ],
     version = 1,
     exportSchema = false
 )
@@ -109,18 +116,18 @@ abstract class ExerciseDatabase : RoomDatabase() {
         )
 
         val PREPOPULATE_HISTORY = listOf(
-            HistoryItem(1, 5),
-            HistoryItem(1, 30),
-            HistoryItem(1, 1),
-            HistoryItem(3, 5),
-            HistoryItem(4, 5),
-            HistoryItem(5, 5),
-            HistoryItem(6, 5),
-            HistoryItem(7, 5),
-            HistoryItem(8, 5),
-            HistoryItem(9, 5),
-            HistoryItem(10, 5),
-            HistoryItem(12, 50),
+            ExerciseHistory(1, 5),
+            ExerciseHistory(1, 30),
+            ExerciseHistory(1, 1),
+            ExerciseHistory(3, 5),
+            ExerciseHistory(4, 5),
+            ExerciseHistory(5, 5),
+            ExerciseHistory(6, 5),
+            ExerciseHistory(7, 5),
+            ExerciseHistory(8, 5),
+            ExerciseHistory(9, 5),
+            ExerciseHistory(10, 5),
+            ExerciseHistory(12, 50),
         )
 
         val PREPOPULATE_ROUTINES = listOf(

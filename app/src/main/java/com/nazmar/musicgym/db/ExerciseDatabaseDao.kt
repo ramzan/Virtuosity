@@ -15,10 +15,10 @@ interface ExerciseDatabaseDao {
     suspend fun insertExercises(exercises: List<Exercise>)
 
     @Insert
-    suspend fun insert(historyItem: HistoryItem)
+    suspend fun insert(exerciseHistory: ExerciseHistory)
 
     @Insert
-    suspend fun insertHistoryItems(historyItems: List<HistoryItem>)
+    suspend fun insertHistoryItems(exerciseHistories: List<ExerciseHistory>)
 
     @Insert
     suspend fun insert(routineExercise: RoutineExercise)
@@ -52,7 +52,7 @@ interface ExerciseDatabaseDao {
     suspend fun delete(exercise: Exercise)
 
     @Delete
-    suspend fun delete(historyItem: HistoryItem)
+    suspend fun delete(exerciseExerciseHistory: ExerciseHistory)
 
     @Delete
     suspend fun delete(routineExercise: RoutineExercise)
@@ -71,7 +71,7 @@ interface ExerciseDatabaseDao {
     @Query(
         """
         SELECT id, name, MAX(bpm) AS bpm FROM exercise_table
-        LEFT OUTER JOIN history_table ON exerciseId = id
+        LEFT OUTER JOIN exercise_history_table ON exerciseId = id
         GROUP BY id ORDER BY name COLLATE NOCASE ASC
         """
     )
@@ -103,7 +103,7 @@ interface ExerciseDatabaseDao {
         SELECT `order`, routine_exercise_table.exerciseId, name, duration, MAX(bpm) AS bpmRecord, "" AS newBpm
         FROM routine_exercise_table 
         JOIN exercise_table ON routine_exercise_table.exerciseId = exercise_table.id 
-        LEFT OUTER JOIN history_table ON routine_exercise_table.exerciseId = history_table.exerciseId 
+        LEFT OUTER JOIN exercise_history_table ON routine_exercise_table.exerciseId = exercise_history_table.exerciseId 
         WHERE routineId = :routineId 
         GROUP BY `order`
         ORDER BY `order`

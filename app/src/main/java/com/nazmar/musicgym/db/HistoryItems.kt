@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "history_table",
+    tableName = "exercise_history_table",
     foreignKeys = [
         ForeignKey(
             entity = Exercise::class,
@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-data class HistoryItem(
+data class ExerciseHistory(
     @ColumnInfo(index = true)
     val exerciseId: Long,
 
@@ -26,4 +26,12 @@ data class HistoryItem(
 
     @PrimaryKey(autoGenerate = true)
     val itemId: Long = 0
+)
+
+@Entity(tableName = "session_history_table")
+data class SessionHistory(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
+
+    val history: String
 )
