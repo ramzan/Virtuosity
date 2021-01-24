@@ -161,4 +161,9 @@
             android:id="@+id/action_restartSessionDialogFragment_to_sessionGraph"
             app:destination="@id/sessionGraph" />
     </dialog>
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.nazmar.musicgym.history.HistoryFragment"
+        android:label="@string/history"
+        tools:layout="@layout/fragment_history" />
 </navigation>
