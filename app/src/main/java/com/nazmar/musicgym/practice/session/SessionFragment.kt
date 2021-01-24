@@ -18,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.*
-import com.nazmar.musicgym.data.Repository
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
 
 
@@ -224,7 +223,6 @@ class SessionFragment : Fragment() {
     private fun goBack() {
         requireContext().stopService(Intent(requireContext(), TimerService::class.java))
         imm.hideKeyboard(requireView().windowToken)
-        Repository.clearSavedSession()
         findNavController().popBackStack(R.id.routineListFragment, false)
     }
 

@@ -1,5 +1,12 @@
 package com.nazmar.musicgym.data
 
+import android.content.SharedPreferences
+import androidx.core.content.edit
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.nazmar.musicgym.SAVED_SESSION_ID
+import com.nazmar.musicgym.SAVED_SESSION_NAME
+import com.nazmar.musicgym.SAVED_SESSION_TIME
 import com.nazmar.musicgym.db.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -7,18 +14,34 @@ import kotlinx.coroutines.launch
 
 object Repository {
     private lateinit var dataSource: ExerciseDatabaseDao
+    private lateinit var prefs: SharedPreferences
 
     fun setDataSource(dao: ExerciseDatabaseDao) {
         dataSource = dao
     }
 
+    fun setPreferences(preferences: SharedPreferences) {
+        prefs = preferences
+        _sessionSaved.value = prefs.contains(SAVED_SESSION_NAME)
+    }
+
+    private var _sessionSaved = MutableLiveData(false)
+
+    val sessionSaved: LiveData<Boolean>
+        get() = _sessionSaved
     //------------------------------------------------------------------------------------
 
-    suspend fun getSession(sessionId: Long, restore: Boolean): MutableList<SessionExercise> {
-        return if (restore) {
+    suspend fun getSession(routineId: Long): MutableList<SessionExercise> {
+        return if (prefs.contains(SAVED_SESSION_NAME)) {
             dataSource.getSavedSession()
         } else {
-            dataSource.getSessionExercises(sessionId).also {
+            dataSource.getSessionExercises(routineId).also {
+                prefs.edit {
+                    putString(SAVED_SESSION_NAME, dataSource.getRoutineName(routineId))
+                    putLong(SAVED_SESSION_TIME, System.currentTimeMillis())
+                    putLong(SAVED_SESSION_ID, routineId)
+                }
+                _sessionSaved.value = true
                 CoroutineScope(Dispatchers.IO).launch {
                     dataSource.createSession(it)
                 }
@@ -33,13 +56,24 @@ object Repository {
                     .filter { it.newBpm.isNotEmpty() }
                     .map { HistoryItem(it.exerciseId, it.newBpm.toInt()) }
             )
-            dataSource.clearSavedSession()
         }
+        clearSavedSession()
     }
 
     fun clearSavedSession() {
+        prefs.edit {
+            remove(SAVED_SESSION_NAME)
+            remove(SAVED_SESSION_TIME)
+            remove(SAVED_SESSION_ID)
+        }
+        _sessionSaved.value = false
         CoroutineScope(Dispatchers.IO).launch {
             dataSource.clearSavedSession()
+        }
+    }
+    fun updateSessionState(sessionExercise: SessionExercise) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataSource.update(sessionExercise)
         }
     }
 

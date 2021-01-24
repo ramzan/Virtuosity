@@ -35,4 +35,7 @@
     <string name="metronome_notification_channel_name">Metronome</string>
     <string name="timer_notification_channel_id">timer_channel</string>
     <string name="metronome_notification_channel_id">metronome_channel</string>
+    <string name="clear_session_dialog_message">Clear the saved session?</string>
+    <string name="resume_session_title">Resume session</string>
+    <string name="resume">Resume</string>
 </resources>

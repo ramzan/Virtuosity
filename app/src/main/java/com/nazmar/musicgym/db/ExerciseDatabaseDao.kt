@@ -43,6 +43,9 @@ interface ExerciseDatabaseDao {
     @Update
     suspend fun update(routineExercise: RoutineExercise)
 
+    @Update
+    suspend fun update(sessionExercise: SessionExercise)
+
     // Delete
 
     @Delete
@@ -79,6 +82,9 @@ interface ExerciseDatabaseDao {
 
     @Query("SELECT * FROM routine_table WHERE id = :key")
     fun getRoutine(key: Long): LiveData<Routine?>
+
+    @Query("SELECT name FROM routine_table WHERE id = :key")
+    suspend fun getRoutineName(key: Long): String
 
     @Query("SELECT * FROM routine_exercise_table WHERE routineId = :routineId ORDER BY `order`")
     fun getRoutineExercises(routineId: Long): List<RoutineExercise>

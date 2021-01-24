@@ -21,7 +21,7 @@ class SessionViewModel(routineId: Long) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            _exercises.value = Repository.getSession(routineId, false)
+            _exercises.value = Repository.getSession(routineId)
         }
     }
 
@@ -65,6 +65,10 @@ class SessionViewModel(routineId: Long) : ViewModel() {
     fun updateBpm(bpm: String) {
         currentIndex.value?.let {
             _exercises.updateBpm(it, bpm)
+            _exercises.value?.let { exerciseList ->
+                Repository.updateSessionState(exerciseList[it])
+            }
+
         }
     }
 

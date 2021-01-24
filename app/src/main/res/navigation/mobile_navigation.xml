@@ -25,10 +25,13 @@
         android:label="@string/practice"
         tools:layout="@layout/fragment_routine_list">
         <action
-            android:id="@+id/action_practiceFragment_to_routineEditor"
+            android:id="@+id/action_routineListFragment_to_restartSessionDialogFragment"
+            app:destination="@id/restartSessionDialogFragment" />
+        <action
+            android:id="@+id/action_routineListFragment_to_routineEditorGraph"
             app:destination="@id/routineEditorGraph" />
         <action
-            android:id="@+id/action_practiceFragment_to_sessionFragment"
+            android:id="@+id/action_routineListFragment_to_sessionGraph"
             app:destination="@id/sessionGraph" />
     </fragment>
     <fragment
@@ -147,4 +150,15 @@
                 app:argType="long" />
         </dialog>
     </navigation>
+    <dialog
+        android:id="@+id/restartSessionDialogFragment"
+        android:name="com.nazmar.musicgym.practice.routine.list.RestartSessionDialogFragment"
+        android:label="RestartSessionDialogFragment" >
+        <argument
+            android:name="routineId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_restartSessionDialogFragment_to_sessionGraph"
+            app:destination="@id/sessionGraph" />
+    </dialog>
 </navigation>
