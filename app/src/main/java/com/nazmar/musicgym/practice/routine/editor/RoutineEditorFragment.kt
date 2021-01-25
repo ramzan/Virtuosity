@@ -28,7 +28,7 @@ class RoutineEditorFragment : Fragment() {
     private lateinit var imm: InputMethodManager
 
     private val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
-        RoutineEditorViewModelFactory(arguments?.get("routineId") as Long)
+        RoutineEditorViewModelFactory(requireArguments().getLong("routineId"))
     }
 
     private val simpleItemTouchCallback =

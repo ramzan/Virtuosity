@@ -27,7 +27,7 @@ class SessionFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
-        SessionViewModelFactory(arguments?.get("routineId") as Long)
+        SessionViewModelFactory(requireArguments().getLong("routineId"))
     }
 
     private lateinit var imm: InputMethodManager
@@ -242,9 +242,7 @@ class SessionFragment : Fragment() {
     private fun showTimerEditor() {
         val action =
             SessionFragmentDirections.actionSessionFragmentToTimerEditorDialogFragment(
-                arguments?.get(
-                    "routineId"
-                ) as Long,
+                requireArguments().getLong("routineId"),
                 mTimer.timeLeft.value ?: 0L
             )
         findNavController().navigate(action)

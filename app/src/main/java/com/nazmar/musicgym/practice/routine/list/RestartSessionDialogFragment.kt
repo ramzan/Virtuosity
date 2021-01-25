@@ -18,7 +18,7 @@ class RestartSessionDialogFragment : DialogFragment() {
                 findNavController().navigate(
                     RestartSessionDialogFragmentDirections
                         .actionRestartSessionDialogFragmentToSessionGraph(
-                            arguments?.get("routineId") as Long
+                            requireArguments().getLong("routineId")
                         )
                 )
             }

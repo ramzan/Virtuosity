@@ -11,7 +11,7 @@ class DeleteExerciseDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
-            ExerciseDetailViewModelFactory(arguments?.get("exerciseId") as Long)
+            ExerciseDetailViewModelFactory(requireArguments().getLong("exerciseId"))
         }
 
         return MaterialAlertDialogBuilder(requireContext())

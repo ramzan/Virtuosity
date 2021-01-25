@@ -12,7 +12,7 @@ class DurationPickerDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
-            RoutineEditorViewModelFactory(arguments?.get("routineId") as Long)
+            RoutineEditorViewModelFactory(requireArguments().getLong("routineId"))
         }
 
         val exerciseIndex = requireArguments().getInt("exerciseIndex")

@@ -21,7 +21,7 @@ class RenameDialogFragment : DialogFragment() {
         val text = layout.findViewById<EditText>(R.id.name_input)
 
         val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
-            ExerciseDetailViewModelFactory(arguments?.get("exerciseId") as Long)
+            ExerciseDetailViewModelFactory(requireArguments().getLong("exerciseId"))
         }
 
         val firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
