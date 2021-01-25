@@ -10,9 +10,9 @@ import androidx.lifecycle.MutableLiveData
 import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.TimerState
 import com.nazmar.musicgym.db.SessionExercise
+import com.nazmar.musicgym.toTimerString
 import com.nazmar.musicgym.vibrate
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.Duration
 
 class Timer(
     private val runningNotification: NotificationCompat.Builder,
@@ -26,8 +26,6 @@ class Timer(
 ) {
 
     private var notification = stoppedNotification
-
-    private val timeFormatter = SimpleDateFormat("mm:ss", Locale.US)
 
     private fun updateTimerNotification() {
         notification.run {
@@ -66,10 +64,11 @@ class Timer(
     val timerStatus: LiveData<TimerState>
         get() = _timerStatus
 
-    private var currentExercise: SessionExercise? = SessionExercise(-1, -1, "", -1, -1)
+    private var currentExercise: SessionExercise? =
+        SessionExercise(-1, -1, "", Duration.ofMillis(-1), -1)
 
     private val currentExerciseDuration
-        get() = currentExercise?.duration ?: 0L
+        get() = currentExercise?.duration?.toMillis() ?: 0L
 
     private val currentExerciseName
         get() = currentExercise?.name ?: ""
@@ -79,7 +78,7 @@ class Timer(
             timer = object : CountDownTimer(this, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     _timeLeft.value = millisUntilFinished
-                    _timeString.value = timeFormatter.format(millisUntilFinished)
+                    _timeString.value = millisUntilFinished.toTimerString()
                     updateTimerNotification()
                 }
 
@@ -90,7 +89,7 @@ class Timer(
                     mediaPlayer.start()
                 }
             }
-            _timeString.value = timeFormatter.format(this)
+            _timeString.value = this.toTimerString()
             _timeLeft.value = this
         }
         updateTimerNotification()
@@ -142,7 +141,7 @@ class Timer(
         timer = null
         _timerStatus.value = TimerState.STOPPED
         _timeLeft.value = null
-        _timeString.value = timeFormatter.format(0)
+        _timeString.value = 0L.toTimerString()
         notification = pausedNotification
         showStoppedNotification()
     }

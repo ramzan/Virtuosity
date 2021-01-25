@@ -7,6 +7,7 @@ import com.nazmar.musicgym.DEFAULT_TIMER_DURATION
 import com.nazmar.musicgym.data.Repository
 import com.nazmar.musicgym.db.Exercise
 import com.nazmar.musicgym.db.RoutineExerciseName
+import java.time.Duration
 
 class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
 
@@ -71,7 +72,7 @@ class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
 
     fun updateDuration(exerciseIndex: Int, newDuration: Long) {
         with(currentExercises[exerciseIndex]) {
-            this.duration = newDuration
+            this.duration = Duration.ofMillis(newDuration)
             _updatedIndex.value = exerciseIndex
         }
     }
@@ -81,12 +82,12 @@ class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
             RoutineExerciseName(
                 exercise.id,
                 exercise.name,
-                DEFAULT_TIMER_DURATION
+                Duration.ofMillis(DEFAULT_TIMER_DURATION)
             )
         )
     }
 
-    fun getItemDuration(index: Int): Long {
+    fun getItemDuration(index: Int): Duration {
         return currentExercises[index].duration
     }
 }

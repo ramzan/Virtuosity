@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.*
 import com.nazmar.musicgym.databinding.FragmentRoutineEditorBinding
 import com.nazmar.musicgym.db.Exercise
+import java.time.Duration
 
 
 class RoutineEditorFragment : Fragment() {
@@ -180,11 +181,11 @@ class RoutineEditorFragment : Fragment() {
         return binding.root
     }
 
-    private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
+    private fun showDurationPicker(exerciseIndex: Int, duration: Duration) {
         findNavController().navigate(
             RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
                 exerciseIndex,
-                duration
+                duration.toMillis()
             )
         )
     }

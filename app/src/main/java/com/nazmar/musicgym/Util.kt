@@ -17,6 +17,7 @@ import com.nazmar.musicgym.practice.session.PAUSE_TIMER
 import com.nazmar.musicgym.practice.session.RESTART_TIMER
 import com.nazmar.musicgym.practice.session.RESUME_TIMER
 import com.nazmar.musicgym.practice.session.TimerService
+import java.time.Duration
 
 enum class TimerState {
     STOPPED,
@@ -30,7 +31,6 @@ const val SAVED_SESSION_ID = "SAVED_SESSION_ID"
 const val SAVED_SESSION_NAME = "SAVED_SESSION_NAME"
 const val SAVED_SESSION_TIME = "SAVED_SESSION_TIME"
 
-const val MAX_TIMER_DURATION = 5999000L
 const val DEFAULT_TIMER_DURATION = 300000L
 
 fun Activity.hideBottomNavBar() {
@@ -163,4 +163,16 @@ fun Vibrator.vibrate() {
         this.vibrate(VibrationEffect.createWaveform(longArrayOf(200, 250, 200, 250), -1))
     } else this.vibrate(longArrayOf(200, 250, 200, 250), -10)
 
+}
+
+fun Duration.toTimerString(): String {
+    return this.seconds.let { s ->
+        String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60))
+    }
+}
+
+fun Long.toTimerString(): String {
+    return (this / 1000).let { s ->
+        String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60))
+    }
 }
