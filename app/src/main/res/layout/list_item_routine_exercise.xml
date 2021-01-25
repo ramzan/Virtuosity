@@ -21,12 +21,10 @@
             android:layout_weight="1"
             tools:text="C# Melodic Minor Scale" />
 
-        <EditText
+        <TextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:focusable="false"
             android:textAlignment="viewEnd"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textColor="?android:attr/textColorSecondary"

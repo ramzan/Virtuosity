@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.core.text.buildSpannedString
+import androidx.core.text.underline
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +48,9 @@ class RoutineExerciseAdapter(
         ) {
             binding.apply {
                 exerciseName.text = item.name
-                duration.setText(timeFormatter.format(item.duration))
+                duration.text = buildSpannedString {
+                    underline { append(timeFormatter.format(item.duration)) }
+                }
                 duration.setOnClickListener {
                     onClickListener(bindingAdapterPosition, item.duration)
                 }
