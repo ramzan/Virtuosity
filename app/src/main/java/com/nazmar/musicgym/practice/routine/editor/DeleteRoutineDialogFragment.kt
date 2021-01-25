@@ -16,10 +16,10 @@ class DeleteRoutineDialogFragment : DialogFragment() {
 
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete_routine_dialog_message)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
                 viewModel.deleteRoutine()
             }
-            .setNegativeButton("CANCEL") { _, _ -> }
+            .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ -> }
             .show()
     }
 }

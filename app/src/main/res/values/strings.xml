@@ -24,7 +24,7 @@
     <string name="add_an_exercise">Add an exercise</string>
     <string name="edit">Edit</string>
     <string name="start">Start</string>
-    <string name="bpm">BPM</string>
+    <string name="bpm" translatable="false">BPM</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
     <string name="done">Done</string>
@@ -33,10 +33,17 @@
     <string name="restart_timer">Restart timer</string>
     <string name="timer_notification_channel_name">Timer</string>
     <string name="metronome_notification_channel_name">Metronome</string>
-    <string name="timer_notification_channel_id">timer_channel</string>
-    <string name="metronome_notification_channel_id">metronome_channel</string>
+    <string name="timer_notification_channel_id" translatable="false">timer_channel</string>
+    <string name="metronome_notification_channel_id" translatable="false">metronome_channel</string>
     <string name="clear_session_dialog_message">Clear the saved session?</string>
     <string name="resume_session_title">Resume session</string>
     <string name="resume">Resume</string>
     <string name="history">History</string>
+    <string name="dialog_positive_button_label">OK</string>
+    <string name="dialog_negative_button_label">Cancel</string>
+    <string name="pref_timer_vibrate_title">Vibrate on complete</string>
+    <string name="pref_timer_title">Timer</string>
+    <string name="timer_notification_stopped_message">Practice in session</string>
+    <string name="timer_notification_time_up_message">Time\'s up!</string>
+    <string name="timer_notification_time_remaining_prefix">Time remaining:</string>
 </resources>

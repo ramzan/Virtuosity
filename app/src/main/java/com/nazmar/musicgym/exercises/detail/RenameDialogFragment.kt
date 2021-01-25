@@ -35,10 +35,10 @@ class RenameDialogFragment : DialogFragment() {
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.rename)
             .setView(layout)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
                 viewModel.renameExercise()
             }
-            .setNegativeButton("CANCEL") { _, _ -> }
+            .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ -> }
             .create()
 
         text.addTextChangedListener(object : TextWatcher {

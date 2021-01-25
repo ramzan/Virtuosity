@@ -13,7 +13,7 @@ class RestartSessionDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.clear_session_dialog_message)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
                 Repository.clearSavedSession()
                 findNavController().navigate(
                     RestartSessionDialogFragmentDirections
@@ -22,7 +22,7 @@ class RestartSessionDialogFragment : DialogFragment() {
                         )
                 )
             }
-            .setNegativeButton("CANCEL") { _, _ -> }
+            .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ -> }
             .show()
     }
 }

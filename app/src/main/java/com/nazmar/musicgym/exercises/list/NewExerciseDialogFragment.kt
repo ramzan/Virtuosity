@@ -26,10 +26,10 @@ class NewExerciseDialogFragment : DialogFragment() {
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.new_exercise)
             .setView(layout)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
                 viewModel.addExercise(text.text.toString().trim())
             }
-            .setNegativeButton("CANCEL") { _, _ -> }
+            .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ -> }
             .create()
 
         text.addTextChangedListener(object : TextWatcher {

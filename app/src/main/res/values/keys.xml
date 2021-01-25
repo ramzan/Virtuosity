@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="key_theme" translatable="false">theme</string>
+    <string name="key_theme_title" translatable="false">Theme</string>
+    <string name="key_timer_vibrate" translatable="false">timer_vibrate</string>
+</resources>

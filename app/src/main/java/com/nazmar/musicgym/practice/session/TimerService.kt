@@ -47,7 +47,8 @@ class TimerService : Service() {
         stoppedNotification = getTimerNotificationBuilder(this, TimerState.STOPPED)
 
         val vibrator =
-            PreferenceManager.getDefaultSharedPreferences(this).getBoolean("timer_vibrate", true)
+            PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.key_timer_vibrate), true)
                 .let {
                     if (it) getSystemService(Vibrator::class.java) else null
                 }
@@ -57,6 +58,8 @@ class TimerService : Service() {
             pausedNotification,
             stoppedNotification,
             notificationManager,
+            getString(R.string.timer_notification_time_remaining_prefix),
+            getString(R.string.timer_notification_time_up_message),
             mediaPlayer,
             vibrator
         )

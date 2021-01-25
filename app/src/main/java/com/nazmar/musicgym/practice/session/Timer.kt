@@ -19,6 +19,8 @@ class Timer(
     private val pausedNotification: NotificationCompat.Builder,
     private val stoppedNotification: NotificationCompat.Builder,
     private val notificationManager: NotificationManager,
+    private val timeRemainingPrefix: String,
+    private val timeUpString: String,
     private val mediaPlayer: MediaPlayer,
     private val vibrator: Vibrator?
 ) {
@@ -28,19 +30,22 @@ class Timer(
     private val timeFormatter = SimpleDateFormat("mm:ss", Locale.US)
 
     private fun updateTimerNotification() {
-        notification.setContentTitle(currentExerciseName)
-        notification.setContentText("Time remaining: ${timeString.value}")
-        notificationManager.notify(TIMER_NOTIFICATION_ID, notification.build())
+        notification.run {
+            setContentTitle(currentExerciseName)
+            setContentText(timeRemainingPrefix + " ${timeString.value}")
+            notificationManager.notify(TIMER_NOTIFICATION_ID, build())
+        }
     }
 
     private fun showTimeUpNotification() {
-        notification.setContentTitle(currentExerciseName)
-        notification.setContentText("Time's up!")
-        notificationManager.notify(TIMER_NOTIFICATION_ID, notification.build())
+        notification.run {
+            setContentTitle(currentExerciseName)
+            setContentText(timeUpString)
+            notificationManager.notify(TIMER_NOTIFICATION_ID, build())
+        }
     }
 
     private fun showStoppedNotification() {
-        stoppedNotification.setContentText("Practice in session")
         notificationManager.notify(TIMER_NOTIFICATION_ID, stoppedNotification.build())
     }
 

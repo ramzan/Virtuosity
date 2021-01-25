@@ -19,9 +19,9 @@ import com.nazmar.musicgym.practice.session.RESUME_TIMER
 import com.nazmar.musicgym.practice.session.TimerService
 
 enum class TimerState {
-    STOPPED, // Timer has not been created
-    RUNNING, // Timer is counting down
-    PAUSED, // Pause button pressed, time still remaining
+    STOPPED,
+    RUNNING,
+    PAUSED,
 }
 
 const val FIRST_RUN_KEY = "FIRST_RUN_KEY"
@@ -91,7 +91,7 @@ fun getTimerNotificationBuilder(
         .setOngoing(true)
         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         .setContentIntent(contentPendingIntent)
-        .setContentText("Practice in session")
+        .setContentText(context.getString(R.string.timer_notification_stopped_message))
 
     if (timerState != TimerState.STOPPED) {
 

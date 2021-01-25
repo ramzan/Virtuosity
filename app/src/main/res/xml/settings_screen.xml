@@ -2,17 +2,17 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
-        app:key="theme"
-        app:title="Theme" />
+        app:key="@string/key_theme"
+        app:title="@string/key_theme_title" />
 
     <PreferenceCategory
         app:key="timer_group"
-        app:title="Timer">
+        app:title="@string/pref_timer_title">
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
-            app:key="timer_vibrate"
-            app:title="Vibrate on complete" />
+            app:key="@string/key_timer_vibrate"
+            app:title="@string/pref_timer_vibrate_title" />
 
     </PreferenceCategory>
 
