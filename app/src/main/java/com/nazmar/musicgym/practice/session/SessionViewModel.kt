@@ -3,7 +3,6 @@ package com.nazmar.musicgym.practice.session
 import androidx.lifecycle.*
 import com.nazmar.musicgym.data.Repository
 import com.nazmar.musicgym.db.SessionExercise
-import com.nazmar.musicgym.updateBpm
 import kotlinx.coroutines.launch
 
 class SessionViewModel(routineId: Long) : ViewModel() {
@@ -70,6 +69,16 @@ class SessionViewModel(routineId: Long) : ViewModel() {
             }
 
         }
+    }
+
+    private fun MutableLiveData<MutableList<SessionExercise>>.updateBpm(
+        index: Int,
+        updatedBpm: String
+    ) {
+        val value = this.value?.toMutableList() ?: mutableListOf()
+        value[index] = value[index].copy(newBpm = updatedBpm)
+        this.value = value
+
     }
 
     fun completeSession() = summaryList.value?.let { Repository.completeSession(it) }

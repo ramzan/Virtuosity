@@ -19,6 +19,9 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.*
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
+import com.nazmar.musicgym.practice.session.timer.Timer
+import com.nazmar.musicgym.practice.session.timer.TimerService
+import com.nazmar.musicgym.practice.session.timer.TimerState
 
 
 class SessionFragment : Fragment() {

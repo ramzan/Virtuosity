@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice.session
+package com.nazmar.musicgym.practice.session.timer
 
 import android.content.BroadcastReceiver
 import android.content.Context

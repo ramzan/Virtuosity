@@ -1,18 +1,24 @@
-package com.nazmar.musicgym.practice.session
+package com.nazmar.musicgym.practice.session.timer
 
 import android.app.NotificationManager
 import android.media.MediaPlayer
 import android.os.CountDownTimer
+import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
-import com.nazmar.musicgym.TimerState
 import com.nazmar.musicgym.db.SessionExercise
+import com.nazmar.musicgym.isOreoOrAbove
 import com.nazmar.musicgym.toTimerString
-import com.nazmar.musicgym.vibrate
 import java.time.Duration
+
+enum class TimerState {
+    STOPPED,
+    RUNNING,
+    PAUSED,
+}
 
 class Timer(
     private val runningNotification: NotificationCompat.Builder,
@@ -150,5 +156,13 @@ class Timer(
         timer?.cancel()
         _timeLeft.value = newTime
         if (newTime != 0L) createTimer()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun Vibrator.vibrate() {
+        if (isOreoOrAbove()) {
+            this.vibrate(VibrationEffect.createWaveform(longArrayOf(200, 250, 200, 250), -1))
+        } else this.vibrate(longArrayOf(200, 250, 200, 250), -10)
+
     }
 }
