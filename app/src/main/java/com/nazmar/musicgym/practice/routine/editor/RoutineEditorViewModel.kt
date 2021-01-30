@@ -71,10 +71,9 @@ class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
     }
 
     fun updateDuration(exerciseIndex: Int, newDuration: Long) {
-        with(currentExercises[exerciseIndex]) {
-            this.duration = Duration.ofMillis(newDuration)
-            _updatedIndex.value = exerciseIndex
-        }
+        currentExercises[exerciseIndex].duration = Duration.ofMillis(newDuration)
+        _updatedIndex.value = exerciseIndex
+
     }
 
     fun addExercise(exercise: Exercise) {
