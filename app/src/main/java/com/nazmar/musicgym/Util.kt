@@ -25,6 +25,8 @@ enum class TimerState {
     PAUSED,
 }
 
+const val MAX_TIMER_DURATION = 359999000L
+
 const val FIRST_RUN_KEY = "FIRST_RUN_KEY"
 
 const val SAVED_SESSION_ID = "SAVED_SESSION_ID"
