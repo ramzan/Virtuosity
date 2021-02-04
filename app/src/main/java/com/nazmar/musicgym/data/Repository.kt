@@ -60,15 +60,15 @@ object Repository {
         CoroutineScope(Dispatchers.IO).launch {
             dataSource.completeSession(
                 exercises
-                    .filter { dataSource.exerciseExists(it.exerciseId) }
-                    .map { ExerciseHistory(it.exerciseId, it.newBpm.toInt(), time) },
+                    .filter { dataSource.exerciseExists(it.exerciseId) },
                 SessionHistory(
                     time,
                     title,
                     exercises.map { it.name },
                     exercises.map { it.newBpm },
                     exercises.map { it.getBpmDiff() }
-                )
+                ),
+                time
             )
         }
         clearSavedSession()
@@ -147,7 +147,8 @@ object Repository {
 
     suspend fun getRoutine(routineId: Long) = dataSource.getRoutine(routineId)
 
-    suspend fun getRoutineExerciseNames(routineId: Long) = dataSource.getRoutineExerciseNames(routineId)
+    suspend fun getRoutineExerciseNames(routineId: Long) =
+        dataSource.getRoutineExerciseNames(routineId)
 
     fun deleteRoutine(it: Routine) {
         CoroutineScope(Dispatchers.IO).launch {

@@ -61,22 +61,8 @@ abstract class ExerciseDatabase : RoomDatabase() {
                                     withContext(Dispatchers.IO) {
                                         getInstance(context).exerciseDatabaseDao.apply {
                                             insertExercises(PREPOPULATE_EXERCISES)
-                                            insertHistoryItems(PREPOPULATE_HISTORY)
                                             PREPOPULATE_ROUTINES.forEach { insert(it) }
                                             PREPOPULATE_ROUTINE_EXERCISES.forEach { insert(it) }
-                                            for (i in 1..900) {
-                                                completeSession(
-                                                    listOf(ExerciseHistory(1, i)),
-                                                    SessionHistory(
-                                                        System.currentTimeMillis(),
-                                                        i.toString(),
-                                                        listOf("Name"),
-                                                        listOf(i.toString()),
-                                                        listOf("1")
-                                                    )
-                                                )
-
-                                            }
                                         }
                                     }
                                 }
@@ -129,21 +115,6 @@ abstract class ExerciseDatabase : RoomDatabase() {
             Exercise("F# Harmonic Minor Scale"),
             Exercise("G Harmonic Minor Scale"),
             Exercise("G# Harmonic Minor Scale")
-        )
-
-        val PREPOPULATE_HISTORY = listOf(
-            ExerciseHistory(1, 5),
-            ExerciseHistory(1, 30),
-            ExerciseHistory(1, 1),
-            ExerciseHistory(3, 5),
-            ExerciseHistory(4, 5),
-            ExerciseHistory(5, 5),
-            ExerciseHistory(6, 5),
-            ExerciseHistory(7, 5),
-            ExerciseHistory(8, 5),
-            ExerciseHistory(9, 5),
-            ExerciseHistory(10, 5),
-            ExerciseHistory(12, 50),
         )
 
         val PREPOPULATE_ROUTINES = listOf(

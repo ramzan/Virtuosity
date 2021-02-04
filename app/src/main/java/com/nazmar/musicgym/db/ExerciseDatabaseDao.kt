@@ -34,15 +34,18 @@ interface ExerciseDatabaseDao {
     suspend fun createSession(exercises: List<SessionExercise>)
 
     @Insert
-    suspend fun insert(sessionHistory: SessionHistory)
+    suspend fun insert(sessionHistory: SessionHistory): Long
 
     @Transaction
     suspend fun completeSession(
-        exerciseHistories: List<ExerciseHistory>,
-        sessionHistory: SessionHistory
+        exerciseHistories: List<SessionExercise>,
+        sessionHistory: SessionHistory,
+        time: Long
     ) {
-        insertHistoryItems(exerciseHistories)
-        insert(sessionHistory)
+        val id = insert(sessionHistory)
+        insertHistoryItems(exerciseHistories.map {
+            ExerciseHistory(it.exerciseId, id, it.newBpm.toInt(), time)
+        })
     }
 
     // Update

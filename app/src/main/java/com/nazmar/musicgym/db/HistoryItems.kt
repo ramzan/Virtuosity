@@ -14,12 +14,21 @@ import androidx.room.PrimaryKey
             parentColumns = ["id"],
             childColumns = ["exerciseId"],
             onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = SessionHistory::class,
+            parentColumns = ["id"],
+            childColumns = ["sessionId"],
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class ExerciseHistory(
     @ColumnInfo(index = true)
     val exerciseId: Long,
+
+    @ColumnInfo(index = true)
+    val sessionId: Long,
 
     val bpm: Int,
 
