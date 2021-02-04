@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.FragmentHistoryBinding
+import com.nazmar.musicgym.db.SessionHistory
 
 class HistoryFragment : Fragment() {
 
@@ -24,7 +26,7 @@ class HistoryFragment : Fragment() {
     ): View {
         _binding = FragmentHistoryBinding.inflate(inflater)
 
-        SessionHistoryAdapter(viewModel::deleteHistoryItem).run {
+        SessionHistoryAdapter(::deleteSessionHistory).run {
             this.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
@@ -36,6 +38,13 @@ class HistoryFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun deleteSessionHistory(history: SessionHistory) {
+        viewModel.setItemToDelete(history)
+        findNavController().navigate(
+            HistoryFragmentDirections.actionHistoryFragmentToDeleteHistoryDialogFragment()
+        )
     }
 
     override fun onDestroyView() {

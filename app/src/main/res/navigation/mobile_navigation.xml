@@ -165,5 +165,13 @@
         android:id="@+id/historyFragment"
         android:name="com.nazmar.musicgym.history.HistoryFragment"
         android:label="@string/history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_historyFragment_to_deleteHistoryDialogFragment"
+            app:destination="@id/deleteHistoryDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/deleteHistoryDialogFragment"
+        android:name="com.nazmar.musicgym.history.DeleteHistoryDialogFragment"
+        android:label="DeleteHistoryDialogFragment" />
 </navigation>
