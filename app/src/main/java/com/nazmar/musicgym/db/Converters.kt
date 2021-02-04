@@ -1,4 +1,4 @@
-package com.nazmar.musicgym
+package com.nazmar.musicgym.db
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
