@@ -1,9 +1,13 @@
 package com.nazmar.musicgym.data
 
 import android.content.SharedPreferences
+import android.graphics.Color
 import androidx.core.content.edit
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.toLiveData
 import com.nazmar.musicgym.SAVED_SESSION_ID
 import com.nazmar.musicgym.SAVED_SESSION_NAME
 import com.nazmar.musicgym.SAVED_SESSION_TIME
@@ -88,7 +92,30 @@ object Repository {
         }
     }
 
-    fun getSessionHistory() = dataSource.getSessionHistory()
+    fun getSessionHistory() = dataSource.getSessionHistories()
+        .map { toSessionHistoryDisplay(it) }
+        .toLiveData(pageSize = 50)
+
+    private fun toSessionHistoryDisplay(history: SessionHistory): SessionHistoryDisplay {
+        return SessionHistoryDisplay(
+            id = history.id,
+            time = history.time,
+            title = history.title,
+            text = buildSpannedString {
+                for (i in history.exercises.indices) {
+                    append("${history.exercises[i]}: ${history.bpms[i]} BPM")
+                    if (history.improvements[i].isEmpty()) append("\n")
+                    else {
+                        color(
+                            Color.GREEN
+                        ) {
+                            this.append(" ${history.improvements[i]}\n")
+                        }
+                    }
+                }
+            }
+        )
+    }
 
     //------------------------------------------------------------------------------------
 
@@ -193,9 +220,11 @@ object Repository {
 
     }
 
-    fun deleteSessionHistory(history: SessionHistory) {
+    fun deleteSessionHistory(id: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            dataSource.delete(history)
+            dataSource.getSessionHistory(id)?.let {
+                dataSource.delete(it)
+            }
         }
     }
 }

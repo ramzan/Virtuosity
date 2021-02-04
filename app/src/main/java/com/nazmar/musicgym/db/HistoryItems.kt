@@ -1,5 +1,6 @@
 package com.nazmar.musicgym.db
 
+import android.text.SpannedString
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -42,4 +43,14 @@ data class SessionHistory(
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
+)
+
+data class SessionHistoryDisplay(
+    val id: Long,
+
+    val time: Long,
+
+    val title: String,
+
+    val text: SpannedString
 )

@@ -133,8 +133,11 @@ interface ExerciseDatabaseDao {
     @Query("DELETE FROM saved_session_table")
     fun clearSavedSession()
 
+    @Query("SELECT * FROM session_history_table WHERE id = :id")
+    suspend fun getSessionHistory(id: Long): SessionHistory?
+
     @Query("SELECT * FROM session_history_table ORDER BY time DESC")
-    fun getSessionHistory(): DataSource.Factory<Int, SessionHistory>
+    fun getSessionHistories(): DataSource.Factory<Int, SessionHistory>
 
     @Query("SELECT EXISTS(SELECT * FROM exercise_table WHERE id = :exerciseId)")
     fun exerciseExists(exerciseId: Long): Boolean

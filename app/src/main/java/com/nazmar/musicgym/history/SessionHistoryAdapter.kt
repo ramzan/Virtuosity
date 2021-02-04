@@ -1,21 +1,21 @@
 package com.nazmar.musicgym.history
 
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.text.buildSpannedString
-import androidx.core.text.color
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.ListItemHistoryBinding
-import com.nazmar.musicgym.db.SessionHistory
+import com.nazmar.musicgym.db.SessionHistoryDisplay
+import com.nazmar.musicgym.setSafeOnClickListener
 import java.util.*
 
 
-class SessionHistoryAdapter(private val onDelete: (SessionHistory) -> Unit) :
-    PagedListAdapter<SessionHistory, SessionHistoryAdapter.ViewHolder>(SessionHistoryDiffCallback()) {
+class SessionHistoryDisplayAdapter(private val onDelete: (Long) -> Unit) :
+    PagedListAdapter<SessionHistoryDisplay, SessionHistoryDisplayAdapter.ViewHolder>(
+        SessionHistoryDisplayDiffCallback()
+    ) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), onDelete)
@@ -28,25 +28,15 @@ class SessionHistoryAdapter(private val onDelete: (SessionHistory) -> Unit) :
     class ViewHolder private constructor(private val binding: ListItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: SessionHistory?, onDelete: (SessionHistory) -> Unit) {
+        fun bind(item: SessionHistoryDisplay?, onDelete: (Long) -> Unit) {
             binding.apply {
                 item?.run {
-                    historyDeleteBtn.setOnClickListener { onDelete(item) }
+                    historyDeleteBtn.setSafeOnClickListener {
+                        onDelete(item.id)
+                    }
                     historyTitle.text = title
                     historyDate.text = Date(time).toString()
-                    historyData.text = buildSpannedString {
-                        for (i in exercises.indices) {
-                            append("${exercises[i]}: ${bpms[i]} BPM")
-                            if (improvements[i].isEmpty()) append("\n")
-                            else {
-                                color(
-                                    Color.GREEN
-                                ) {
-                                    this.append(" ${improvements[i]}\n")
-                                }
-                            }
-                        }
-                    }
+                    historyData.text = text
                 } ?: run {
                     historyTitle.text = ""
                     historyDate.text = ""
@@ -68,12 +58,18 @@ class SessionHistoryAdapter(private val onDelete: (SessionHistory) -> Unit) :
     }
 }
 
-class SessionHistoryDiffCallback : DiffUtil.ItemCallback<SessionHistory>() {
-    override fun areItemsTheSame(oldItem: SessionHistory, newItem: SessionHistory): Boolean {
+class SessionHistoryDisplayDiffCallback : DiffUtil.ItemCallback<SessionHistoryDisplay>() {
+    override fun areItemsTheSame(
+        oldItem: SessionHistoryDisplay,
+        newItem: SessionHistoryDisplay
+    ): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: SessionHistory, newItem: SessionHistory): Boolean {
+    override fun areContentsTheSame(
+        oldItem: SessionHistoryDisplay,
+        newItem: SessionHistoryDisplay
+    ): Boolean {
         return oldItem == newItem
     }
 }
