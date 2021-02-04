@@ -210,6 +210,7 @@ class SessionFragment : Fragment() {
                         text = Editable.Factory.getInstance().newEditable(viewModel.newExerciseBpm)
                         hint = viewModel.currentExerciseBpmRecord
                         isEnabled = true
+                        setSelection(text.length.coerceAtLeast(0))
                     }
                 }
             }
