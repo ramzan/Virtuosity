@@ -24,7 +24,7 @@ class HistoryFragment : Fragment() {
     ): View {
         _binding = FragmentHistoryBinding.inflate(inflater)
 
-        SessionHistoryAdapter().run {
+        SessionHistoryAdapter(viewModel::deleteHistoryItem).run {
             this.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 

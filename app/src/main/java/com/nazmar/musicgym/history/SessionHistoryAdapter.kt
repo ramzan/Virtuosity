@@ -14,11 +14,11 @@ import com.nazmar.musicgym.db.SessionHistory
 import java.util.*
 
 
-class SessionHistoryAdapter :
+class SessionHistoryAdapter(private val onDelete: (SessionHistory) -> Unit) :
     PagedListAdapter<SessionHistory, SessionHistoryAdapter.ViewHolder>(SessionHistoryDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onDelete)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,9 +28,10 @@ class SessionHistoryAdapter :
     class ViewHolder private constructor(private val binding: ListItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: SessionHistory?) {
+        fun bind(item: SessionHistory?, onDelete: (SessionHistory) -> Unit) {
             binding.apply {
                 item?.run {
+                    historyDeleteBtn.setOnClickListener { onDelete(item) }
                     historyTitle.text = title
                     historyDate.text = Date(time).toString()
                     historyData.text = buildSpannedString {

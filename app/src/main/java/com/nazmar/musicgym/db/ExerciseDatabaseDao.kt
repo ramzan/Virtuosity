@@ -73,6 +73,9 @@ interface ExerciseDatabaseDao {
     @Delete
     suspend fun delete(routine: Routine)
 
+    @Delete
+    suspend fun delete(history: SessionHistory)
+
     // Query
 
     @Query("SELECT * FROM exercise_table ORDER BY name COLLATE NOCASE ASC")

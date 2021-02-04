@@ -192,4 +192,10 @@ object Repository {
         }
 
     }
+
+    fun deleteSessionHistory(history: SessionHistory) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataSource.delete(history)
+        }
+    }
 }
