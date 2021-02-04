@@ -173,5 +173,9 @@
     <dialog
         android:id="@+id/deleteHistoryDialogFragment"
         android:name="com.nazmar.musicgym.history.DeleteHistoryDialogFragment"
-        android:label="DeleteHistoryDialogFragment" />
+        android:label="DeleteHistoryDialogFragment" >
+        <argument
+            android:name="historyId"
+            app:argType="long" />
+    </dialog>
 </navigation>

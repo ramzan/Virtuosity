@@ -40,9 +40,8 @@ class HistoryFragment : Fragment() {
     }
 
     private fun deleteSessionHistory(id: Long) {
-        viewModel.setItemToDelete(id)
         findNavController().navigate(
-            HistoryFragmentDirections.actionHistoryFragmentToDeleteHistoryDialogFragment()
+            HistoryFragmentDirections.actionHistoryFragmentToDeleteHistoryDialogFragment(id)
         )
     }
 
