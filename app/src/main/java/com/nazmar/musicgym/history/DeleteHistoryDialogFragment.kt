@@ -7,8 +7,6 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
 
-const val ARG_HISTORY_ID = "history_id"
-
 class DeleteHistoryDialogFragment : DialogFragment() {
 
     private val viewModel: HistoryViewModel by activityViewModels()
@@ -18,7 +16,7 @@ class DeleteHistoryDialogFragment : DialogFragment() {
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete_history_dialog_message)
             .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
-                viewModel.deleteHistoryItem(requireArguments().getLong(ARG_HISTORY_ID))
+                viewModel.deleteHistoryItem(requireArguments().getLong("historyId"))
             }
             .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ -> }
             .show()
