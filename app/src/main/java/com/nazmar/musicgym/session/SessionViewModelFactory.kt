@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice.session
+package com.nazmar.musicgym.session
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

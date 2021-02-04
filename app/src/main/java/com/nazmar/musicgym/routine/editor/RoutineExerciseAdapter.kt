@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice.routine.editor
+package com.nazmar.musicgym.routine.editor
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

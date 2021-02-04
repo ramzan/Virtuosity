@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice.session
+package com.nazmar.musicgym.session
 
 import androidx.lifecycle.*
 import com.nazmar.musicgym.data.Repository

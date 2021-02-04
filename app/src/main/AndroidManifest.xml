@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".practice.session.timer.TimerService" />
+        <service android:name=".session.timer.TimerService" />
     </application>
 
 </manifest>

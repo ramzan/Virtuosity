@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/routineListFragment"
-        android:name="com.nazmar.musicgym.practice.routine.list.RoutineListFragment"
+        android:name="com.nazmar.musicgym.routine.list.RoutineListFragment"
         android:label="@string/practice"
         tools:layout="@layout/fragment_routine_list">
         <action
@@ -85,7 +85,7 @@
             app:argType="long" />
         <fragment
             android:id="@+id/routineEditor"
-            android:name="com.nazmar.musicgym.practice.routine.editor.RoutineEditorFragment"
+            android:name="com.nazmar.musicgym.routine.editor.RoutineEditorFragment"
             android:label="RoutineEditor">
             <argument
                 android:name="routineId"
@@ -99,7 +99,7 @@
         </fragment>
         <dialog
             android:id="@+id/durationPickerDialog"
-            android:name="com.nazmar.musicgym.practice.routine.editor.DurationPickerDialogFragment"
+            android:name="com.nazmar.musicgym.routine.editor.DurationPickerDialogFragment"
             android:label="DurationPickerDialog">
             <argument
                 android:name="exerciseIndex"
@@ -110,7 +110,7 @@
         </dialog>
         <dialog
             android:id="@+id/deleteRoutineDialogFragment"
-            android:name="com.nazmar.musicgym.practice.routine.editor.DeleteRoutineDialogFragment"
+            android:name="com.nazmar.musicgym.routine.editor.DeleteRoutineDialogFragment"
             android:label="DeleteRoutineDialogFragment">
             <argument
                 android:name="routineId"
@@ -129,7 +129,7 @@
             app:argType="long" />
         <fragment
             android:id="@+id/sessionFragment"
-            android:name="com.nazmar.musicgym.practice.session.SessionFragment"
+            android:name="com.nazmar.musicgym.session.SessionFragment"
             android:label="SessionFragment">
             <argument
                 android:name="routineId"
@@ -140,7 +140,7 @@
         </fragment>
         <dialog
             android:id="@+id/timerEditorDialog"
-            android:name="com.nazmar.musicgym.practice.session.TimerEditorDialogFragment"
+            android:name="com.nazmar.musicgym.session.TimerEditorDialogFragment"
             android:label="TimerEditorDialogFragment">
             <argument
                 android:name="routineId"
@@ -152,7 +152,7 @@
     </navigation>
     <dialog
         android:id="@+id/restartSessionDialogFragment"
-        android:name="com.nazmar.musicgym.practice.routine.list.RestartSessionDialogFragment"
+        android:name="com.nazmar.musicgym.routine.list.RestartSessionDialogFragment"
         android:label="RestartSessionDialogFragment" >
         <argument
             android:name="routineId"

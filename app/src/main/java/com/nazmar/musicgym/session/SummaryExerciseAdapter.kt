@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice.session
+package com.nazmar.musicgym.session
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

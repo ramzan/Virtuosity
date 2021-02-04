@@ -1,4 +1,4 @@
-package com.nazmar.musicgym.practice.session.timer
+package com.nazmar.musicgym.session.timer
 
 import android.app.NotificationManager
 import android.media.MediaPlayer
