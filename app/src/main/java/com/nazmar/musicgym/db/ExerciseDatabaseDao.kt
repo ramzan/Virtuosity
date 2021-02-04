@@ -97,7 +97,7 @@ interface ExerciseDatabaseDao {
     fun getAllRoutines(): LiveData<List<Routine>>
 
     @Query("SELECT * FROM routine_table WHERE id = :key")
-    fun getRoutine(key: Long): LiveData<Routine?>
+    suspend fun getRoutine(key: Long): Routine
 
     @Query("SELECT name FROM routine_table WHERE id = :key")
     suspend fun getRoutineName(key: Long): String
@@ -112,7 +112,7 @@ interface ExerciseDatabaseDao {
         WHERE routineId = :routineId ORDER BY `order`
         """
     )
-    fun getRoutineExerciseNames(routineId: Long): LiveData<List<RoutineExerciseName>>
+    suspend fun getRoutineExerciseNames(routineId: Long): List<RoutineExerciseName>
 
     @Query(
         """

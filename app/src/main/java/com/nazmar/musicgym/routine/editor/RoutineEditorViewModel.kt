@@ -1,83 +1,77 @@
 package com.nazmar.musicgym.routine.editor
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.nazmar.musicgym.DEFAULT_TIMER_DURATION
 import com.nazmar.musicgym.data.Repository
 import com.nazmar.musicgym.db.Exercise
+import com.nazmar.musicgym.db.Routine
 import com.nazmar.musicgym.db.RoutineExerciseName
+import kotlinx.coroutines.launch
 import java.time.Duration
 
 class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
 
-    val newRoutine = routineId == 0L
+    val allExercises = Repository.getAllExercises()
 
-    val routine = Repository.getRoutine(routineId)
+    private var _state = MutableLiveData<RoutineEditorState>(RoutineEditorState.Loading)
 
-    private var _routineDeleted = false
+    val state: LiveData<RoutineEditorState>
+        get() = _state
 
-    val routineDeleted: Boolean
-        get() = _routineDeleted
+    val exercises = Transformations.map(state) {
+        it.exercises
+    }
 
-    val exercises = Repository.getAllExercises()
-
-    val oldExercises = Repository.getRoutineExerciseNames(routineId)
-
-    private var _currentExercises = mutableListOf<RoutineExerciseName>()
-
-    val currentExercises: MutableList<RoutineExerciseName>
-        get() = _currentExercises
-
-    private var currentExercisesLoaded = false
-
-    private var _updatedIndex = MutableLiveData<Int>()
-
-    val updatedIndex: LiveData<Int>
-        get() = _updatedIndex
-
-    var nameInputText: String = ""
-
-    fun loadOldRoutine() {
-        if (!currentExercisesLoaded) {
-            oldExercises.value?.let {
-                _currentExercises = it.toMutableList()
-                currentExercisesLoaded = true
+    init {
+        if (routineId == 0L) {
+            _state.value = RoutineEditorState.New(
+                exercises = mutableListOf(),
+                nameInputText = ""
+            )
+        } else {
+            viewModelScope.launch {
+                Repository.getRoutine(routineId).let {
+                    _state.value = RoutineEditorState.Editing(
+                        routine = it,
+                        exercises = Repository.getRoutineExerciseNames(routineId).toMutableList(),
+                        nameInputText = it.name
+                    )
+                }
             }
         }
     }
 
-    fun deleteRoutine() {
-        routine.value?.let {
-            Repository.deleteRoutine(it)
-            _routineDeleted = true
+    fun updateDuration(exerciseIndex: Int, newDuration: Long) {
+        (_state.value as RoutineEditorState.Editing).let {
+            val newExercises = it.exercises.toMutableList()
+            newExercises[exerciseIndex] = newExercises[exerciseIndex].copy(duration = Duration.ofMillis(newDuration))
+            _state.value = it.copy(exercises = newExercises)
         }
     }
 
-    fun updateRoutine() {
-        when (newRoutine) {
-            true -> Repository.createRoutine(nameInputText, currentExercises)
-            false -> Repository.updateRoutine(routineId, nameInputText, currentExercises)
+    fun deleteRoutine() {
+        if (state.value is RoutineEditorState.Editing) {
+            (state.value as RoutineEditorState.Editing).deleteRoutine()
+            _state.value = RoutineEditorState.Deleted
         }
     }
+}
+
+sealed class RoutineEditorState {
+    abstract val exercises: MutableList<RoutineExerciseName>
+    abstract var nameInputText: String
 
     fun moveItem(fromPos: Int, toPos: Int): Boolean {
-        _currentExercises.add(toPos, _currentExercises.removeAt(fromPos))
+        exercises.add(toPos, exercises.removeAt(fromPos))
         return true
     }
 
     fun deleteItem(index: Int) {
-        _currentExercises.removeAt(index)
-    }
-
-    fun updateDuration(exerciseIndex: Int, newDuration: Long) {
-        currentExercises[exerciseIndex].duration = Duration.ofMillis(newDuration)
-        _updatedIndex.value = exerciseIndex
-
+        exercises.removeAt(index)
     }
 
     fun addExercise(exercise: Exercise) {
-        currentExercises.add(
+        exercises.add(
             RoutineExerciseName(
                 exercise.id,
                 exercise.name,
@@ -87,6 +81,34 @@ class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
     }
 
     fun getItemDuration(index: Int): Duration {
-        return currentExercises[index].duration
+        return exercises[index].duration
+    }
+
+    object Loading : RoutineEditorState() {
+        override val exercises = mutableListOf<RoutineExerciseName>()
+        override var nameInputText: String = ""
+    }
+
+    object Deleted : RoutineEditorState() {
+        override val exercises = mutableListOf<RoutineExerciseName>()
+        override var nameInputText: String = ""
+    }
+
+    data class Editing(
+        val routine: Routine,
+        override val exercises: MutableList<RoutineExerciseName>,
+        override var nameInputText: String,
+    ) : RoutineEditorState() {
+        fun deleteRoutine() = Repository.deleteRoutine(routine)
+
+        fun saveRoutine() = Repository.updateRoutine(routine.id, nameInputText, exercises)
+    }
+
+    data class New(
+        override val exercises: MutableList<RoutineExerciseName>,
+        override var nameInputText: String = ""
+    ) : RoutineEditorState() {
+        fun saveRoutine() = Repository.createRoutine(nameInputText, exercises)
+
     }
 }

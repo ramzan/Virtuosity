@@ -52,13 +52,13 @@ class RoutineEditorFragment : Fragment() {
                 }
                 val fromPos = viewHolder.bindingAdapterPosition
                 val toPos = target.bindingAdapterPosition
-                viewModel.moveItem(fromPos, toPos)
+                viewModel.state.value?.moveItem(fromPos, toPos)
                 adapter.notifyItemMoved(fromPos, toPos)
                 return true
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                viewModel.deleteItem(viewHolder.bindingAdapterPosition)
+                viewModel.state.value?.deleteItem(viewHolder.bindingAdapterPosition)
                 adapter.notifyItemRemoved(viewHolder.bindingAdapterPosition)
             }
 
@@ -96,78 +96,27 @@ class RoutineEditorFragment : Fragment() {
 
         _binding = FragmentRoutineEditorBinding.inflate(inflater)
 
-        binding.routineExerciseList.adapter = simpleItemTouchCallback.adapter
-
-        viewModel.oldExercises.observe(viewLifecycleOwner, {
-            viewModel.loadOldRoutine()
-            simpleItemTouchCallback.adapter.submitList(viewModel.currentExercises)
-        })
-
-        itemTouchHelper.attachToRecyclerView(binding.routineExerciseList)
-
-        viewModel.updatedIndex.observe(viewLifecycleOwner) {
-            simpleItemTouchCallback.adapter.notifyItemChanged(it)
-        }
-
-
         binding.apply {
-            editorToolbar.title =
-                getString(if (viewModel.newRoutine) R.string.editorTitleNew else R.string.editorTitleEdit)
             editorToolbar.setNavigationOnClickListener {
                 goBack()
             }
 
-            val deleteButton = editorToolbar.menu.getItem(0)
-            val saveButton = editorToolbar.menu.getItem(1)
-
-            deleteButton.setOnMenuItemClickListener {
-                showDeleteDialog()
-                true
-            }
-
-            saveButton.setOnMenuItemClickListener {
-                if (nameInput.text?.trim().isNullOrEmpty()) {
-                    nameInput.setText("")
-                    nameInputLayout.isErrorEnabled = true
-                    nameInputLayout.error = getString(R.string.empty_name_error_msg)
-                } else {
-                    viewModel.updateRoutine()
-                    goBack()
-                }
-                true
-            }
-
             nameInput.doOnTextChanged { text, _, _, _ ->
-                viewModel.nameInputText = text.toString().trim().replace('\n', ' ')
-            }
-
-            if (!viewModel.newRoutine) {
-                viewModel.routine.observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        deleteButton.isVisible = true
-                        saveButton.isVisible = true
-                        if (firstRun) {
-                            nameInput.setText(it.name)
-                            viewModel.nameInputText = it.name
-                        }
-                        nameInput.setSelection(viewModel.nameInputText.length)
-                    } else if (viewModel.routineDeleted) goBack()
-                }
-            } else {
-                saveButton.isVisible = true
-                imm.showKeyboard()
+                viewModel.state.value?.nameInputText = text.toString().trim().replace('\n', ' ')
             }
 
             exerciseSpinner.apply {
                 onItemClickListener = AdapterView.OnItemClickListener { _, _, pos, _ ->
-                    viewModel.addExercise(this.adapter.getItem(pos) as Exercise)
-                    binding.routineExerciseList.adapter?.notifyItemInserted(viewModel.currentExercises.size)
-                    setText("")
+                    viewModel.state.value?.let {
+                        it.addExercise(this.adapter.getItem(pos) as Exercise)
+                        binding.routineExerciseList.adapter?.notifyItemInserted(it.exercises.size)
+                        setText("")
+                    }
                 }
             }
 
             // Populate exercise autocomplete
-            viewModel.exercises.observe(viewLifecycleOwner, {
+            viewModel.allExercises.observe(viewLifecycleOwner, {
                 exerciseSpinner.setAdapter(
                     ArrayAdapter(
                         requireContext(),
@@ -176,7 +125,71 @@ class RoutineEditorFragment : Fragment() {
                     )
                 )
             })
+        }
 
+        binding.routineExerciseList.adapter = simpleItemTouchCallback.adapter
+        itemTouchHelper.attachToRecyclerView(binding.routineExerciseList)
+
+        viewModel.exercises.observe(viewLifecycleOwner) {
+            simpleItemTouchCallback.adapter.submitList(it)
+        }
+
+        val deleteButton = binding.editorToolbar.menu.getItem(0)
+        val saveButton = binding.editorToolbar.menu.getItem(1)
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                RoutineEditorState.Loading -> {
+                }
+                is RoutineEditorState.Editing -> {
+                    binding.apply {
+                        editorToolbar.title = getString(R.string.editorTitleEdit)
+
+                        if (firstRun) {
+                            nameInput.setText(state.nameInputText)
+                        }
+                        nameInput.setSelection(state.nameInputText.length)
+
+                        saveButton.setOnMenuItemClickListener {
+                            if (nameInput.text?.trim().isNullOrEmpty()) {
+                                nameInput.setText("")
+                                nameInputLayout.isErrorEnabled = true
+                                nameInputLayout.error = getString(R.string.empty_name_error_msg)
+                            } else {
+                                state.saveRoutine()
+                                goBack()
+                            }
+                            true
+                        }
+                        deleteButton.setOnMenuItemClickListener {
+                            showDeleteDialog()
+                            true
+                        }
+                        deleteButton.isVisible = true
+                        saveButton.isVisible = true
+                    }
+                }
+                is RoutineEditorState.New -> {
+                    binding.apply {
+                        editorToolbar.title = getString(R.string.editorTitleNew)
+
+                        saveButton.setOnMenuItemClickListener {
+                            if (nameInput.text?.trim().isNullOrEmpty()) {
+                                nameInput.setText("")
+                                nameInputLayout.isErrorEnabled = true
+                                nameInputLayout.error = getString(R.string.empty_name_error_msg)
+                            } else {
+                                state.saveRoutine()
+                                goBack()
+                            }
+                            true
+                        }
+                    }
+                    saveButton.isVisible = true
+                    imm.showKeyboard()
+                }
+                RoutineEditorState.Deleted -> goBack()
+            }
         }
         return binding.root
     }

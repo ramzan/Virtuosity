@@ -7,7 +7,15 @@ import kotlinx.coroutines.launch
 
 class SessionViewModel(routineId: Long) : ViewModel() {
 
-    val session = Repository.getRoutine(routineId)
+    private var _sessionName = MutableLiveData("")
+
+    val sessionName: LiveData<String> = _sessionName
+
+    init {
+        viewModelScope.launch {
+            _sessionName.value = Repository.getRoutine(routineId).name
+        }
+    }
 
     private var _exercises = MutableLiveData<MutableList<SessionExercise>>()
 

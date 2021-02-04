@@ -41,7 +41,7 @@ data class RoutineExerciseName(
 
     val name: String,
 
-    var duration: Duration
+    val duration: Duration
 )
 
 @Entity(tableName = "saved_session_table")
@@ -57,7 +57,7 @@ data class SessionExercise(
 
     val bpmRecord: Int,
 
-    var newBpm: String = ""
+    val newBpm: String = ""
 ) {
     fun getBpmDiff() = (newBpm.toInt() - bpmRecord).let { diff ->
         when (diff.sign) {

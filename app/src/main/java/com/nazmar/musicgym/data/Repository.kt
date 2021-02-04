@@ -145,9 +145,9 @@ object Repository {
 
     //------------------------------------------------------------------------------------
 
-    fun getRoutine(routineId: Long) = dataSource.getRoutine(routineId)
+    suspend fun getRoutine(routineId: Long) = dataSource.getRoutine(routineId)
 
-    fun getRoutineExerciseNames(routineId: Long) = dataSource.getRoutineExerciseNames(routineId)
+    suspend fun getRoutineExerciseNames(routineId: Long) = dataSource.getRoutineExerciseNames(routineId)
 
     fun deleteRoutine(it: Routine) {
         CoroutineScope(Dispatchers.IO).launch {

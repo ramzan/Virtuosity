@@ -73,11 +73,9 @@ class SessionFragment : Fragment() {
                 }
             }
 
-            viewModel.session.observe(viewLifecycleOwner) {
-                it?.name?.let { routineName ->
-                    binding.sessionToolbar.title = routineName
-                    timerService.updateRoutineName(routineName)
-                }
+            viewModel.sessionName.observe(viewLifecycleOwner) {
+                    binding.sessionToolbar.title = it
+                    timerService.updateRoutineName(it)
             }
 
             viewModel.editorTime.observe(viewLifecycleOwner) {
