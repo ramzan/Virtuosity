@@ -11,9 +11,7 @@ const val ARG_HISTORY_ID = "history_id"
 
 class DeleteHistoryDialogFragment : DialogFragment() {
 
-    private val viewModel: HistoryViewModel by activityViewModels {
-        HistoryViewModelFactory()
-    }
+    private val viewModel: HistoryViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 

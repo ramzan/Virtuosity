@@ -25,9 +25,7 @@ class ExerciseListFragment : Fragment() {
 
     private lateinit var imm: InputMethodManager
 
-    private val viewModel: ExerciseListViewModel by activityViewModels {
-        ExerciseListViewModelFactory()
-    }
+    private val viewModel: ExerciseListViewModel by activityViewModels()
 
     private lateinit var searchView: SearchView
 

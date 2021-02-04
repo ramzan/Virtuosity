@@ -16,9 +16,7 @@ import com.nazmar.musicgym.showKeyboard
 class NewExerciseDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val viewModel: ExerciseListViewModel by activityViewModels {
-            ExerciseListViewModelFactory()
-        }
+        val viewModel: ExerciseListViewModel by activityViewModels()
 
         val layout = layoutInflater.inflate(R.layout.text_input_dialog, null)
         val text = layout.findViewById<EditText>(R.id.name_input)
