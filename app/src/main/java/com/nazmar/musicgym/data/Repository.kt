@@ -159,7 +159,6 @@ object Repository {
         CoroutineScope(Dispatchers.IO).launch {
             val newRoutineId = dataSource.insert(Routine(routineName))
             var order = 1
-
             dataSource.insertRoutineExercises(exercises.map {
                 RoutineExercise(newRoutineId, order++, it.exerciseId, it.duration)
             })

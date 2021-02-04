@@ -56,7 +56,7 @@ fun Long.toTimerString(): String {
 }
 
 class SafeClickListener(
-    private var defaultInterval: Int = 1000,
+    private val defaultInterval: Int = 1000,
     private val onSafeCLick: (View) -> Unit
 ) : View.OnClickListener {
     private var lastTimeClicked: Long = 0
