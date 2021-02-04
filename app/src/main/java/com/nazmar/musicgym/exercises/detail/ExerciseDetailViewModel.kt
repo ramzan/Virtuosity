@@ -12,8 +12,6 @@ class ExerciseDetailViewModel(exerciseId: Long) : ViewModel() {
     val exerciseDeleted: Boolean
         get() = _exerciseDeleted
 
-    var nameInputText: String = ""
-
     fun deleteExercise() {
         exercise.value?.let {
             Repository.deleteExercise(it)
@@ -21,10 +19,10 @@ class ExerciseDetailViewModel(exerciseId: Long) : ViewModel() {
         }
     }
 
-    fun renameExercise() {
+    fun renameExercise(newName: String) {
         exercise.value?.let { exercise ->
-            if (nameInputText != exercise.name) {
-                Repository.renameExercise(exercise.id, nameInputText)
+            if (newName != exercise.name) {
+                Repository.renameExercise(exercise.id, newName)
             }
         }
     }

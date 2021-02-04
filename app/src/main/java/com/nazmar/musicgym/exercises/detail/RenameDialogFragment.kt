@@ -14,7 +14,11 @@ import com.nazmar.musicgym.R
 import com.nazmar.musicgym.getInputMethodManager
 import com.nazmar.musicgym.showKeyboard
 
+const val ARG_NAME_INPUT = "name_input"
+
 class RenameDialogFragment : DialogFragment() {
+
+    private var nameInputText = ""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val layout = layoutInflater.inflate(R.layout.text_input_dialog, null)
@@ -26,17 +30,17 @@ class RenameDialogFragment : DialogFragment() {
 
         val firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
 
-        if (firstRun) {
-            viewModel.nameInputText = viewModel.exercise.value?.name ?: ""
-        }
+        nameInputText = if (firstRun) {
+            viewModel.exercise.value?.name ?: ""
+        } else savedInstanceState?.getString(ARG_NAME_INPUT) ?: ""
 
-        text.setText(viewModel.nameInputText)
+        text.setText(nameInputText)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.rename)
             .setView(layout)
             .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
-                viewModel.renameExercise()
+                viewModel.renameExercise(nameInputText)
             }
             .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ -> }
             .create()
@@ -50,7 +54,7 @@ class RenameDialogFragment : DialogFragment() {
                 val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                 with(text.text.trim()) {
                     okButton.isEnabled = this.isNotEmpty()
-                    viewModel.nameInputText = this.toString().replace('\n', ' ')
+                    nameInputText = this.toString().replace('\n', ' ')
                 }
             }
         })
@@ -66,5 +70,6 @@ class RenameDialogFragment : DialogFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(FIRST_RUN_KEY, false)
+        outState.putString(ARG_NAME_INPUT, nameInputText)
     }
 }
