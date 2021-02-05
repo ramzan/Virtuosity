@@ -24,7 +24,7 @@ class DurationPickerDialogFragment : DialogFragment() {
                 viewModel.updateDuration(exerciseIndex, l.coerceAtMost(MAX_TIMER_DURATION))
 
             },
-            viewModel.state.value!!.getItemDuration(exerciseIndex).toMillis(),
+            viewModel.state.value!!.getItemDuration(exerciseIndex),
             TimeDurationPicker.HH_MM_SS
         )
     }

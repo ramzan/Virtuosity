@@ -7,7 +7,6 @@ import android.os.SystemClock
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.time.Duration
 
 
 fun Activity.hideBottomNavBar() {
@@ -42,12 +41,6 @@ fun InputMethodManager.showKeyboard() {
 
 
 fun isOreoOrAbove() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-
-fun Duration.toTimerString(): String {
-    return this.seconds.let { s ->
-        String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60))
-    }
-}
 
 fun Long.toTimerString(): String {
     return (this / 1000).let { s ->

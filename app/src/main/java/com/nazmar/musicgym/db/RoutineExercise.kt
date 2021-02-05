@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.time.Duration
 import kotlin.math.sign
 
 @Entity(
@@ -33,7 +32,7 @@ data class RoutineExercise(
     @ColumnInfo(index = true)
     val exerciseId: Long,
 
-    val duration: Duration
+    val duration: Long
 )
 
 data class RoutineExerciseName(
@@ -41,7 +40,7 @@ data class RoutineExerciseName(
 
     val name: String,
 
-    val duration: Duration
+    val duration: Long
 )
 
 @Entity(tableName = "saved_session_table")
@@ -53,7 +52,7 @@ data class SessionExercise(
 
     val name: String,
 
-    val duration: Duration,
+    val duration: Long,
 
     val bpmRecord: Int,
 

@@ -12,12 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.ListItemRoutineExerciseBinding
 import com.nazmar.musicgym.db.RoutineExerciseName
 import com.nazmar.musicgym.toTimerString
-import java.time.Duration
 
 
 class RoutineExerciseAdapter(
     private val fragment: RoutineEditorFragment,
-    private val onClickListener: (exerciseIndex: Int, duration: Duration) -> Unit
+    private val onClickListener: (exerciseIndex: Int, duration: Long) -> Unit
 ) : ListAdapter<RoutineExerciseName, RoutineExerciseAdapter.ViewHolder>(RoutineDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -44,7 +43,7 @@ class RoutineExerciseAdapter(
 
         fun bind(
             item: RoutineExerciseName,
-            onClickListener: (exerciseIndex: Int, duration: Duration) -> Unit
+            onClickListener: (exerciseIndex: Int, duration: Long) -> Unit
         ) {
             binding.apply {
                 exerciseName.text = item.name

@@ -12,7 +12,6 @@ import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.db.SessionExercise
 import com.nazmar.musicgym.isOreoOrAbove
 import com.nazmar.musicgym.toTimerString
-import java.time.Duration
 
 enum class TimerState {
     STOPPED,
@@ -71,10 +70,10 @@ class Timer(
         get() = _timerStatus
 
     private var currentExercise: SessionExercise? =
-        SessionExercise(-1, -1, "", Duration.ofMillis(-1), -1)
+        SessionExercise(-1, -1, "", -1, -1)
 
     private val currentExerciseDuration
-        get() = currentExercise?.duration?.toMillis() ?: 0L
+        get() = currentExercise?.duration ?: 0L
 
     private val currentExerciseName
         get() = currentExercise?.name ?: ""

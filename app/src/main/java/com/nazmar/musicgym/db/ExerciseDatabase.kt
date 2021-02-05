@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.Duration
 
 @Database(
     entities = [
@@ -140,11 +139,11 @@ abstract class ExerciseDatabase : RoomDatabase() {
         )
 
         val PREPOPULATE_ROUTINE_EXERCISES = listOf(
-            RoutineExercise(1, 1, 1, Duration.ofMillis(81000)),
-            RoutineExercise(1, 2, 2, Duration.ofMillis(72000)),
-            RoutineExercise(1, 3, 3, Duration.ofMillis(63000)),
-            RoutineExercise(1, 4, 9, Duration.ofMillis(54000)),
-            RoutineExercise(1, 5, 2, Duration.ofMillis(45000))
+            RoutineExercise(1, 1, 1, 81000),
+            RoutineExercise(1, 2, 2, 72000),
+            RoutineExercise(1, 3, 3, 63000),
+            RoutineExercise(1, 4, 9, 54000),
+            RoutineExercise(1, 5, 2, 45000)
         )
     }
 }

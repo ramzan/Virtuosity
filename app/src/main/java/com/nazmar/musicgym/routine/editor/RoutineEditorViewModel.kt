@@ -7,7 +7,6 @@ import com.nazmar.musicgym.db.Exercise
 import com.nazmar.musicgym.db.Routine
 import com.nazmar.musicgym.db.RoutineExerciseName
 import kotlinx.coroutines.launch
-import java.time.Duration
 
 class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
 
@@ -44,7 +43,7 @@ class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
     fun updateDuration(exerciseIndex: Int, newDuration: Long) {
         (_state.value as RoutineEditorState.Editing).let {
             val newExercises = it.exercises.toMutableList()
-            newExercises[exerciseIndex] = newExercises[exerciseIndex].copy(duration = Duration.ofMillis(newDuration))
+            newExercises[exerciseIndex] = newExercises[exerciseIndex].copy(duration = newDuration)
             _state.value = it.copy(exercises = newExercises)
         }
     }
@@ -75,12 +74,12 @@ sealed class RoutineEditorState {
             RoutineExerciseName(
                 exercise.id,
                 exercise.name,
-                Duration.ofMillis(DEFAULT_TIMER_DURATION)
+                DEFAULT_TIMER_DURATION
             )
         )
     }
 
-    fun getItemDuration(index: Int): Duration {
+    fun getItemDuration(index: Int): Long {
         return exercises[index].duration
     }
 
