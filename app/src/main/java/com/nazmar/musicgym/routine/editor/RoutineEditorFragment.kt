@@ -8,7 +8,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -19,10 +18,7 @@ import com.nazmar.musicgym.databinding.FragmentRoutineEditorBinding
 import com.nazmar.musicgym.db.Exercise
 
 
-class RoutineEditorFragment : Fragment() {
-
-    private var _binding: FragmentRoutineEditorBinding? = null
-    private val binding get() = _binding!!
+class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
     private lateinit var imm: InputMethodManager
 
@@ -218,7 +214,6 @@ class RoutineEditorFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         requireActivity().showBottomNavBar()
-        _binding = null
     }
 
     fun startDragging(viewHolder: RecyclerView.ViewHolder) {

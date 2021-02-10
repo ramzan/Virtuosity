@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -24,10 +23,7 @@ import com.nazmar.musicgym.session.timer.TimerService
 import com.nazmar.musicgym.session.timer.TimerState
 
 
-class SessionFragment : Fragment() {
-
-    private var _binding: FragmentSessionBinding? = null
-    private val binding get() = _binding!!
+class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
     private val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
         SessionViewModelFactory(requireArguments().getLong("routineId"))
@@ -74,8 +70,8 @@ class SessionFragment : Fragment() {
             }
 
             viewModel.sessionName.observe(viewLifecycleOwner) {
-                    binding.sessionToolbar.title = it
-                    timerService.updateRoutineName(it)
+                binding.sessionToolbar.title = it
+                timerService.updateRoutineName(it)
             }
 
             viewModel.editorTime.observe(viewLifecycleOwner) {
@@ -219,7 +215,6 @@ class SessionFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         requireActivity().showBottomNavBar()
-        _binding = null
     }
 
     private fun goBack() {

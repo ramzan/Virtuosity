@@ -4,19 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.nazmar.musicgym.BaseFragment
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
 import com.nazmar.musicgym.hideBottomNavBar
 import com.nazmar.musicgym.showBottomNavBar
 
 
-class ExerciseDetailFragment : Fragment() {
-
-    private var _binding: FragmentExerciseDetailBinding? = null
-    private val binding get() = _binding!!
+class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
 
     private val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
         ExerciseDetailViewModelFactory(requireArguments().getLong("exerciseId"))
@@ -81,6 +78,5 @@ class ExerciseDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         requireActivity().showBottomNavBar()
-        _binding = null
     }
 }

@@ -4,16 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.nazmar.musicgym.BaseFragment
 import com.nazmar.musicgym.databinding.FragmentHistoryBinding
 
-class HistoryFragment : Fragment() {
-
-    private var _binding: FragmentHistoryBinding? = null
-    private val binding get() = _binding!!
+class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
 
     private val viewModel: HistoryViewModel by activityViewModels()
 
@@ -41,10 +38,5 @@ class HistoryFragment : Fragment() {
         findNavController().navigate(
             HistoryFragmentDirections.actionHistoryFragmentToDeleteHistoryDialogFragment(id)
         )
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

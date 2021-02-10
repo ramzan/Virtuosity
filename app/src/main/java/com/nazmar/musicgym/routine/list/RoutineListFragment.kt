@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.nazmar.musicgym.BaseFragment
 import com.nazmar.musicgym.SAVED_SESSION_ID
 import com.nazmar.musicgym.SAVED_SESSION_NAME
 import com.nazmar.musicgym.SAVED_SESSION_TIME
@@ -17,10 +17,7 @@ import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
 import com.nazmar.musicgym.db.Routine
 import java.util.*
 
-class RoutineListFragment : Fragment() {
-
-    private var _binding: FragmentRoutineListBinding? = null
-    private val binding get() = _binding!!
+class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
     private lateinit var prefs: SharedPreferences
 
@@ -111,10 +108,5 @@ class RoutineListFragment : Fragment() {
                 RoutineListFragmentDirections.actionRoutineListFragmentToSessionGraph(id)
             }
         )
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -7,21 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.nazmar.musicgym.R
+import com.nazmar.musicgym.*
 import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
-import com.nazmar.musicgym.getInputMethodManager
-import com.nazmar.musicgym.hideKeyboard
-import com.nazmar.musicgym.showKeyboard
 
 
-class ExerciseListFragment : Fragment() {
-
-    private var _binding: FragmentExerciseListBinding? = null
-    private val binding get() = _binding!!
+class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
     private lateinit var imm: InputMethodManager
 
@@ -112,6 +105,5 @@ class ExerciseListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         searchView.setOnQueryTextListener(null)
-        _binding = null
     }
 }
