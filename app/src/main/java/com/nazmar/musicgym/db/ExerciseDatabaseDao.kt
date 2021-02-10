@@ -1,8 +1,8 @@
 package com.nazmar.musicgym.db
 
-import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExerciseDatabaseDao {
@@ -82,10 +82,10 @@ interface ExerciseDatabaseDao {
     // Query
 
     @Query("SELECT * FROM exercise_table ORDER BY name COLLATE NOCASE ASC")
-    fun getAllExercises(): LiveData<List<Exercise>>
+    fun getAllExercises(): Flow<List<Exercise>>
 
     @Query("SELECT * FROM exercise_table WHERE id = :key")
-    fun getExercise(key: Long): LiveData<Exercise?>
+    fun getExercise(key: Long): Flow<Exercise?>
 
     @Query(
         """
@@ -94,10 +94,10 @@ interface ExerciseDatabaseDao {
         GROUP BY id ORDER BY name COLLATE NOCASE ASC
         """
     )
-    fun getAllExerciseMaxBPMs(): LiveData<List<ExerciseMaxBpm>>
+    fun getAllExerciseMaxBPMs(): Flow<List<ExerciseMaxBpm>>
 
     @Query("SELECT * FROM routine_table ORDER BY name COLLATE NOCASE ASC")
-    fun getAllRoutines(): LiveData<List<Routine>>
+    fun getAllRoutines(): Flow<List<Routine>>
 
     @Query("SELECT * FROM routine_table WHERE id = :key")
     suspend fun getRoutine(key: Long): Routine

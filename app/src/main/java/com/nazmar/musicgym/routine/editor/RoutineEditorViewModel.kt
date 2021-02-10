@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
 
-    val allExercises = Repository.getAllExercises()
+    val allExercises = Repository.getAllExercises().asLiveData()
 
     private var _state = MutableLiveData<RoutineEditorState>(RoutineEditorState.Loading)
 

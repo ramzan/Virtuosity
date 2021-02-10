@@ -1,11 +1,12 @@
 package com.nazmar.musicgym.exercises.detail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.nazmar.musicgym.data.Repository
 
 class ExerciseDetailViewModel(exerciseId: Long) : ViewModel() {
 
-    val exercise = Repository.getExercise(exerciseId)
+    val exercise = Repository.getExercise(exerciseId).asLiveData()
 
     private var _exerciseDeleted = false
 
