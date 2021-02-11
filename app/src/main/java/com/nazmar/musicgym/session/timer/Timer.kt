@@ -54,9 +54,9 @@ class Timer(
 
     private var timer: CountDownTimer? = null
 
-    private var _timeLeft = MutableLiveData<Long>(null)
+    private var _timeLeft = MutableLiveData<Long?>(null)
 
-    val timeLeft: LiveData<Long>
+    val timeLeft: LiveData<Long?>
         get() = _timeLeft
 
     private val _timeString = MutableLiveData("")
