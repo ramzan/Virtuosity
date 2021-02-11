@@ -39,13 +39,14 @@ class RoutineEditorUseCase @Inject constructor(private val dao: ExerciseDatabase
         newExercises: List<RoutineExerciseName>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            dao.update(Routine(routineName, routineId))
             val oldExercises = dao.getRoutineExercises(routineId)
+            val updatedExercises = mutableListOf<RoutineExercise>()
+            val deletedExercises = mutableListOf<RoutineExercise>()
 
             if (oldExercises.size <= newExercises.size) {
                 for (i in oldExercises.indices) {
                     val updatedExercise = newExercises[i]
-                    dao.update(
+                    updatedExercises.add(
                         RoutineExercise(
                             routineId,
                             i + 1,
@@ -56,7 +57,7 @@ class RoutineEditorUseCase @Inject constructor(private val dao: ExerciseDatabase
                 }
                 for (i in oldExercises.size until newExercises.size) {
                     val newExercise = newExercises[i]
-                    dao.insert(
+                    updatedExercises.add(
                         RoutineExercise(
                             routineId,
                             i + 1,
@@ -68,7 +69,7 @@ class RoutineEditorUseCase @Inject constructor(private val dao: ExerciseDatabase
             } else {
                 for (i in newExercises.indices) {
                     val updatedExercise = newExercises[i]
-                    dao.update(
+                    updatedExercises.add(
                         RoutineExercise(
                             routineId,
                             i + 1,
@@ -78,10 +79,10 @@ class RoutineEditorUseCase @Inject constructor(private val dao: ExerciseDatabase
                     )
                 }
                 for (i in newExercises.size until oldExercises.size) {
-                    dao.delete(oldExercises[i])
+                    deletedExercises.add(oldExercises[i])
                 }
             }
+            dao.updateRoutine(Routine(routineName, routineId), updatedExercises, deletedExercises)
         }
-
     }
 }

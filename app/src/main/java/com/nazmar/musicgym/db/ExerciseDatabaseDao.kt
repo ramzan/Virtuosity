@@ -24,7 +24,7 @@ interface ExerciseDatabaseDao {
     @Insert
     suspend fun insert(routineExercise: RoutineExercise)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRoutineExercises(routineExercises: List<RoutineExercise>)
 
     @Insert
@@ -46,6 +46,17 @@ interface ExerciseDatabaseDao {
         insertHistoryItems(exerciseHistories.map {
             ExerciseHistory(it.exerciseId, id, it.newBpm.toInt(), time)
         })
+    }
+
+    @Transaction
+    suspend fun updateRoutine(
+        routine: Routine,
+        updatedExercises: List<RoutineExercise>,
+        deletedExercises: List<RoutineExercise>
+    ) {
+        update(routine)
+        insertRoutineExercises(updatedExercises)
+        delete(deletedExercises)
     }
 
     // Update
@@ -72,6 +83,9 @@ interface ExerciseDatabaseDao {
 
     @Delete
     suspend fun delete(routineExercise: RoutineExercise)
+
+    @Delete
+    suspend fun delete(routineExercises: List<RoutineExercise>)
 
     @Delete
     suspend fun delete(routine: Routine)
