@@ -5,7 +5,7 @@ import androidx.core.content.edit
 import com.nazmar.musicgym.SAVED_SESSION_ID
 import com.nazmar.musicgym.SAVED_SESSION_NAME
 import com.nazmar.musicgym.SAVED_SESSION_TIME
-import com.nazmar.musicgym.db.ExerciseDatabaseDao
+import com.nazmar.musicgym.db.SessionDao
 import com.nazmar.musicgym.db.SessionExercise
 import com.nazmar.musicgym.db.SessionHistory
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SessionUseCase @Inject constructor(
-    private val dao: ExerciseDatabaseDao,
+    private val dao: SessionDao,
     private val prefs: SharedPreferences
 ) {
 

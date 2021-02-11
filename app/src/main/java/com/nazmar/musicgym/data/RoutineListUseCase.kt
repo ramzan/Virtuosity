@@ -5,11 +5,11 @@ import androidx.core.content.edit
 import com.nazmar.musicgym.SAVED_SESSION_ID
 import com.nazmar.musicgym.SAVED_SESSION_NAME
 import com.nazmar.musicgym.SAVED_SESSION_TIME
-import com.nazmar.musicgym.db.ExerciseDatabaseDao
+import com.nazmar.musicgym.db.RoutineListDao
 import javax.inject.Inject
 
 class RoutineListUseCase @Inject constructor(
-    private val dao: ExerciseDatabaseDao,
+    private val dao: RoutineListDao,
     private val prefs: SharedPreferences
 ) {
 

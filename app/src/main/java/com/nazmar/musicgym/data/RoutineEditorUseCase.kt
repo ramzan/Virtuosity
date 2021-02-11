@@ -1,7 +1,7 @@
 package com.nazmar.musicgym.data
 
-import com.nazmar.musicgym.db.ExerciseDatabaseDao
 import com.nazmar.musicgym.db.Routine
+import com.nazmar.musicgym.db.RoutineEditorDao
 import com.nazmar.musicgym.db.RoutineExercise
 import com.nazmar.musicgym.db.RoutineExerciseName
 import kotlinx.coroutines.CoroutineScope
@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class RoutineEditorUseCase @Inject constructor(private val dao: ExerciseDatabaseDao) {
+class RoutineEditorUseCase @Inject constructor(private val dao: RoutineEditorDao) {
 
     fun getAllExercises() = dao.getAllExercises()
 

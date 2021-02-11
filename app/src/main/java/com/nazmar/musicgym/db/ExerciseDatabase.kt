@@ -26,7 +26,12 @@ import kotlinx.coroutines.withContext
 @TypeConverters(Converters::class)
 abstract class ExerciseDatabase : RoomDatabase() {
 
-    abstract val exerciseDatabaseDao: ExerciseDatabaseDao
+    abstract val exerciseDetailDao: ExerciseDetailDao
+    abstract val exerciseListDao: ExerciseListDao
+    abstract val historyDao: HistoryDao
+    abstract val sessionDao: SessionDao
+    abstract val routineEditorDao: RoutineEditorDao
+    abstract val routineListDao: RoutineListDao
 
     companion object {
         @Volatile
@@ -34,45 +39,41 @@ abstract class ExerciseDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): ExerciseDatabase {
             synchronized(this) {
-
-                // Copy the current value of INSTANCE to a local variable so Kotlin can smart cast.
-                // Smart cast is only available to local variables.
                 var instance = INSTANCE
-
-                // If instance is `null` make a new database instance.
                 if (instance == null) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         ExerciseDatabase::class.java,
                         "exercise_database"
                     )
-                        // Wipes and rebuilds instead of migrating if no Migration object.
-                        // Migration is not part of this lesson. You can learn more about
-                        // migration with Room in this blog post:
-                        // https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929
                         .fallbackToDestructiveMigration()
-                        // prepopulate the database after onCreate was called
                         .addCallback(object : Callback() {
                             override fun onCreate(db: SupportSQLiteDatabase) {
                                 super.onCreate(db)
-                                // moving to a new thread
                                 GlobalScope.launch(Dispatchers.IO) {
                                     withContext(Dispatchers.IO) {
-                                        getInstance(context).exerciseDatabaseDao.apply {
-                                            PREPOPULATE_EXERCISES.forEach { insert(it) }
-                                            PREPOPULATE_ROUTINES.forEach { insert(it) }
-                                            insertRoutineExercises(PREPOPULATE_ROUTINE_EXERCISES)
+                                        getInstance(context).run {
+                                            PREPOPULATE_EXERCISES.forEach {
+                                                exerciseListDao.insert(
+                                                    it
+                                                )
+                                            }
+                                            PREPOPULATE_ROUTINES.forEach {
+                                                routineEditorDao.insert(
+                                                    it
+                                                )
+                                            }
+                                            routineEditorDao.insertRoutineExercises(
+                                                PREPOPULATE_ROUTINE_EXERCISES
+                                            )
                                         }
                                     }
                                 }
                             }
                         })
                         .build()
-                    // Assign INSTANCE to the newly created database.
                     INSTANCE = instance
                 }
-
-                // Return instance; smart cast to be non-null.
                 return instance
             }
         }

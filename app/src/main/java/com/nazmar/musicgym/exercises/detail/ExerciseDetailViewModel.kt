@@ -3,14 +3,14 @@ package com.nazmar.musicgym.exercises.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
-import com.nazmar.musicgym.data.EditExerciseUseCase
+import com.nazmar.musicgym.data.ExerciseDetailUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 
 class ExerciseDetailViewModel @AssistedInject constructor(
     @Assisted exerciseId: Long,
-    private val useCase: EditExerciseUseCase
+    private val useCase: ExerciseDetailUseCase
 ) : ViewModel() {
 
     val exercise = useCase.getExercise(exerciseId).asLiveData()

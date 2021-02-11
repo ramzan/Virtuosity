@@ -4,7 +4,7 @@ import android.graphics.Color
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.paging.toLiveData
-import com.nazmar.musicgym.db.ExerciseDatabaseDao
+import com.nazmar.musicgym.db.HistoryDao
 import com.nazmar.musicgym.db.SessionHistory
 import com.nazmar.musicgym.db.SessionHistoryDisplay
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class HistoryUseCase @Inject constructor(private val dao: ExerciseDatabaseDao) {
+class HistoryUseCase @Inject constructor(private val dao: HistoryDao) {
 
     fun deleteSessionHistory(id: Long) {
         CoroutineScope(Dispatchers.IO).launch {

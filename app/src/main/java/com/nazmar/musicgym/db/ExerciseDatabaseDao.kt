@@ -5,9 +5,7 @@ import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ExerciseDatabaseDao {
-
-    // region Exercise list
+interface ExerciseListDao {
     @Insert
     suspend fun insert(exercise: Exercise)
 
@@ -19,9 +17,10 @@ interface ExerciseDatabaseDao {
         """
     )
     fun getAllExerciseMaxBPMs(): Flow<List<ExerciseMaxBpm>>
-    // endregion Exercise list
+}
 
-    // region Routine editor
+@Dao
+interface RoutineEditorDao {
     @Insert
     suspend fun insert(routine: Routine): Long
 
@@ -74,9 +73,10 @@ interface ExerciseDatabaseDao {
         insertRoutineExercises(updatedExercises)
         delete(deletedExercises)
     }
-    // endregion Routine editor
+}
 
-    // region Session
+@Dao
+interface SessionDao {
     @Insert
     suspend fun insertHistoryItems(exerciseHistories: List<ExerciseHistory>)
 
@@ -125,9 +125,10 @@ interface ExerciseDatabaseDao {
             ExerciseHistory(it.exerciseId, id, it.newBpm.toInt(), time)
         })
     }
-    // endregion Session
+}
 
-    // region Exercise Detail
+@Dao
+interface ExerciseDetailDao {
     @Update
     suspend fun update(exercise: Exercise)
 
@@ -136,9 +137,10 @@ interface ExerciseDatabaseDao {
 
     @Query("SELECT * FROM exercise_table WHERE id = :key")
     fun getExercise(key: Long): Flow<Exercise?>
-    // endregion Exercise Detail
+}
 
-    // region History
+@Dao
+interface HistoryDao {
     @Delete
     suspend fun delete(history: SessionHistory)
 
@@ -147,10 +149,10 @@ interface ExerciseDatabaseDao {
 
     @Query("SELECT * FROM session_history_table ORDER BY time DESC")
     fun getSessionHistories(): DataSource.Factory<Int, SessionHistory>
-    // endregion History
+}
 
-    // region Routine list
+@Dao
+interface RoutineListDao {
     @Query("SELECT * FROM routine_table ORDER BY name COLLATE NOCASE ASC")
     fun getAllRoutines(): Flow<List<Routine>>
-    // endregion Routine list
 }

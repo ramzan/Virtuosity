@@ -13,10 +13,34 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
+
     @Provides
     @Singleton
-    fun dao(application: Application) =
-        ExerciseDatabase.getInstance(application).exerciseDatabaseDao
+    fun db(application: Application) = ExerciseDatabase.getInstance(application)
+
+    @Provides
+    @Singleton
+    fun exerciseDetailDao(db: ExerciseDatabase) = db.exerciseDetailDao
+
+    @Provides
+    @Singleton
+    fun exerciseListDao(db: ExerciseDatabase) = db.exerciseListDao
+
+    @Provides
+    @Singleton
+    fun historyDao(db: ExerciseDatabase) = db.historyDao
+
+    @Provides
+    @Singleton
+    fun sessionDao(db: ExerciseDatabase) = db.sessionDao
+
+    @Provides
+    @Singleton
+    fun routineEditorDao(db: ExerciseDatabase) = db.routineEditorDao
+
+    @Provides
+    @Singleton
+    fun routineListDao(db: ExerciseDatabase) = db.routineListDao
 
     @Provides
     @Singleton
