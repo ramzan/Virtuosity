@@ -25,11 +25,7 @@ class RoutineEditorUseCase @Inject constructor(private val dao: ExerciseDatabase
 
     fun createRoutine(routineName: String, exercises: List<RoutineExerciseName>) {
         CoroutineScope(Dispatchers.IO).launch {
-            val newRoutineId = dao.insert(Routine(routineName))
-            var order = 1
-            dao.insertRoutineExercises(exercises.map {
-                RoutineExercise(newRoutineId, order++, it.exerciseId, it.duration)
-            })
+            dao.createRoutine(routineName, exercises)
         }
     }
 

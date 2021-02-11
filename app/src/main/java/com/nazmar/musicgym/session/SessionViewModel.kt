@@ -16,11 +16,11 @@ class SessionViewModel @AssistedInject constructor(
 
     private var _sessionName = MutableLiveData("")
 
-    val sessionName: LiveData<String> = _sessionName
+    val sessionName get() = _sessionName
 
     init {
         viewModelScope.launch {
-            _sessionName.value = useCase.getRoutine(routineId).name
+            _sessionName.value = useCase.getRoutineName(routineId)
         }
     }
 

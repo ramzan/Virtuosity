@@ -59,9 +59,9 @@ abstract class ExerciseDatabase : RoomDatabase() {
                                 GlobalScope.launch(Dispatchers.IO) {
                                     withContext(Dispatchers.IO) {
                                         getInstance(context).exerciseDatabaseDao.apply {
-                                            insertExercises(PREPOPULATE_EXERCISES)
+                                            PREPOPULATE_EXERCISES.forEach { insert(it) }
                                             PREPOPULATE_ROUTINES.forEach { insert(it) }
-                                            PREPOPULATE_ROUTINE_EXERCISES.forEach { insert(it) }
+                                            insertRoutineExercises(PREPOPULATE_ROUTINE_EXERCISES)
                                         }
                                     }
                                 }

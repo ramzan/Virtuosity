@@ -18,12 +18,15 @@ class SessionUseCase @Inject constructor(
     private val prefs: SharedPreferences
 ) {
 
-    suspend fun getRoutine(id: Long) = dao.getRoutine(id)
+    suspend fun getRoutineName(id: Long) = dao.getRoutineName(id)
 
     suspend fun getSession(routineId: Long): MutableList<SessionExercise> {
         return if (prefs.contains(SAVED_SESSION_NAME)) {
             dao.getSavedSession()
         } else {
+            CoroutineScope(Dispatchers.IO).launch {
+                dao.clearSavedSession()
+            }
             dao.getSessionExercises(routineId).also {
                 prefs.edit {
                     putString(SAVED_SESSION_NAME, dao.getRoutineName(routineId))
