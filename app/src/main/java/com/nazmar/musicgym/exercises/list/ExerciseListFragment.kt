@@ -12,8 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.*
 import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
     private lateinit var imm: InputMethodManager
@@ -37,7 +38,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
             binding.exerciseList.adapter = this
 
-            viewModel.exercises.observe(viewLifecycleOwner, {
+            viewModel.filteredExercises.observe(viewLifecycleOwner, {
                 this.submitList(it)
             })
         }

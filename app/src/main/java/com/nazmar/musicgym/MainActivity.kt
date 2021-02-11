@@ -6,20 +6,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.nazmar.musicgym.data.Repository
-import com.nazmar.musicgym.db.ExerciseDatabase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Repository.apply {
-            setDataSource(ExerciseDatabase.getInstance(application).exerciseDatabaseDao)
-            setPreferences(PreferenceManager.getDefaultSharedPreferences(applicationContext))
-        }
 
         setContentView(R.layout.activity_main)
         val navView = findViewById<BottomNavigationView>(R.id.nav_view)

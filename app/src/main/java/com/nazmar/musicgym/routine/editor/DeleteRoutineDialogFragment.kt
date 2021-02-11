@@ -10,9 +10,7 @@ import com.nazmar.musicgym.R
 class DeleteRoutineDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
-            RoutineEditorViewModelFactory(requireArguments().getLong("routineId"))
-        }
+        val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph)
 
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete_routine_dialog_message)

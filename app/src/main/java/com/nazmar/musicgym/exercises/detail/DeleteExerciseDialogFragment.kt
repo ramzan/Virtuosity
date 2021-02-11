@@ -10,10 +10,7 @@ import com.nazmar.musicgym.R
 class DeleteExerciseDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
-            ExerciseDetailViewModelFactory(requireArguments().getLong("exerciseId"))
-        }
-
+        val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph)
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete_exercise_dialog_message)
             .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->

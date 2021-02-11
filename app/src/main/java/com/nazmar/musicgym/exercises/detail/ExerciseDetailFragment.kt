@@ -11,12 +11,17 @@ import com.nazmar.musicgym.R
 import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
 import com.nazmar.musicgym.hideBottomNavBar
 import com.nazmar.musicgym.showBottomNavBar
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
 
+    @Inject
+    lateinit var factory: ExerciseDetailViewModel.Factory
+
     private val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
-        ExerciseDetailViewModelFactory(requireArguments().getLong("exerciseId"))
+        ExerciseDetailViewModel.provideFactory(factory, requireArguments().getLong("exerciseId"))
     }
 
     override fun onCreateView(

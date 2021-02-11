@@ -15,8 +15,10 @@ import com.nazmar.musicgym.SAVED_SESSION_NAME
 import com.nazmar.musicgym.SAVED_SESSION_TIME
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
 import com.nazmar.musicgym.db.Routine
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
     private lateinit var prefs: SharedPreferences
@@ -34,26 +36,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
-        viewModel.sessionSaved.observe(viewLifecycleOwner) {
-            binding.apply {
-                if (it) {
-                    savedSessionCard.visibility = View.VISIBLE
-                    savedSessionName.text = prefs.getString(SAVED_SESSION_NAME, "")
-                    savedSessionDate.text = Date(
-                        prefs.getLong(
-                            SAVED_SESSION_TIME,
-                            System.currentTimeMillis()
-                        )
-                    ).toString()
-                    resumeSessionBtn.isEnabled = true
-                } else {
-                    savedSessionCard.visibility = View.GONE
-                    savedSessionName.text = ""
-                    savedSessionDate.text = ""
-                    resumeSessionBtn.isEnabled = false
-                }
-            }
-        }
+        if (prefs.contains(SAVED_SESSION_ID)) showSavedSessionCard() else hideSavedSessionCard()
 
         RoutineAdapter(
             object : RoutineAdapter.OnClickListener {
@@ -90,6 +73,30 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         }
 
         return binding.root
+    }
+
+    private fun showSavedSessionCard() {
+        binding.apply {
+            savedSessionCard.visibility = View.VISIBLE
+            savedSessionName.text = prefs.getString(SAVED_SESSION_NAME, "")
+            savedSessionDate.text = Date(
+                prefs.getLong(
+                    SAVED_SESSION_TIME,
+                    System.currentTimeMillis()
+                )
+            ).toString()
+            resumeSessionBtn.isEnabled = true
+
+        }
+    }
+
+    private fun hideSavedSessionCard() {
+        binding.apply {
+            savedSessionCard.visibility = View.GONE
+            savedSessionName.text = ""
+            savedSessionDate.text = ""
+            resumeSessionBtn.isEnabled = false
+        }
     }
 
     private fun showRoutineEditor(id: Long) {

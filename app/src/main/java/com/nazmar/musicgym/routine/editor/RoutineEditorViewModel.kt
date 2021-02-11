@@ -2,15 +2,21 @@ package com.nazmar.musicgym.routine.editor
 
 import androidx.lifecycle.*
 import com.nazmar.musicgym.DEFAULT_TIMER_DURATION
-import com.nazmar.musicgym.data.Repository
+import com.nazmar.musicgym.data.RoutineEditorUseCase
 import com.nazmar.musicgym.db.Exercise
 import com.nazmar.musicgym.db.Routine
 import com.nazmar.musicgym.db.RoutineExerciseName
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
-class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
+class RoutineEditorViewModel @AssistedInject constructor(
+    @Assisted private val routineId: Long,
+    private val useCase: RoutineEditorUseCase
+) : ViewModel() {
 
-    val allExercises = Repository.getAllExercises().asLiveData()
+    val allExercises = useCase.getAllExercises().asLiveData()
 
     private var _state = MutableLiveData<RoutineEditorState>(RoutineEditorState.Loading)
 
@@ -29,10 +35,10 @@ class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
             )
         } else {
             viewModelScope.launch {
-                Repository.getRoutine(routineId).let {
+                useCase.getRoutine(routineId).let {
                     _state.value = RoutineEditorState.Editing(
                         routine = it,
-                        exercises = Repository.getRoutineExerciseNames(routineId).toMutableList(),
+                        exercises = useCase.getRoutineExerciseNames(routineId).toMutableList(),
                         nameInputText = it.name
                     )
                 }
@@ -49,9 +55,40 @@ class RoutineEditorViewModel(private val routineId: Long) : ViewModel() {
     }
 
     fun deleteRoutine() {
-        if (state.value is RoutineEditorState.Editing) {
-            (state.value as RoutineEditorState.Editing).deleteRoutine()
+        (state.value as? RoutineEditorState.Editing)?.let {
+            useCase.deleteRoutine(it.routine)
             _state.value = RoutineEditorState.Deleted
+        }
+    }
+
+    fun saveRoutine() {
+        when (val state = _state.value) {
+            is RoutineEditorState.Editing -> {
+                useCase.updateRoutine(state.routine.id, state.nameInputText, state.exercises)
+            }
+            is RoutineEditorState.New -> {
+                useCase.createRoutine(state.nameInputText, state.exercises)
+            }
+            else -> return
+        }
+    }
+
+    // Factory -----------------------------------------------------------------------------------
+
+    @AssistedFactory
+    interface Factory {
+        fun create(routineId: Long): RoutineEditorViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            assistedFactory: Factory,
+            routineId: Long
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return assistedFactory.create(routineId) as T
+            }
         }
     }
 }
@@ -97,17 +134,10 @@ sealed class RoutineEditorState {
         val routine: Routine,
         override val exercises: MutableList<RoutineExerciseName>,
         override var nameInputText: String,
-    ) : RoutineEditorState() {
-        fun deleteRoutine() = Repository.deleteRoutine(routine)
-
-        fun saveRoutine() = Repository.updateRoutine(routine.id, nameInputText, exercises)
-    }
+    ) : RoutineEditorState()
 
     data class New(
         override val exercises: MutableList<RoutineExerciseName>,
         override var nameInputText: String = ""
-    ) : RoutineEditorState() {
-        fun saveRoutine() = Repository.createRoutine(nameInputText, exercises)
-
-    }
+    ) : RoutineEditorState()
 }

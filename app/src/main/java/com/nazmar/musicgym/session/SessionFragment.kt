@@ -21,12 +21,17 @@ import com.nazmar.musicgym.databinding.FragmentSessionBinding
 import com.nazmar.musicgym.session.timer.Timer
 import com.nazmar.musicgym.session.timer.TimerService
 import com.nazmar.musicgym.session.timer.TimerState
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
+    @Inject
+    lateinit var factory: SessionViewModel.Factory
+
     private val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
-        SessionViewModelFactory(requireArguments().getLong("routineId"))
+        SessionViewModel.provideFactory(factory, requireArguments().getLong("routineId"))
     }
 
     private lateinit var imm: InputMethodManager

@@ -1,11 +1,14 @@
 package com.nazmar.musicgym.history
 
 import androidx.lifecycle.ViewModel
-import com.nazmar.musicgym.data.Repository
+import com.nazmar.musicgym.data.HistoryUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HistoryViewModel : ViewModel() {
+@HiltViewModel
+class HistoryViewModel @Inject constructor(private val useCase: HistoryUseCase) : ViewModel() {
 
-    fun deleteHistoryItem(id: Long) = Repository.deleteSessionHistory(id)
+    fun deleteHistoryItem(id: Long) = useCase.deleteSessionHistory(id)
 
-    val history = Repository.getSessionHistory()
+    val history = useCase.getSessionHistory()
 }

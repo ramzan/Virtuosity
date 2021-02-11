@@ -1,17 +1,21 @@
 package com.nazmar.musicgym.exercises.list
 
 import androidx.lifecycle.*
-import com.nazmar.musicgym.data.Repository
+import com.nazmar.musicgym.data.ExerciseListUseCase
 import com.nazmar.musicgym.db.ExerciseMaxBpm
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
+import javax.inject.Inject
 
-class ExerciseListViewModel : ViewModel() {
+@HiltViewModel
+class ExerciseListViewModel @Inject constructor(private val useCase: ExerciseListUseCase) :
+    ViewModel() {
 
     private var _query = MutableLiveData("")
 
-    private val allExercises = Repository.getAllExerciseMaxBPMs().asLiveData()
+    private val allExercises = useCase.getAllExerciseMaxBPMs().asLiveData()
 
-    val exercises: LiveData<List<ExerciseMaxBpm>> =
+    val filteredExercises: LiveData<List<ExerciseMaxBpm>> =
         Transformations.switchMap(_query) { name: String ->
             getFilteredExerciseMaxBPMs(name)
         }
@@ -27,6 +31,6 @@ class ExerciseListViewModel : ViewModel() {
     }
 
     fun addExercise(name: String) {
-        Repository.addExercise(name)
+        useCase.addExercise(name)
     }
 }

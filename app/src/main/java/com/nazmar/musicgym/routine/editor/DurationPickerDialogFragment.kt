@@ -12,9 +12,7 @@ import mobi.upod.timedurationpicker.TimeDurationPickerDialog
 class DurationPickerDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
-            RoutineEditorViewModelFactory(requireArguments().getLong("routineId"))
-        }
+        val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph)
 
         val exerciseIndex = requireArguments().getInt("exerciseIndex")
 

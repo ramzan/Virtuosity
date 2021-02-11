@@ -1,11 +1,18 @@
 package com.nazmar.musicgym.session
 
 import androidx.lifecycle.*
-import com.nazmar.musicgym.data.Repository
+import com.nazmar.musicgym.data.SessionUseCase
 import com.nazmar.musicgym.db.SessionExercise
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
-class SessionViewModel(routineId: Long) : ViewModel() {
+class SessionViewModel @AssistedInject constructor(
+    @Assisted routineId: Long,
+    private val useCase: SessionUseCase
+) :
+    ViewModel() {
 
     private var _sessionName = MutableLiveData("")
 
@@ -13,7 +20,7 @@ class SessionViewModel(routineId: Long) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            _sessionName.value = Repository.getRoutine(routineId).name
+            _sessionName.value = useCase.getRoutine(routineId).name
         }
     }
 
@@ -28,7 +35,7 @@ class SessionViewModel(routineId: Long) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            _exercises.value = Repository.getSession(routineId)
+            _exercises.value = useCase.getSession(routineId)
         }
     }
 
@@ -73,7 +80,7 @@ class SessionViewModel(routineId: Long) : ViewModel() {
         currentIndex.value?.let {
             _exercises.updateBpm(it, bpm)
             _exercises.value?.let { exerciseList ->
-                Repository.updateSessionState(exerciseList[it])
+                useCase.updateSessionState(exerciseList[it])
             }
 
         }
@@ -89,7 +96,7 @@ class SessionViewModel(routineId: Long) : ViewModel() {
 
     }
 
-    fun completeSession() = summaryList.value?.let { Repository.completeSession(it) }
+    fun completeSession() = summaryList.value?.let { useCase.completeSession(it) }
 
     // Timer editor
 
@@ -104,5 +111,24 @@ class SessionViewModel(routineId: Long) : ViewModel() {
 
     fun clearEditorTime() {
         _editorTime.value = null
+    }
+
+    // Factory -----------------------------------------------------------------------------------
+
+    @AssistedFactory
+    interface Factory {
+        fun create(routine: Long): SessionViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            assistedFactory: Factory,
+            routineId: Long
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return assistedFactory.create(routineId) as T
+            }
+        }
     }
 }

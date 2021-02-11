@@ -16,14 +16,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.*
 import com.nazmar.musicgym.databinding.FragmentRoutineEditorBinding
 import com.nazmar.musicgym.db.Exercise
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
     private lateinit var imm: InputMethodManager
 
+    @Inject
+    lateinit var factory: RoutineEditorViewModel.Factory
+
     private val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
-        RoutineEditorViewModelFactory(requireArguments().getLong("routineId"))
+        RoutineEditorViewModel.provideFactory(factory, requireArguments().getLong("routineId"))
     }
 
     private val simpleItemTouchCallback =
@@ -91,9 +96,28 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
         _binding = FragmentRoutineEditorBinding.inflate(inflater)
 
+        val deleteButton = binding.editorToolbar.menu.getItem(0)
+        val saveButton = binding.editorToolbar.menu.getItem(1)
+
         binding.apply {
             editorToolbar.setNavigationOnClickListener {
                 goBack()
+            }
+
+            saveButton.setOnMenuItemClickListener {
+                if (nameInput.text?.trim().isNullOrEmpty()) {
+                    nameInput.setText("")
+                    nameInputLayout.isErrorEnabled = true
+                    nameInputLayout.error = getString(R.string.empty_name_error_msg)
+                } else {
+                    viewModel.saveRoutine()
+                    goBack()
+                }
+                true
+            }
+            deleteButton.setOnMenuItemClickListener {
+                showDeleteDialog()
+                true
             }
 
             nameInput.doOnTextChanged { text, _, _, _ ->
@@ -129,9 +153,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
             simpleItemTouchCallback.adapter.submitList(it)
         }
 
-        val deleteButton = binding.editorToolbar.menu.getItem(0)
-        val saveButton = binding.editorToolbar.menu.getItem(1)
-
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 RoutineEditorState.Loading -> {
@@ -139,47 +160,16 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                 is RoutineEditorState.Editing -> {
                     binding.apply {
                         editorToolbar.title = getString(R.string.editorTitleEdit)
-
                         if (firstRun) {
                             nameInput.setText(state.nameInputText)
                         }
                         nameInput.setSelection(state.nameInputText.length)
-
-                        saveButton.setOnMenuItemClickListener {
-                            if (nameInput.text?.trim().isNullOrEmpty()) {
-                                nameInput.setText("")
-                                nameInputLayout.isErrorEnabled = true
-                                nameInputLayout.error = getString(R.string.empty_name_error_msg)
-                            } else {
-                                state.saveRoutine()
-                                goBack()
-                            }
-                            true
-                        }
-                        deleteButton.setOnMenuItemClickListener {
-                            showDeleteDialog()
-                            true
-                        }
                         deleteButton.isVisible = true
                         saveButton.isVisible = true
                     }
                 }
                 is RoutineEditorState.New -> {
-                    binding.apply {
-                        editorToolbar.title = getString(R.string.editorTitleNew)
-
-                        saveButton.setOnMenuItemClickListener {
-                            if (nameInput.text?.trim().isNullOrEmpty()) {
-                                nameInput.setText("")
-                                nameInputLayout.isErrorEnabled = true
-                                nameInputLayout.error = getString(R.string.empty_name_error_msg)
-                            } else {
-                                state.saveRoutine()
-                                goBack()
-                            }
-                            true
-                        }
-                    }
+                    binding.editorToolbar.title = getString(R.string.editorTitleNew)
                     saveButton.isVisible = true
                     imm.showKeyboard()
                 }
