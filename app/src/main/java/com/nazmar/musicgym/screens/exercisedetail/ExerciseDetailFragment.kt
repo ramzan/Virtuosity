@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.nazmar.musicgym.R
@@ -57,6 +59,38 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                 true
             }
         }
+
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.history_range_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.historyRangerSpinner.adapter = adapter
+        }
+
+        binding.historyRangerSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    when (position) {
+                        0 -> viewModel.getWeekHistory()
+                        1 -> viewModel.getMonthHistory()
+                        2 -> viewModel.getQuarterHistory()
+                        3 -> viewModel.getYearHistory()
+                        4 -> viewModel.getAllHistory()
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // Do nothing
+                }
+            }
+
         return binding.root
     }
 

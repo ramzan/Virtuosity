@@ -47,4 +47,12 @@
     <string name="timer_notification_stopped_message">Practice in session</string>
     <string name="timer_notification_time_up_message">Time\'s up!</string>
     <string name="timer_notification_time_remaining_prefix">Time remaining:</string>
+    <string-array name="history_range_array">
+        <item>7 days</item>
+        <item>30 days</item>
+        <item>90 days</item>
+        <item>Year</item>
+        <item>All</item>
+    </string-array>
+
 </resources>

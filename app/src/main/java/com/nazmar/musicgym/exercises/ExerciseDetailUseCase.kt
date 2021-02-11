@@ -10,6 +10,9 @@ class ExerciseDetailUseCase @Inject constructor(private val dao: ExerciseDetailD
 
     fun getExercise(id: Long) = dao.getExercise(id)
 
+    suspend fun getExerciseHistorySince(exerciseId: Long, startTime: Long) =
+        dao.getExerciseHistorySince(exerciseId, startTime)
+
     fun renameExercise(exercise: Exercise, newName: String) {
         CoroutineScope(Dispatchers.IO).launch {
             dao.update(exercise.copy(name = newName))

@@ -5,6 +5,7 @@ import androidx.room.*
 import com.nazmar.musicgym.exercises.Exercise
 import com.nazmar.musicgym.exercises.ExerciseHistory
 import com.nazmar.musicgym.exercises.ExerciseMaxBpm
+import com.nazmar.musicgym.exercises.HistoryGraphDataPoint
 import com.nazmar.musicgym.history.SessionHistoryEntity
 import com.nazmar.musicgym.routine.Routine
 import com.nazmar.musicgym.routine.RoutineExercise
@@ -145,6 +146,20 @@ interface ExerciseDetailDao {
 
     @Query("SELECT * FROM exercise_table WHERE id = :key")
     fun getExercise(key: Long): Flow<Exercise?>
+
+    @Query(
+        """
+        SELECT time, MAX(bpm) as bpm 
+        FROM exercise_history_table
+        WHERE exerciseId = :exerciseId AND time > :startTime
+        GROUP BY time
+        ORDER by time
+        """
+    )
+    suspend fun getExerciseHistorySince(
+        exerciseId: Long,
+        startTime: Long
+    ): List<HistoryGraphDataPoint>
 }
 
 @Dao

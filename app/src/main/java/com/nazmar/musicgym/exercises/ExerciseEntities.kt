@@ -55,3 +55,9 @@ data class ExerciseHistory(
     @PrimaryKey(autoGenerate = true)
     val itemId: Long = 0
 )
+
+data class HistoryGraphDataPoint(
+    val time: Long,
+
+    val bpm: Int
+)
