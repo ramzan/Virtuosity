@@ -6,7 +6,7 @@
     app:startDestination="@id/routineListFragment">
     <fragment
         android:id="@+id/exerciseListFragment"
-        android:name="com.nazmar.musicgym.exercises.list.ExerciseListFragment"
+        android:name="com.nazmar.musicgym.screens.exerciselist.ExerciseListFragment"
         android:label="@string/exercises"
         tools:layout="@layout/fragment_exercise_list">
         <action
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/routineListFragment"
-        android:name="com.nazmar.musicgym.routine.list.RoutineListFragment"
+        android:name="com.nazmar.musicgym.screens.routinelist.RoutineListFragment"
         android:label="@string/practice"
         tools:layout="@layout/fragment_routine_list">
         <action
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.nazmar.musicgym.settings.SettingsFragment"
+        android:name="com.nazmar.musicgym.screens.settings.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
     <navigation
@@ -47,7 +47,7 @@
             app:argType="long" />
         <fragment
             android:id="@+id/exerciseDetailFragment"
-            android:name="com.nazmar.musicgym.exercises.detail.ExerciseDetailFragment"
+            android:name="com.nazmar.musicgym.screens.exercisedetail.ExerciseDetailFragment"
             android:label="ExerciseDetailFragment"
             app:startDestination="@id/action_exerciseDetailFragment_to_deleteDialogFragment">
             <argument
@@ -62,7 +62,7 @@
         </fragment>
         <dialog
             android:id="@+id/renameDialogFragment"
-            android:name="com.nazmar.musicgym.exercises.detail.RenameDialogFragment"
+            android:name="com.nazmar.musicgym.screens.exercisedetail.RenameDialogFragment"
             android:label="RenameDialogFragment">
             <argument
                 android:name="exerciseId"
@@ -70,7 +70,7 @@
         </dialog>
         <dialog
             android:id="@+id/deleteExerciseDialogFragment"
-            android:name="com.nazmar.musicgym.exercises.detail.DeleteExerciseDialogFragment"
+            android:name="com.nazmar.musicgym.screens.exercisedetail.DeleteExerciseDialogFragment"
             android:label="DeleteExerciseDialogFragment">
             <argument
                 android:name="exerciseId"
@@ -85,7 +85,7 @@
             app:argType="long" />
         <fragment
             android:id="@+id/routineEditor"
-            android:name="com.nazmar.musicgym.routine.editor.RoutineEditorFragment"
+            android:name="com.nazmar.musicgym.screens.routineeditor.RoutineEditorFragment"
             android:label="RoutineEditor">
             <argument
                 android:name="routineId"
@@ -99,7 +99,7 @@
         </fragment>
         <dialog
             android:id="@+id/durationPickerDialog"
-            android:name="com.nazmar.musicgym.routine.editor.DurationPickerDialogFragment"
+            android:name="com.nazmar.musicgym.screens.routineeditor.DurationPickerDialogFragment"
             android:label="DurationPickerDialog">
             <argument
                 android:name="exerciseIndex"
@@ -110,7 +110,7 @@
         </dialog>
         <dialog
             android:id="@+id/deleteRoutineDialogFragment"
-            android:name="com.nazmar.musicgym.routine.editor.DeleteRoutineDialogFragment"
+            android:name="com.nazmar.musicgym.screens.routineeditor.DeleteRoutineDialogFragment"
             android:label="DeleteRoutineDialogFragment">
             <argument
                 android:name="routineId"
@@ -119,7 +119,7 @@
     </navigation>
     <dialog
         android:id="@+id/newExerciseDialogFragment"
-        android:name="com.nazmar.musicgym.exercises.list.NewExerciseDialogFragment"
+        android:name="com.nazmar.musicgym.screens.exerciselist.NewExerciseDialogFragment"
         android:label="NewExerciseDialogFragment" />
     <navigation
         android:id="@+id/sessionGraph"
@@ -129,7 +129,7 @@
             app:argType="long" />
         <fragment
             android:id="@+id/sessionFragment"
-            android:name="com.nazmar.musicgym.session.SessionFragment"
+            android:name="com.nazmar.musicgym.screens.session.SessionFragment"
             android:label="SessionFragment">
             <argument
                 android:name="routineId"
@@ -140,7 +140,7 @@
         </fragment>
         <dialog
             android:id="@+id/timerEditorDialog"
-            android:name="com.nazmar.musicgym.session.TimerEditorDialogFragment"
+            android:name="com.nazmar.musicgym.screens.session.TimerEditorDialogFragment"
             android:label="TimerEditorDialogFragment">
             <argument
                 android:name="routineId"
@@ -152,8 +152,8 @@
     </navigation>
     <dialog
         android:id="@+id/restartSessionDialogFragment"
-        android:name="com.nazmar.musicgym.routine.list.RestartSessionDialogFragment"
-        android:label="RestartSessionDialogFragment" >
+        android:name="com.nazmar.musicgym.screens.routinelist.RestartSessionDialogFragment"
+        android:label="RestartSessionDialogFragment">
         <argument
             android:name="routineId"
             app:argType="long" />
@@ -163,17 +163,17 @@
     </dialog>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.nazmar.musicgym.history.HistoryFragment"
+        android:name="com.nazmar.musicgym.screens.history.HistoryFragment"
         android:label="@string/history"
-        tools:layout="@layout/fragment_history" >
+        tools:layout="@layout/fragment_history">
         <action
             android:id="@+id/action_historyFragment_to_deleteHistoryDialogFragment"
             app:destination="@id/deleteHistoryDialogFragment" />
     </fragment>
     <dialog
         android:id="@+id/deleteHistoryDialogFragment"
-        android:name="com.nazmar.musicgym.history.DeleteHistoryDialogFragment"
-        android:label="DeleteHistoryDialogFragment" >
+        android:name="com.nazmar.musicgym.screens.history.DeleteHistoryDialogFragment"
+        android:label="DeleteHistoryDialogFragment">
         <argument
             android:name="historyId"
             app:argType="long" />

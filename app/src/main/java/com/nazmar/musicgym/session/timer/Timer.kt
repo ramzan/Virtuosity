@@ -8,10 +8,10 @@ import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.nazmar.musicgym.TIMER_NOTIFICATION_ID
-import com.nazmar.musicgym.db.SessionExercise
-import com.nazmar.musicgym.isOreoOrAbove
-import com.nazmar.musicgym.toTimerString
+import com.nazmar.musicgym.common.TIMER_NOTIFICATION_ID
+import com.nazmar.musicgym.common.isOreoOrAbove
+import com.nazmar.musicgym.common.toTimerString
+import com.nazmar.musicgym.session.SessionExercise
 
 enum class TimerState {
     STOPPED,
