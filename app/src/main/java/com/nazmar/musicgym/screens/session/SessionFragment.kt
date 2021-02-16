@@ -243,11 +243,11 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
     }
 
     private fun showTimerEditor() {
-        val action =
+        findNavController().safeNavigate(
             SessionFragmentDirections.actionSessionFragmentToTimerEditorDialogFragment(
                 requireArguments().getLong("routineId"),
                 mTimer.timeLeft.value ?: 0L
             )
-        findNavController().navigate(action)
+        )
     }
 }

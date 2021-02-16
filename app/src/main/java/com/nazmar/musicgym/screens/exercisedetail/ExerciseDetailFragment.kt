@@ -14,6 +14,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.common.hideBottomNavBar
+import com.nazmar.musicgym.common.safeNavigate
 import com.nazmar.musicgym.common.showBottomNavBar
 import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
 import com.nazmar.musicgym.screens.BaseFragment
@@ -165,7 +166,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
     }
 
     private fun showDeleteDialog() {
-        findNavController().navigate(
+        findNavController().safeNavigate(
             ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToDeleteDialogFragment(
                 requireArguments().getLong("exerciseId")
             )
@@ -173,7 +174,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
     }
 
     private fun showRenameDialog() {
-        findNavController().navigate(
+        findNavController().safeNavigate(
             ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToRenameDialogFragment(
                 requireArguments().getLong("exerciseId")
             )

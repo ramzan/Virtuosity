@@ -3,9 +3,11 @@ package com.nazmar.musicgym.common
 import android.app.Activity
 import android.os.Build
 import android.os.IBinder
-import android.os.SystemClock
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.IdRes
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.nazmar.musicgym.R
 
@@ -49,24 +51,8 @@ fun Long.toTimerString(): String {
     }
 }
 
-class SafeClickListener(
-    private val defaultInterval: Int = 1000,
-    private val onSafeCLick: (View) -> Unit
-) : View.OnClickListener {
-    private var lastTimeClicked: Long = 0
-
-    override fun onClick(v: View) {
-        if (SystemClock.elapsedRealtime() - lastTimeClicked < defaultInterval) {
-            return
-        }
-        lastTimeClicked = SystemClock.elapsedRealtime()
-        onSafeCLick(v)
+fun NavController.safeNavigate(directions: NavDirections) {
+    currentDestination?.getAction(directions.actionId)?.let {
+        navigate(directions)
     }
-}
-
-fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
-    val safeClickListener = SafeClickListener {
-        onSafeClick(it)
-    }
-    setOnClickListener(safeClickListener)
 }

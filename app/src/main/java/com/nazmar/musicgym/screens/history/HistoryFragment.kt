@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.nazmar.musicgym.common.safeNavigate
 import com.nazmar.musicgym.databinding.FragmentHistoryBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +38,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
     }
 
     private fun deleteSessionHistory(id: Long) {
-        findNavController().navigate(
+        findNavController().safeNavigate(
             HistoryFragmentDirections.actionHistoryFragmentToDeleteHistoryDialogFragment(id)
         )
     }

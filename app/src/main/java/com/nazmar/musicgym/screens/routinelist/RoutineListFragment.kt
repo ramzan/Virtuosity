@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.common.SAVED_SESSION_ID
 import com.nazmar.musicgym.common.SAVED_SESSION_NAME
 import com.nazmar.musicgym.common.SAVED_SESSION_TIME
+import com.nazmar.musicgym.common.safeNavigate
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
 import com.nazmar.musicgym.routine.Routine
 import com.nazmar.musicgym.screens.BaseFragment
@@ -42,7 +43,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
             object : RoutineAdapter.OnClickListener {
                 override fun onEdit(routine: Routine) = showRoutineEditor(routine.id)
 
-                override fun onStart(routine: Routine) = startRoutine(routine.id)
+                override fun onStart(routine: Routine) = checkSessionSaved(routine.id)
             }
         ).run {
             this.stateRestorationPolicy =
@@ -61,13 +62,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
         binding.resumeSessionBtn.setOnClickListener {
             with(prefs.getLong(SAVED_SESSION_ID, 0)) {
-                if (this > 0) {
-                    findNavController().navigate(
-                        RoutineListFragmentDirections.actionRoutineListFragmentToSessionGraph(
-                            this
-                        )
-                    )
-                }
+                if (this > 0) startSession(this)
             }
 
         }
@@ -100,20 +95,23 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
     }
 
     private fun showRoutineEditor(id: Long) {
-        findNavController().navigate(
+        findNavController().safeNavigate(
             RoutineListFragmentDirections.actionRoutineListFragmentToRoutineEditorGraph(id)
         )
     }
 
-    private fun startRoutine(id: Long) {
-        findNavController().navigate(
-            if (prefs.contains(SAVED_SESSION_NAME)) {
-                RoutineListFragmentDirections.actionRoutineListFragmentToRestartSessionDialogFragment(
-                    id
-                )
-            } else {
-                RoutineListFragmentDirections.actionRoutineListFragmentToSessionGraph(id)
-            }
+    private fun startSession(id: Long) {
+        findNavController().safeNavigate(
+            RoutineListFragmentDirections.actionRoutineListFragmentToSessionGraph(id)
         )
+    }
+
+    private fun checkSessionSaved(id: Long) {
+        if (prefs.contains(SAVED_SESSION_NAME)) {
+            findNavController().safeNavigate(
+                RoutineListFragmentDirections
+                    .actionRoutineListFragmentToRestartSessionDialogFragment(id)
+            )
+        } else startSession(id)
     }
 }

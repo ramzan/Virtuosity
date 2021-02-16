@@ -182,7 +182,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     }
 
     private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
-        findNavController().navigate(
+        findNavController().safeNavigate(
             RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
                 exerciseIndex,
                 duration
@@ -191,7 +191,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     }
 
     private fun showDeleteDialog() {
-        findNavController().navigate(
+        findNavController().safeNavigate(
             RoutineEditorFragmentDirections.actionRoutineEditorToDeleteRoutineDialogFragment(
                 requireArguments().getLong("routineId")
             )

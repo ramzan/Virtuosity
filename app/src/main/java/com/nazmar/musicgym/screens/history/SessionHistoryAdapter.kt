@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.nazmar.musicgym.common.setSafeOnClickListener
 import com.nazmar.musicgym.databinding.ListItemHistoryBinding
 import com.nazmar.musicgym.history.SessionHistory
 import java.util.*
@@ -31,7 +30,7 @@ class SessionHistoryDisplayAdapter(private val onDelete: (Long) -> Unit) :
         fun bind(item: SessionHistory?, onDelete: (Long) -> Unit) {
             binding.apply {
                 item?.run {
-                    historyDeleteBtn.setSafeOnClickListener {
+                    historyDeleteBtn.setOnClickListener {
                         onDelete(item.id)
                     }
                     historyTitle.text = title

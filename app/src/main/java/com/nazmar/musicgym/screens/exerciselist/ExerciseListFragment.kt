@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.common.getInputMethodManager
 import com.nazmar.musicgym.common.hideKeyboard
+import com.nazmar.musicgym.common.safeNavigate
 import com.nazmar.musicgym.common.showKeyboard
 import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
 import com.nazmar.musicgym.screens.BaseFragment
@@ -90,13 +91,13 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
     }
 
     private fun showExerciseView(id: Long) {
-        findNavController().navigate(
+        findNavController().safeNavigate(
             ExerciseListFragmentDirections.actionExercisesFragmentToExercisesGraph(id)
         )
     }
 
     private fun showNewExerciseDialog() {
-        findNavController().navigate(
+        findNavController().safeNavigate(
             ExerciseListFragmentDirections.actionExerciseListFragmentToNewExerciseDialogFragment()
         )
     }
