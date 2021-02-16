@@ -8,12 +8,19 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.common.hideBottomNavBar
 import com.nazmar.musicgym.common.showBottomNavBar
 import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,6 +31,26 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
 
     private val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
         ExerciseDetailViewModel.provideFactory(factory, requireArguments().getLong("exerciseId"))
+    }
+
+    private val dayMonthFormatter = object : ValueFormatter() {
+        private val format = DateTimeFormatter.ofPattern("dd MM")
+
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return Instant.ofEpochMilli(value.toLong()).run {
+                format.format(this.atZone(ZoneId.systemDefault()))
+            }
+        }
+    }
+
+    private val monthYearFormatter = object : ValueFormatter() {
+        private val format = DateTimeFormatter.ofPattern("MM-yyyy")
+
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return Instant.ofEpochMilli(value.toLong()).run {
+                format.format(this.atZone(ZoneId.systemDefault()))
+            }
+        }
     }
 
     override fun onCreateView(
@@ -69,6 +96,24 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             binding.historyRangerSpinner.adapter = adapter
         }
 
+        binding.historyGraph.description = null
+        // Y axis
+        binding.historyGraph.axisRight.isEnabled = false
+        binding.historyGraph.axisLeft.axisMinimum = 0f
+        viewModel.graphMax.observe(viewLifecycleOwner) {
+            binding.historyGraph.axisLeft.apply {
+                axisMaximum = it * 1.1f
+            }
+        }
+
+        viewModel.history.observe(viewLifecycleOwner) {
+            binding.historyGraph.apply {
+                val dataSet = LineDataSet(it, "BPM")
+                data = LineData(dataSet)
+                invalidate()
+            }
+        }
+
         binding.historyRangerSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -78,11 +123,11 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                     id: Long
                 ) {
                     when (position) {
-                        0 -> viewModel.getWeekHistory()
-                        1 -> viewModel.getMonthHistory()
-                        2 -> viewModel.getQuarterHistory()
-                        3 -> viewModel.getYearHistory()
-                        4 -> viewModel.getAllHistory()
+                        0 -> setGraphWeek()
+                        1 -> setGraphMonth()
+                        2 -> setGraphQuarter()
+                        3 -> setGraphYear()
+                        4 -> setGraphAll()
                     }
                 }
 
@@ -92,6 +137,31 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             }
 
         return binding.root
+    }
+
+    private fun setGraphWeek() {
+        viewModel.getWeekHistory()
+        binding.historyGraph.xAxis.valueFormatter = dayMonthFormatter
+    }
+
+    private fun setGraphMonth() {
+        viewModel.getMonthHistory()
+        binding.historyGraph.xAxis.valueFormatter = dayMonthFormatter
+    }
+
+    private fun setGraphQuarter() {
+        viewModel.getQuarterHistory()
+        binding.historyGraph.xAxis.valueFormatter = dayMonthFormatter
+    }
+
+    private fun setGraphYear() {
+        viewModel.getYearHistory()
+        binding.historyGraph.xAxis.valueFormatter = monthYearFormatter
+    }
+
+    private fun setGraphAll() {
+        viewModel.getAllHistory()
+        binding.historyGraph.xAxis.valueFormatter = monthYearFormatter
     }
 
     private fun showDeleteDialog() {

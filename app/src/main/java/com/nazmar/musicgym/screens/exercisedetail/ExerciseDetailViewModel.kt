@@ -1,9 +1,8 @@
 package com.nazmar.musicgym.screens.exercisedetail
 
-import android.util.Log
 import androidx.lifecycle.*
+import com.github.mikephil.charting.data.Entry
 import com.nazmar.musicgym.exercises.ExerciseDetailUseCase
-import com.nazmar.musicgym.exercises.HistoryGraphDataPoint
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -37,7 +36,11 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     // History -----------------------------------------------------------------------------------
 
-    private val _history = MutableLiveData(emptyList<HistoryGraphDataPoint>())
+    private val _history = MutableLiveData(emptyList<Entry>())
+
+    val graphMax = Transformations.map(history) { list ->
+        list.map { it.y }.maxByOrNull { it } ?: 0f
+    }
 
     val history get() = _history
 
@@ -109,3 +112,8 @@ class ExerciseDetailViewModel @AssistedInject constructor(
         }
     }
 }
+
+data class HistoryGraphData(
+    val points: List<Entry>,
+    val maxBpm: Float
+)
