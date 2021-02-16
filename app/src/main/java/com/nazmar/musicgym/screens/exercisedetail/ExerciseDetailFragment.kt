@@ -16,6 +16,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
+import com.nazmar.musicgym.exercises.ExerciseDetailUseCase
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
@@ -34,6 +35,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
     }
 
     private val dayMonthFormatter = object : ValueFormatter() {
+        // TODO MM format is a number and not text on Nougat
         private val format = DateTimeFormatter.ofPattern("dd MM")
 
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
@@ -106,23 +108,26 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             binding.historyRangerSpinner.adapter = adapter
         }
 
-        binding.historyGraph.description = null
-        // Y axis
-        binding.historyGraph.axisRight.isEnabled = false
-        binding.historyGraph.axisLeft.axisMinimum = 0f
-        viewModel.graphMax.observe(viewLifecycleOwner) {
-            binding.historyGraph.axisLeft.apply {
-                axisMaximum = it * 1.1f
+        binding.historyGraph.apply {
+            description = null
+            axisRight.isEnabled = false
+            axisLeft.axisMinimum = 0f
+
+            viewModel.history.observe(viewLifecycleOwner) { state ->
+                when (state) {
+                    is ExerciseDetailUseCase.GraphState.Loading -> {
+
+                    }
+                    is ExerciseDetailUseCase.GraphState.Loaded -> {
+                        val dataSet = LineDataSet(state.data, "BPM")
+                        data = LineData(dataSet)
+                        invalidate()
+                        axisLeft.axisMaximum = state.maxBpm // TODO if 0 then show no data screen
+                    }
+                }
             }
         }
 
-        viewModel.history.observe(viewLifecycleOwner) {
-            binding.historyGraph.apply {
-                val dataSet = LineDataSet(it, "BPM")
-                data = LineData(dataSet)
-                invalidate()
-            }
-        }
 
         binding.historyRangerSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {

@@ -6,6 +6,7 @@ import com.nazmar.musicgym.exercises.ExerciseDetailUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 const val DURATION_WEEK = 604800000L // 7 days
@@ -36,21 +37,21 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     // History -----------------------------------------------------------------------------------
 
-    private val _history = MutableLiveData(emptyList<Entry>())
-
-    val graphMax = Transformations.map(history) { list ->
-        list.map { it.y }.maxByOrNull { it } ?: 0f
-    }
+    private val _history = MutableLiveData<ExerciseDetailUseCase.GraphState>()
 
     val history get() = _history
 
     init {
-        getWeekHistory()
+        viewModelScope.launch {
+            useCase.graphState.collect {
+                _history.value = it
+            }
+        }
     }
 
     fun getWeekHistory() {
         viewModelScope.launch {
-            _history.value = useCase.getExerciseHistorySince(
+            useCase.getExerciseHistorySince(
                 exerciseId,
                 System.currentTimeMillis() - DURATION_WEEK
             )
@@ -59,7 +60,7 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     fun getMonthHistory() {
         viewModelScope.launch {
-            _history.value = useCase.getExerciseHistorySince(
+            useCase.getExerciseHistorySince(
                 exerciseId,
                 System.currentTimeMillis() - DURATION_MONTH
             )
@@ -68,7 +69,7 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     fun getQuarterHistory() {
         viewModelScope.launch {
-            _history.value = useCase.getExerciseHistorySince(
+            useCase.getExerciseHistorySince(
                 exerciseId,
                 System.currentTimeMillis() - DURATION_QUARTER
             )
@@ -77,7 +78,7 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     fun getYearHistory() {
         viewModelScope.launch {
-            _history.value = useCase.getExerciseHistorySince(
+            useCase.getExerciseHistorySince(
                 exerciseId,
                 System.currentTimeMillis() - DURATION_YEAR
             )
@@ -86,7 +87,7 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     fun getAllHistory() {
         viewModelScope.launch {
-            _history.value = useCase.getExerciseHistorySince(
+            useCase.getExerciseHistorySince(
                 exerciseId,
                 0L
             )

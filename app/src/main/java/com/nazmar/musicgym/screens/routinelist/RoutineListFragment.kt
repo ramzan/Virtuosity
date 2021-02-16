@@ -31,6 +31,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
             if (bundle.getBoolean(POSITIVE_RESULT)) {
                 viewModel.useCase.clearSavedSession()
+                // TODO why isn't this navigating
                 viewModel.sessionToStartId?.let { startSession(it) }
             }
         }

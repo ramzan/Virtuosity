@@ -69,6 +69,7 @@ class Timer(
     val status: LiveData<TimerState>
         get() = _status
 
+    // TODO fix ugly hack
     private var currentExercise: SessionExercise? =
         SessionExercise(-1, -1, "", -1, -1)
 
