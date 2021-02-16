@@ -11,10 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.common.getInputMethodManager
-import com.nazmar.musicgym.common.hideKeyboard
-import com.nazmar.musicgym.common.safeNavigate
-import com.nazmar.musicgym.common.showKeyboard
+import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +31,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentExerciseListBinding.inflate(inflater)
+        requireActivity().showBottomNavBar()
 
         ExerciseAdapter(ExerciseAdapter.OnClickListener {
             showExerciseView(it.id)

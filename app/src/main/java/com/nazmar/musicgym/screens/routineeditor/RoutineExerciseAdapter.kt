@@ -9,7 +9,7 @@ import androidx.core.text.underline
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.nazmar.musicgym.common.toTimerString
+import com.nazmar.musicgym.common.millisToTimerString
 import com.nazmar.musicgym.databinding.ListItemRoutineExerciseBinding
 import com.nazmar.musicgym.routine.RoutineExercise
 
@@ -48,7 +48,7 @@ class RoutineExerciseAdapter(
             binding.apply {
                 exerciseName.text = item.name
                 duration.text = buildSpannedString {
-                    underline { append(item.duration.toTimerString()) }
+                    underline { append(millisToTimerString(item.duration)) }
                 }
                 duration.setOnClickListener {
                     onClickListener(bindingAdapterPosition, item.duration)

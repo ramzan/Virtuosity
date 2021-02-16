@@ -218,11 +218,6 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        requireActivity().showBottomNavBar()
-    }
-
     private fun goBack() {
         requireContext().stopService(Intent(requireContext(), TimerService::class.java))
         imm.hideKeyboard(requireView().windowToken)

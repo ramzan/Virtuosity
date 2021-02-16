@@ -203,11 +203,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         findNavController().popBackStack(R.id.routineListFragment, false)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        requireActivity().showBottomNavBar()
-    }
-
     fun startDragging(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
     }

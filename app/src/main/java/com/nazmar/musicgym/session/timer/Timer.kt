@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nazmar.musicgym.common.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.common.isOreoOrAbove
-import com.nazmar.musicgym.common.toTimerString
+import com.nazmar.musicgym.common.millisToTimerString
 import com.nazmar.musicgym.session.SessionExercise
 
 enum class TimerState {
@@ -83,7 +83,7 @@ class Timer(
             timer = object : CountDownTimer(this, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     _timeLeft.value = millisUntilFinished
-                    _timeString.value = millisUntilFinished.toTimerString()
+                    _timeString.value = millisToTimerString(millisUntilFinished)
                     updateTimerNotification()
                 }
 
@@ -94,7 +94,7 @@ class Timer(
                     mediaPlayer.start()
                 }
             }
-            _timeString.value = this.toTimerString()
+            _timeString.value = millisToTimerString(this)
             _timeLeft.value = this
         }
         updateTimerNotification()
@@ -146,7 +146,7 @@ class Timer(
         timer = null
         _timerStatus.value = TimerState.STOPPED
         _timeLeft.value = null
-        _timeString.value = 0L.toTimerString()
+        _timeString.value = millisToTimerString(0L)
         notification = pausedNotification
         showStoppedNotification()
     }

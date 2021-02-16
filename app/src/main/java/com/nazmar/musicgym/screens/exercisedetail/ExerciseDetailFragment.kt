@@ -15,7 +15,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.common.hideBottomNavBar
 import com.nazmar.musicgym.common.safeNavigate
-import com.nazmar.musicgym.common.showBottomNavBar
 import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -183,10 +182,5 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
 
     private fun goBack() {
         findNavController().popBackStack(R.id.exerciseListFragment, false)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        requireActivity().showBottomNavBar()
     }
 }

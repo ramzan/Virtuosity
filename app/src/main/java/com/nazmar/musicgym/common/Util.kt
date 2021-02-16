@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.IBinder
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.IdRes
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -13,15 +12,11 @@ import com.nazmar.musicgym.R
 
 
 fun Activity.hideBottomNavBar() {
-    this.findViewById<BottomNavigationView>(R.id.nav_view)?.let {
-        it.visibility = View.GONE
-    }
+    this.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
 }
 
 fun Activity.showBottomNavBar() {
-    this.findViewById<BottomNavigationView>(R.id.nav_view)?.let {
-        it.visibility = View.VISIBLE
-    }
+    this.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
 }
 
 fun Activity.getInputMethodManager(): InputMethodManager {
@@ -42,17 +37,16 @@ fun InputMethodManager.showKeyboard() {
     )
 }
 
-
 fun isOreoOrAbove() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
-fun Long.toTimerString(): String {
-    return (this / 1000).let { s ->
+fun millisToTimerString(millis: Long): String {
+    return (millis / 1000).let { s ->
         String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60))
     }
 }
 
 fun NavController.safeNavigate(directions: NavDirections) {
-    currentDestination?.getAction(directions.actionId)?.let {
+    currentDestination?.getAction(directions.actionId)?.run {
         navigate(directions)
     }
 }

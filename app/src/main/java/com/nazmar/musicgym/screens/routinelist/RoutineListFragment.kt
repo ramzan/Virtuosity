@@ -9,10 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import com.nazmar.musicgym.common.SAVED_SESSION_ID
-import com.nazmar.musicgym.common.SAVED_SESSION_NAME
-import com.nazmar.musicgym.common.SAVED_SESSION_TIME
-import com.nazmar.musicgym.common.safeNavigate
+import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
 import com.nazmar.musicgym.routine.Routine
 import com.nazmar.musicgym.screens.BaseFragment
@@ -34,6 +31,8 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         super.onCreateView(inflater, container, savedInstanceState)
 
         _binding = FragmentRoutineListBinding.inflate(inflater)
+
+        requireActivity().showBottomNavBar()
 
         prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
