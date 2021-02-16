@@ -30,9 +30,11 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         super.onStart()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
             if (bundle.getBoolean(POSITIVE_RESULT)) {
-                viewModel.useCase.clearSavedSession()
-                // TODO why isn't this navigating
-                viewModel.sessionToStartId?.let { startSession(it) }
+                viewModel.sessionToStartId?.let {
+                    viewModel.useCase.clearSavedSession()
+                    findNavController().popBackStack(R.id.routineListFragment, false)
+                    startSession(it)
+                }
             }
         }
     }
@@ -115,7 +117,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
     }
 
     private fun startSession(id: Long) {
-        findNavController().safeNavigate(
+        findNavController().navigate(
             RoutineListFragmentDirections.actionRoutineListFragmentToSessionFragment(id)
         )
     }
