@@ -8,7 +8,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HistoryViewModel @Inject constructor(private val useCase: HistoryUseCase) : ViewModel() {
 
-    fun deleteHistoryItem(id: Long) = useCase.deleteSessionHistory(id)
+    var pendingDeleteId: Long? = null
+
+    fun deleteHistoryItem() = pendingDeleteId?.let { useCase.deleteSessionHistory(it) }
 
     val history = useCase.getSessionHistory()
 }

@@ -6,15 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.common.hideBottomNavBar
-import com.nazmar.musicgym.common.safeNavigate
+import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +29,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
     @Inject
     lateinit var factory: ExerciseDetailViewModel.Factory
 
-    private val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph) {
+    private val viewModel: ExerciseDetailViewModel by viewModels {
         ExerciseDetailViewModel.provideFactory(factory, requireArguments().getLong("exerciseId"))
     }
 
@@ -50,6 +50,16 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             return Instant.ofEpochMilli(value.toLong()).run {
                 format.format(this.atZone(ZoneId.systemDefault()))
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
+            if (bundle.getBoolean(POSITIVE_RESULT)) viewModel.deleteExercise()
+        }
+        setFragmentResultListener(TEXT_INPUT_RESULT) { _, bundle ->
+            bundle.getString(INPUT_TEXT)?.let { viewModel.renameExercise(it) }
         }
     }
 
@@ -166,16 +176,17 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
 
     private fun showDeleteDialog() {
         findNavController().safeNavigate(
-            ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToDeleteDialogFragment(
-                requireArguments().getLong("exerciseId")
+            ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToConfirmationDialog(
+                R.string.delete_exercise_dialog_message
             )
         )
     }
 
     private fun showRenameDialog() {
         findNavController().safeNavigate(
-            ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToRenameDialogFragment(
-                requireArguments().getLong("exerciseId")
+            ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToTextInputDialog(
+                R.string.rename,
+                viewModel.exercise.value?.name ?: ""
             )
         )
     }

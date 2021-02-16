@@ -1,10 +1,12 @@
-package com.nazmar.musicgym.screens.routineeditor
+package com.nazmar.musicgym.screens.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.navGraphViewModels
-import com.nazmar.musicgym.R
+import androidx.fragment.app.setFragmentResult
+import com.nazmar.musicgym.common.DURATION_PICKER_RESULT
+import com.nazmar.musicgym.common.DURATION_VALUE
 import com.nazmar.musicgym.common.MAX_TIMER_DURATION
 import mobi.upod.timedurationpicker.TimeDurationPicker
 import mobi.upod.timedurationpicker.TimeDurationPickerDialog
@@ -12,17 +14,16 @@ import mobi.upod.timedurationpicker.TimeDurationPickerDialog
 class DurationPickerDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph)
-
-        val exerciseIndex = requireArguments().getInt("exerciseIndex")
-
         return TimeDurationPickerDialog(
             requireContext(),
             { _: TimeDurationPicker, l: Long ->
-                viewModel.updateDuration(exerciseIndex, l.coerceAtMost(MAX_TIMER_DURATION))
+                setFragmentResult(
+                    DURATION_PICKER_RESULT,
+                    bundleOf(DURATION_VALUE to l.coerceAtMost(MAX_TIMER_DURATION))
+                )
 
             },
-            viewModel.state.value!!.getItemDuration(exerciseIndex),
+            requireArguments().getLong("initialDuration"),
             TimeDurationPicker.HH_MM_SS
         )
     }

@@ -13,14 +13,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.common.hideBottomNavBar
-import com.nazmar.musicgym.common.hideKeyboard
-import com.nazmar.musicgym.common.isOreoOrAbove
-import com.nazmar.musicgym.common.safeNavigate
+import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import com.nazmar.musicgym.session.timer.Timer
@@ -38,7 +36,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
     @Inject
     lateinit var factory: SessionViewModel.Factory
 
-    private val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
+    private val viewModel: SessionViewModel by viewModels {
         SessionViewModel.provideFactory(factory, requireArguments().getLong("routineId"))
     }
 
@@ -145,6 +143,10 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             }
             requireContext().bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
+        setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
+            bundle.getLong(DURATION_VALUE).let { viewModel.updateEditorTime(it) }
+        }
+
     }
 
     override fun onStop() {
@@ -241,8 +243,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
     private fun showTimerEditor() {
         findNavController().safeNavigate(
-            SessionFragmentDirections.actionSessionFragmentToTimerEditorDialogFragment(
-                requireArguments().getLong("routineId"),
+            SessionFragmentDirections.actionSessionFragmentToDurationPickerDialogFragment(
                 mTimer.timeLeft.value ?: 0L
             )
         )

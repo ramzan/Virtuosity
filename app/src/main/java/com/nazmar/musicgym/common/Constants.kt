@@ -17,3 +17,15 @@ const val TIMER_NOTIFICATION_ID = 1
 const val REQUEST_CODE_RESTART = 0
 const val REQUEST_CODE_PAUSE = 1
 const val REQUEST_CODE_RESUME = 2
+
+// Confirmation dialog result
+const val CONFIRMATION_RESULT = "dialog_result"
+const val POSITIVE_RESULT = "positive_result"
+
+// Text input dialog result
+const val TEXT_INPUT_RESULT = "text_input_result"
+const val INPUT_TEXT = "input_text"
+
+// Duration picker dialog result
+const val DURATION_PICKER_RESULT = "duration_picker_result"
+const val DURATION_VALUE = "duration_value"

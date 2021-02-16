@@ -8,13 +8,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.common.hideKeyboard
-import com.nazmar.musicgym.common.safeNavigate
-import com.nazmar.musicgym.common.showBottomNavBar
-import com.nazmar.musicgym.common.showKeyboard
+import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +27,13 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
     private val viewModel: ExerciseListViewModel by activityViewModels()
 
     private lateinit var searchView: SearchView
+
+    override fun onStart() {
+        super.onStart()
+        setFragmentResultListener(TEXT_INPUT_RESULT) { _, bundle ->
+            bundle.getString(INPUT_TEXT)?.let { viewModel.addExercise(it) }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -99,7 +104,10 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
     private fun showNewExerciseDialog() {
         findNavController().safeNavigate(
-            ExerciseListFragmentDirections.actionExerciseListFragmentToNewExerciseDialogFragment()
+            ExerciseListFragmentDirections.actionExerciseListFragmentToTextInputDialog(
+                R.string.new_exercise,
+                ""
+            )
         )
     }
 

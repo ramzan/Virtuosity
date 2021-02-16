@@ -11,13 +11,10 @@
         tools:layout="@layout/fragment_exercise_list">
         <action
             android:id="@+id/action_exercisesFragment_to_exercisesGraph"
-            app:destination="@id/exercisesGraph" />
+            app:destination="@id/exerciseDetailFragment" />
         <action
-            android:id="@+id/action_exerciseListFragment_to_exercisesGraph"
-            app:destination="@id/exercisesGraph" />
-        <action
-            android:id="@+id/action_exerciseListFragment_to_newExerciseDialogFragment"
-            app:destination="@id/newExerciseDialogFragment" />
+            android:id="@+id/action_exerciseListFragment_to_textInputDialog"
+            app:destination="@id/textInputDialog" />
     </fragment>
     <fragment
         android:id="@+id/routineListFragment"
@@ -25,157 +22,93 @@
         android:label="@string/practice"
         tools:layout="@layout/fragment_routine_list">
         <action
-            android:id="@+id/action_routineListFragment_to_restartSessionDialogFragment"
-            app:destination="@id/restartSessionDialogFragment" />
+            android:id="@+id/action_routineListFragment_to_routineEditorFragment"
+            app:destination="@id/routineEditorFragment" />
         <action
-            android:id="@+id/action_routineListFragment_to_routineEditorGraph"
-            app:destination="@id/routineEditorGraph" />
+            android:id="@+id/action_routineListFragment_to_sessionFragment"
+            app:destination="@id/sessionFragment" />
         <action
-            android:id="@+id/action_routineListFragment_to_sessionGraph"
-            app:destination="@id/sessionGraph" />
+            android:id="@+id/action_routineListFragment_to_confirmationDialog"
+            app:destination="@id/confirmationDialog" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.nazmar.musicgym.screens.settings.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
-    <navigation
-        android:id="@+id/exercisesGraph"
-        app:startDestination="@id/exerciseDetailFragment">
+    <fragment
+        android:id="@+id/exerciseDetailFragment"
+        android:name="com.nazmar.musicgym.screens.exercisedetail.ExerciseDetailFragment"
+        android:label="ExerciseDetailFragment">
         <argument
             android:name="exerciseId"
             app:argType="long" />
-        <fragment
-            android:id="@+id/exerciseDetailFragment"
-            android:name="com.nazmar.musicgym.screens.exercisedetail.ExerciseDetailFragment"
-            android:label="ExerciseDetailFragment"
-            app:startDestination="@id/action_exerciseDetailFragment_to_deleteDialogFragment">
-            <argument
-                android:name="exerciseId"
-                app:argType="long" />
-            <action
-                android:id="@+id/action_exerciseDetailFragment_to_renameDialogFragment"
-                app:destination="@id/renameDialogFragment" />
-            <action
-                android:id="@+id/action_exerciseDetailFragment_to_deleteDialogFragment"
-                app:destination="@id/deleteExerciseDialogFragment" />
-        </fragment>
-        <dialog
-            android:id="@+id/renameDialogFragment"
-            android:name="com.nazmar.musicgym.screens.exercisedetail.RenameDialogFragment"
-            android:label="RenameDialogFragment">
-            <argument
-                android:name="exerciseId"
-                app:argType="long" />
-        </dialog>
-        <dialog
-            android:id="@+id/deleteExerciseDialogFragment"
-            android:name="com.nazmar.musicgym.screens.exercisedetail.DeleteExerciseDialogFragment"
-            android:label="DeleteExerciseDialogFragment">
-            <argument
-                android:name="exerciseId"
-                app:argType="long" />
-        </dialog>
-    </navigation>
-    <navigation
-        android:id="@+id/routineEditorGraph"
-        app:startDestination="@id/routineEditor">
-        <argument
-            android:name="routineId"
-            app:argType="long" />
-        <fragment
-            android:id="@+id/routineEditor"
-            android:name="com.nazmar.musicgym.screens.routineeditor.RoutineEditorFragment"
-            android:label="RoutineEditor">
-            <argument
-                android:name="routineId"
-                app:argType="long" />
-            <action
-                android:id="@+id/action_routineEditor_to_durationPickerDialog"
-                app:destination="@id/durationPickerDialog" />
-            <action
-                android:id="@+id/action_routineEditor_to_deleteRoutineDialogFragment"
-                app:destination="@id/deleteRoutineDialogFragment" />
-        </fragment>
-        <dialog
-            android:id="@+id/durationPickerDialog"
-            android:name="com.nazmar.musicgym.screens.routineeditor.DurationPickerDialogFragment"
-            android:label="DurationPickerDialog">
-            <argument
-                android:name="exerciseIndex"
-                app:argType="integer" />
-            <argument
-                android:name="routineId"
-                app:argType="long" />
-        </dialog>
-        <dialog
-            android:id="@+id/deleteRoutineDialogFragment"
-            android:name="com.nazmar.musicgym.screens.routineeditor.DeleteRoutineDialogFragment"
-            android:label="DeleteRoutineDialogFragment">
-            <argument
-                android:name="routineId"
-                app:argType="long" />
-        </dialog>
-    </navigation>
-    <dialog
-        android:id="@+id/newExerciseDialogFragment"
-        android:name="com.nazmar.musicgym.screens.exerciselist.NewExerciseDialogFragment"
-        android:label="NewExerciseDialogFragment" />
-    <navigation
-        android:id="@+id/sessionGraph"
-        app:startDestination="@id/sessionFragment">
-        <argument
-            android:name="routineId"
-            app:argType="long" />
-        <fragment
-            android:id="@+id/sessionFragment"
-            android:name="com.nazmar.musicgym.screens.session.SessionFragment"
-            android:label="SessionFragment">
-            <argument
-                android:name="routineId"
-                app:argType="long" />
-            <action
-                android:id="@+id/action_sessionFragment_to_timerEditorDialogFragment"
-                app:destination="@id/timerEditorDialog" />
-        </fragment>
-        <dialog
-            android:id="@+id/timerEditorDialog"
-            android:name="com.nazmar.musicgym.screens.session.TimerEditorDialogFragment"
-            android:label="TimerEditorDialogFragment">
-            <argument
-                android:name="routineId"
-                app:argType="long" />
-            <argument
-                android:name="timeLeft"
-                app:argType="long" />
-        </dialog>
-    </navigation>
-    <dialog
-        android:id="@+id/restartSessionDialogFragment"
-        android:name="com.nazmar.musicgym.screens.routinelist.RestartSessionDialogFragment"
-        android:label="RestartSessionDialogFragment">
-        <argument
-            android:name="routineId"
-            app:argType="long" />
         <action
-            android:id="@+id/action_restartSessionDialogFragment_to_sessionGraph"
-            app:destination="@id/sessionGraph" />
-    </dialog>
+            android:id="@+id/action_exerciseDetailFragment_to_confirmationDialog"
+            app:destination="@id/confirmationDialog" />
+        <action
+            android:id="@+id/action_exerciseDetailFragment_to_textInputDialog"
+            app:destination="@id/textInputDialog" />
+    </fragment>
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.nazmar.musicgym.screens.history.HistoryFragment"
         android:label="@string/history"
         tools:layout="@layout/fragment_history">
         <action
-            android:id="@+id/action_historyFragment_to_deleteHistoryDialogFragment"
-            app:destination="@id/deleteHistoryDialogFragment" />
+            android:id="@+id/action_historyFragment_to_confirmationDialog"
+            app:destination="@id/confirmationDialog" />
     </fragment>
     <dialog
-        android:id="@+id/deleteHistoryDialogFragment"
-        android:name="com.nazmar.musicgym.screens.history.DeleteHistoryDialogFragment"
-        android:label="DeleteHistoryDialogFragment">
+        android:id="@+id/confirmationDialog"
+        android:name="com.nazmar.musicgym.screens.dialogs.ConfirmationDialog"
+        android:label="ConfirmationDialog">
         <argument
-            android:name="historyId"
+            android:name="titleId"
+            app:argType="reference" />
+    </dialog>
+    <dialog
+        android:id="@+id/textInputDialog"
+        android:name="com.nazmar.musicgym.screens.dialogs.TextInputDialog"
+        android:label="TextInputDialog">
+        <argument
+            android:name="titleId"
+            app:argType="reference" />
+        <argument
+            android:name="initialText"
+            app:argType="string" />
+    </dialog>
+    <fragment
+        android:id="@+id/routineEditorFragment"
+        android:name="com.nazmar.musicgym.screens.routineeditor.RoutineEditorFragment"
+        android:label="RoutineEditorFragment">
+        <argument
+            android:name="routineId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_routineEditorFragment_to_confirmationDialog"
+            app:destination="@id/confirmationDialog" />
+        <action
+            android:id="@+id/action_routineEditorFragment_to_durationPickerDialogFragment"
+            app:destination="@id/durationPickerDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/durationPickerDialogFragment"
+        android:name="com.nazmar.musicgym.screens.dialogs.DurationPickerDialogFragment"
+        android:label="TimerEditorDialogFragment">
+        <argument
+            android:name="initialDuration"
             app:argType="long" />
     </dialog>
+    <fragment
+        android:id="@+id/sessionFragment"
+        android:name="com.nazmar.musicgym.screens.session.SessionFragment"
+        android:label="SessionFragment">
+        <argument
+            android:name="routineId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_sessionFragment_to_durationPickerDialogFragment"
+            app:destination="@id/durationPickerDialogFragment" />
+    </fragment>
 </navigation>

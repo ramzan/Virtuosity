@@ -27,6 +27,8 @@ class RoutineEditorViewModel @AssistedInject constructor(
         it.exercises
     }
 
+    var indexPendingDurationChange: Int? = null
+
     init {
         if (routineId == 0L) {
             _state.value = RoutineEditorState.New(
@@ -46,11 +48,14 @@ class RoutineEditorViewModel @AssistedInject constructor(
         }
     }
 
-    fun updateDuration(exerciseIndex: Int, newDuration: Long) {
+    fun updateDuration(newDuration: Long) {
         (_state.value as RoutineEditorState.Editing).let {
-            val newExercises = it.exercises.toMutableList()
-            newExercises[exerciseIndex] = newExercises[exerciseIndex].copy(duration = newDuration)
-            _state.value = it.copy(exercises = newExercises)
+            indexPendingDurationChange?.let { index ->
+                val newExercises = it.exercises.toMutableList()
+                newExercises[index] = newExercises[index].copy(duration = newDuration)
+                _state.value = it.copy(exercises = newExercises)
+                indexPendingDurationChange = null
+            }
         }
     }
 
@@ -114,10 +119,6 @@ sealed class RoutineEditorState {
                 DEFAULT_TIMER_DURATION
             )
         )
-    }
-
-    fun getItemDuration(index: Int): Long {
-        return exercises[index].duration
     }
 
     object Loading : RoutineEditorState() {

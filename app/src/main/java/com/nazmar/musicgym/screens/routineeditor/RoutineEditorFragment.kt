@@ -8,8 +8,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_IDLE
 import androidx.recyclerview.widget.RecyclerView
@@ -30,7 +31,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     @Inject
     lateinit var factory: RoutineEditorViewModel.Factory
 
-    private val viewModel: RoutineEditorViewModel by navGraphViewModels(R.id.routineEditorGraph) {
+    private val viewModel: RoutineEditorViewModel by viewModels {
         RoutineEditorViewModel.provideFactory(factory, requireArguments().getLong("routineId"))
     }
 
@@ -83,6 +84,16 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         }
 
     private val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+
+    override fun onStart() {
+        super.onStart()
+        setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
+            if (bundle.getBoolean(POSITIVE_RESULT)) viewModel.deleteRoutine()
+        }
+        setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
+            bundle.getLong(DURATION_VALUE).let { viewModel.updateDuration(it) }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -181,9 +192,9 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     }
 
     private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
+        viewModel.indexPendingDurationChange = exerciseIndex
         findNavController().safeNavigate(
-            RoutineEditorFragmentDirections.actionRoutineEditorToDurationPickerDialog(
-                exerciseIndex,
+            RoutineEditorFragmentDirections.actionRoutineEditorFragmentToDurationPickerDialogFragment(
                 duration
             )
         )
@@ -191,8 +202,8 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
     private fun showDeleteDialog() {
         findNavController().safeNavigate(
-            RoutineEditorFragmentDirections.actionRoutineEditorToDeleteRoutineDialogFragment(
-                requireArguments().getLong("routineId")
+            RoutineEditorFragmentDirections.actionRoutineEditorFragmentToConfirmationDialog(
+                R.string.delete_routine_dialog_message
             )
         )
     }

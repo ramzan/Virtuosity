@@ -1,20 +1,23 @@
-package com.nazmar.musicgym.screens.exercisedetail
+package com.nazmar.musicgym.screens.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.navGraphViewModels
+import androidx.fragment.app.setFragmentResult
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
+import com.nazmar.musicgym.common.CONFIRMATION_RESULT
+import com.nazmar.musicgym.common.POSITIVE_RESULT
 
-class DeleteExerciseDialogFragment : DialogFragment() {
+
+class ConfirmationDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val viewModel: ExerciseDetailViewModel by navGraphViewModels(R.id.exercisesGraph)
         return MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.delete_exercise_dialog_message)
+            .setTitle(requireArguments().getInt("titleId"))
             .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
-                viewModel.deleteExercise()
+                setFragmentResult(CONFIRMATION_RESULT, bundleOf(POSITIVE_RESULT to true))
             }
             .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ -> }
             .show()

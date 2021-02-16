@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.nazmar.musicgym.R
 import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
 import com.nazmar.musicgym.routine.Routine
@@ -23,6 +25,16 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
     lateinit var prefs: SharedPreferences
 
     private val viewModel: RoutineListViewModel by activityViewModels()
+
+    override fun onStart() {
+        super.onStart()
+        setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
+            if (bundle.getBoolean(POSITIVE_RESULT)) {
+                viewModel.useCase.clearSavedSession()
+                viewModel.sessionToStartId?.let { startSession(it) }
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,21 +106,23 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
     private fun showRoutineEditor(id: Long) {
         findNavController().safeNavigate(
-            RoutineListFragmentDirections.actionRoutineListFragmentToRoutineEditorGraph(id)
+            RoutineListFragmentDirections.actionRoutineListFragmentToRoutineEditorFragment(id)
         )
     }
 
     private fun startSession(id: Long) {
         findNavController().safeNavigate(
-            RoutineListFragmentDirections.actionRoutineListFragmentToSessionGraph(id)
+            RoutineListFragmentDirections.actionRoutineListFragmentToSessionFragment(id)
         )
     }
 
     private fun checkSessionSaved(id: Long) {
         if (prefs.contains(SAVED_SESSION_NAME)) {
+            viewModel.sessionToStartId = id
             findNavController().safeNavigate(
-                RoutineListFragmentDirections
-                    .actionRoutineListFragmentToRestartSessionDialogFragment(id)
+                RoutineListFragmentDirections.actionRoutineListFragmentToConfirmationDialog(
+                    R.string.clear_session_dialog_message
+                )
             )
         } else startSession(id)
     }

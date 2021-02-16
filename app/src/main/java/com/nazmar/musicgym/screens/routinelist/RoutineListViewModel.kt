@@ -9,5 +9,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RoutineListViewModel @Inject constructor(val useCase: RoutineListUseCase) : ViewModel() {
 
-    var routines = useCase.getAllRoutines().asLiveData()
+    var sessionToStartId: Long? = null
+
+    val routines = useCase.getAllRoutines().asLiveData()
 }
