@@ -64,10 +64,10 @@ class Timer(
     val timeString: LiveData<String>
         get() = _timeString
 
-    private var _timerStatus = MutableLiveData(TimerState.STOPPED)
+    private var _status = MutableLiveData(TimerState.STOPPED)
 
-    val timerStatus: LiveData<TimerState>
-        get() = _timerStatus
+    val status: LiveData<TimerState>
+        get() = _status
 
     private var currentExercise: SessionExercise? =
         SessionExercise(-1, -1, "", -1, -1)
@@ -115,7 +115,7 @@ class Timer(
         timer?.let {
             notification = runningNotification
             it.start()
-            _timerStatus.value = TimerState.RUNNING
+            _status.value = TimerState.RUNNING
         }
     }
 
@@ -123,7 +123,7 @@ class Timer(
         notification = pausedNotification
         timer?.cancel()
         createTimer()
-        _timerStatus.value = TimerState.PAUSED
+        _status.value = TimerState.PAUSED
     }
 
     fun restartTimer() {
@@ -131,20 +131,20 @@ class Timer(
         _timeLeft.value = null
         if (currentExerciseDuration != 0L) {
             createTimer()
-            if (timerStatus.value == TimerState.RUNNING) {
+            if (status.value == TimerState.RUNNING) {
                 startTimer()
             } else {
-                _timerStatus.value = TimerState.PAUSED
+                _status.value = TimerState.PAUSED
             }
         } else {
-            _timerStatus.value = TimerState.STOPPED
+            _status.value = TimerState.STOPPED
         }
     }
 
     fun clearTimer() {
         timer?.cancel()
         timer = null
-        _timerStatus.value = TimerState.STOPPED
+        _status.value = TimerState.STOPPED
         _timeLeft.value = null
         _timeString.value = millisToTimerString(0L)
         notification = pausedNotification

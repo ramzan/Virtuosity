@@ -1,6 +1,7 @@
 package com.nazmar.musicgym.common.di
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.SharedPreferences
 import android.view.inputmethod.InputMethodManager
 import androidx.preference.PreferenceManager
@@ -17,7 +18,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun db(application: Application) = ExerciseDatabase.getInstance(application)
+    fun db(app: Application) = ExerciseDatabase.getInstance(app)
 
     @Provides
     @Singleton
@@ -45,11 +46,16 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun prefs(application: Application): SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(application.applicationContext)
+    fun prefs(app: Application): SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(app.applicationContext)
 
     @Provides
     @Singleton
-    fun imm(application: Application) = application.getSystemService(InputMethodManager::class.java)
+    fun imm(app: Application): InputMethodManager =
+        app.getSystemService(InputMethodManager::class.java)
 
+    @Provides
+    @Singleton
+    fun notificationManager(app: Application): NotificationManager =
+        app.getSystemService(NotificationManager::class.java)
 }

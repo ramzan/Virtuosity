@@ -9,9 +9,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.nazmar.musicgym.R
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var notificationManager: NotificationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +38,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun createChannel(channelId: String, channelName: String) {
         if (isOreoOrAbove()) {
-            val notificationManager = this.getSystemService(NotificationManager::class.java)
             NotificationChannel(
                 channelId,
                 channelName,

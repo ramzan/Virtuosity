@@ -5,24 +5,31 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.*
 import androidx.core.app.NotificationCompat
-import androidx.preference.PreferenceManager
 import com.nazmar.musicgym.*
 import com.nazmar.musicgym.common.*
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
 
 const val RESUME_TIMER = "resume_timer"
 const val PAUSE_TIMER = "pause_timer"
 const val RESTART_TIMER = "restart_timer"
 
+@AndroidEntryPoint
 class TimerService : Service() {
 
-    private lateinit var mediaPlayer: MediaPlayer
+    @Inject
+    lateinit var notificationManager: NotificationManager
 
-    private lateinit var notificationManager: NotificationManager
+    @Inject
+    lateinit var prefs: SharedPreferences
+
+    private lateinit var mediaPlayer: MediaPlayer
 
     private lateinit var timer: Timer
 
@@ -39,18 +46,13 @@ class TimerService : Service() {
         super.onCreate()
 
         mediaPlayer = MediaPlayer.create(this, R.raw.bell)
-        notificationManager = application.getSystemService(NotificationManager::class.java)
-
         runningNotification = getTimerNotificationBuilder(TimerState.RUNNING)
         pausedNotification = getTimerNotificationBuilder(TimerState.PAUSED)
         stoppedNotification = getTimerNotificationBuilder(TimerState.STOPPED)
 
-        val vibrator =
-            PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(getString(R.string.key_timer_vibrate), true)
-                .let {
-                    if (it) getSystemService(Vibrator::class.java) else null
-                }
+        val vibrator = prefs.getBoolean(getString(R.string.key_timer_vibrate), true).let {
+            if (it) getSystemService(Vibrator::class.java) else null
+        }
 
         timer = Timer(
             runningNotification,
@@ -127,51 +129,13 @@ class TimerService : Service() {
             .setContentText(getString(R.string.timer_notification_stopped_message))
 
         if (timerState != TimerState.STOPPED) {
-
             val playAction = if (timerState == TimerState.PAUSED) {
-                PendingIntent.getBroadcast(
-                    this,
-                    REQUEST_CODE_RESUME,
-                    Intent(RESUME_TIMER),
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                ).let { resumePendingIntent ->
-                    NotificationCompat.Action.Builder(
-                        R.drawable.ic_baseline_play_arrow_24,
-                        getString(R.string.start_timer),
-                        resumePendingIntent
-                    ).build()
-                }
-            } else {
-                PendingIntent.getBroadcast(
-                    this,
-                    REQUEST_CODE_PAUSE,
-                    Intent(PAUSE_TIMER),
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                ).let { pausePendingIntent ->
-                    NotificationCompat.Action.Builder(
-                        R.drawable.ic_baseline_pause_24,
-                        getString(R.string.pause_timer),
-                        pausePendingIntent
-                    ).build()
-                }
-            }
-
-            val restartAction = PendingIntent.getBroadcast(
-                this,
-                REQUEST_CODE_RESTART,
-                Intent(RESTART_TIMER),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            ).let { restartPendingIntent ->
-                NotificationCompat.Action.Builder(
-                    R.drawable.ic_baseline_replay_24,
-                    getString(R.string.restart_timer),
-                    restartPendingIntent
-                ).build()
-            }
+                getResumeAction()
+            } else getPauseAction()
 
             builder.apply {
                 addAction(playAction)
-                addAction(restartAction)
+                addAction(getRestartAction())
                 setStyle(
                     androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0, 1)
@@ -179,5 +143,50 @@ class TimerService : Service() {
             }
         }
         return builder
+    }
+
+    private fun getResumeAction(): NotificationCompat.Action {
+        return PendingIntent.getBroadcast(
+            this,
+            REQUEST_CODE_RESUME,
+            Intent(RESUME_TIMER),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        ).let { resumePendingIntent ->
+            NotificationCompat.Action.Builder(
+                R.drawable.ic_baseline_play_arrow_24,
+                getString(R.string.start_timer),
+                resumePendingIntent
+            ).build()
+        }
+    }
+
+    private fun getPauseAction(): NotificationCompat.Action {
+        return PendingIntent.getBroadcast(
+            this,
+            REQUEST_CODE_PAUSE,
+            Intent(PAUSE_TIMER),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        ).let { pausePendingIntent ->
+            NotificationCompat.Action.Builder(
+                R.drawable.ic_baseline_pause_24,
+                getString(R.string.pause_timer),
+                pausePendingIntent
+            ).build()
+        }
+    }
+
+    private fun getRestartAction(): NotificationCompat.Action {
+        return PendingIntent.getBroadcast(
+            this,
+            REQUEST_CODE_RESTART,
+            Intent(RESTART_TIMER),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        ).let { restartPendingIntent ->
+            NotificationCompat.Action.Builder(
+                R.drawable.ic_baseline_replay_24,
+                getString(R.string.restart_timer),
+                restartPendingIntent
+            ).build()
+        }
     }
 }

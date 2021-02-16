@@ -40,24 +40,24 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         SessionViewModel.provideFactory(factory, requireArguments().getLong("routineId"))
     }
 
-    private lateinit var mTimer: Timer
-    private var mBound: Boolean = false
+    private lateinit var timer: Timer
+    private var bound: Boolean = false
 
     private val connection = object : ServiceConnection {
 
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val timerService = service as TimerService.TimerBinder
-            mTimer = timerService.getTimer()
-            mBound = true
+            timer = timerService.getTimer()
+            bound = true
 
-            mTimer.setUpTimer(viewModel.currentExercise.value)
+            timer.setUpTimer(viewModel.currentExercise.value)
 
-            mTimer.timeString.observe(viewLifecycleOwner) {
+            timer.timeString.observe(viewLifecycleOwner) {
                 binding.timer.text = it
                 binding.timerEditor.setText(it)
             }
 
-            mTimer.timerStatus.observe(viewLifecycleOwner) {
+            timer.status.observe(viewLifecycleOwner) {
                 it?.let {
                     when (it) {
                         TimerState.RUNNING -> {
@@ -85,7 +85,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
             viewModel.editorTime.observe(viewLifecycleOwner) {
                 it?.let {
-                    mTimer.updateTimeLeft(it)
+                    timer.updateTimeLeft(it)
                     viewModel.clearEditorTime()
                 }
             }
@@ -111,15 +111,15 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 }
 
                 pauseTimerButton.setOnClickListener {
-                    mTimer.pauseTimer()
+                    this@SessionFragment.timer.pauseTimer()
                 }
 
                 startTimerButton.setOnClickListener {
-                    mTimer.startTimer()
+                    this@SessionFragment.timer.startTimer()
                 }
 
                 restartTimerButton.setOnClickListener {
-                    mTimer.restartTimer()
+                    this@SessionFragment.timer.restartTimer()
                 }
 
                 timerEditor.setOnClickListener {
@@ -129,7 +129,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
-            mBound = false
+            bound = false
         }
     }
 
@@ -152,7 +152,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
     override fun onStop() {
         super.onStop()
         requireContext().unbindService(connection)
-        mBound = false
+        bound = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -199,10 +199,10 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             binding.apply {
                 previousExerciseButton.isEnabled = viewModel.previousButtonEnabled
                 setButtonVisibility()
-                if (mBound) mTimer.setUpTimer(viewModel.currentExercise.value)
+                if (bound) this@SessionFragment.timer.setUpTimer(viewModel.currentExercise.value)
 
                 if (it == null) {
-                    if (mBound) mTimer.clearTimer()
+                    if (bound) this@SessionFragment.timer.clearTimer()
                     summaryView.visibility = View.VISIBLE
                     exerciseView.visibility = View.GONE
                     bpmInput.isEnabled = false
@@ -244,7 +244,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
     private fun showTimerEditor() {
         findNavController().safeNavigate(
             SessionFragmentDirections.actionSessionFragmentToDurationPickerDialogFragment(
-                mTimer.timeLeft.value ?: 0L
+                timer.timeLeft.value ?: 0L
             )
         )
     }
