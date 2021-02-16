@@ -2,6 +2,7 @@ package com.nazmar.musicgym.common.di
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.view.inputmethod.InputMethodManager
 import androidx.preference.PreferenceManager
 import com.nazmar.musicgym.common.room.ExerciseDatabase
 import dagger.Module
@@ -46,5 +47,9 @@ class AppModule {
     @Singleton
     fun prefs(application: Application): SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(application.applicationContext)
+
+    @Provides
+    @Singleton
+    fun imm(application: Application) = application.getSystemService(InputMethodManager::class.java)
 
 }

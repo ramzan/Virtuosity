@@ -5,19 +5,24 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.common.FIRST_RUN_KEY
-import com.nazmar.musicgym.common.getInputMethodManager
 import com.nazmar.musicgym.common.showKeyboard
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 const val ARG_NAME_INPUT = "name_input"
 
+@AndroidEntryPoint
 class RenameDialogFragment : DialogFragment() {
 
+    @Inject
+    lateinit var imm: InputMethodManager
     private var nameInputText = ""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -58,7 +63,7 @@ class RenameDialogFragment : DialogFragment() {
         })
 
         dialog.setOnShowListener {
-            requireActivity().getInputMethodManager().showKeyboard()
+            imm.showKeyboard()
             text.requestFocus()
             text.setSelection(text.text.length)
         }

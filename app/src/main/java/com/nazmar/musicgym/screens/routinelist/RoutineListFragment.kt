@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
@@ -15,11 +14,13 @@ import com.nazmar.musicgym.routine.Routine
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
-    private lateinit var prefs: SharedPreferences
+    @Inject
+    lateinit var prefs: SharedPreferences
 
     private val viewModel: RoutineListViewModel by activityViewModels()
 
@@ -33,8 +34,6 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         _binding = FragmentRoutineListBinding.inflate(inflater)
 
         requireActivity().showBottomNavBar()
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         if (prefs.contains(SAVED_SESSION_ID)) showSavedSessionCard() else hideSavedSessionCard()
 

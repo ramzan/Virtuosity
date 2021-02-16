@@ -5,15 +5,20 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.common.getInputMethodManager
 import com.nazmar.musicgym.common.showKeyboard
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class NewExerciseDialogFragment : DialogFragment() {
+    @Inject
+    lateinit var imm: InputMethodManager
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val viewModel: ExerciseListViewModel by activityViewModels()
@@ -46,7 +51,7 @@ class NewExerciseDialogFragment : DialogFragment() {
             val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             okButton.isEnabled = text.text.trim().isNotEmpty()
 
-            requireActivity().getInputMethodManager().showKeyboard()
+            imm.showKeyboard()
             text.requestFocus()
         }
         return dialog

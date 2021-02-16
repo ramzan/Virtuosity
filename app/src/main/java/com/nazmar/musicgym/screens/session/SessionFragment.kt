@@ -17,7 +17,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.common.*
+import com.nazmar.musicgym.common.hideBottomNavBar
+import com.nazmar.musicgym.common.hideKeyboard
+import com.nazmar.musicgym.common.isOreoOrAbove
+import com.nazmar.musicgym.common.safeNavigate
 import com.nazmar.musicgym.databinding.FragmentSessionBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import com.nazmar.musicgym.session.timer.Timer
@@ -30,13 +33,14 @@ import javax.inject.Inject
 class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
     @Inject
+    lateinit var imm: InputMethodManager
+
+    @Inject
     lateinit var factory: SessionViewModel.Factory
 
     private val viewModel: SessionViewModel by navGraphViewModels(R.id.sessionGraph) {
         SessionViewModel.provideFactory(factory, requireArguments().getLong("routineId"))
     }
-
-    private lateinit var imm: InputMethodManager
 
     private lateinit var mTimer: Timer
     private var mBound: Boolean = false
@@ -165,8 +169,6 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         super.onCreateView(inflater, container, savedInstanceState)
 
         requireActivity().hideBottomNavBar()
-
-        imm = requireActivity().getInputMethodManager()
 
         _binding = FragmentSessionBinding.inflate(inflater)
 

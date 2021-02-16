@@ -11,15 +11,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.common.*
+import com.nazmar.musicgym.common.hideKeyboard
+import com.nazmar.musicgym.common.safeNavigate
+import com.nazmar.musicgym.common.showBottomNavBar
+import com.nazmar.musicgym.common.showKeyboard
 import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
-    private lateinit var imm: InputMethodManager
+    @Inject
+    lateinit var imm: InputMethodManager
 
     private val viewModel: ExerciseListViewModel by activityViewModels()
 
@@ -65,8 +70,6 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
                     }
                 })
             }
-
-            imm = requireActivity().getInputMethodManager()
 
             setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {

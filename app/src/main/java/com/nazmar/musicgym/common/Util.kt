@@ -19,10 +19,6 @@ fun Activity.showBottomNavBar() {
     this.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
 }
 
-fun Activity.getInputMethodManager(): InputMethodManager {
-    return this.getSystemService(InputMethodManager::class.java)
-}
-
 fun InputMethodManager.hideKeyboard(windowToken: IBinder) {
     this.hideSoftInputFromWindow(
         windowToken,

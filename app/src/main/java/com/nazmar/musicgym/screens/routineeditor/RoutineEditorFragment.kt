@@ -24,7 +24,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
-    private lateinit var imm: InputMethodManager
+    @Inject
+    lateinit var imm: InputMethodManager
 
     @Inject
     lateinit var factory: RoutineEditorViewModel.Factory
@@ -93,8 +94,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         requireActivity().hideBottomNavBar()
 
         val firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
-
-        imm = requireActivity().getInputMethodManager()
 
         _binding = FragmentRoutineEditorBinding.inflate(inflater)
 
