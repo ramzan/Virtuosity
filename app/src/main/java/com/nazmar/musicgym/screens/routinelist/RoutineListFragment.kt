@@ -37,6 +37,11 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().showBottomNavBar()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,8 +50,6 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         super.onCreateView(inflater, container, savedInstanceState)
 
         _binding = FragmentRoutineListBinding.inflate(inflater)
-
-        requireActivity().showBottomNavBar()
 
         if (prefs.contains(SAVED_SESSION_ID)) showSavedSessionCard() else hideSavedSessionCard()
 
