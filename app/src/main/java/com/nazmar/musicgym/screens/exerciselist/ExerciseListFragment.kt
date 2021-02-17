@@ -26,7 +26,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
     private val viewModel: ExerciseListViewModel by activityViewModels()
 
-    private lateinit var searchView: SearchView
+    private var searchView: SearchView? = null
 
     override fun onStart() {
         super.onStart()
@@ -117,8 +117,8 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
         super.onStop()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        searchView.setOnQueryTextListener(null)
+    override fun onDestroy() {
+        searchView?.setOnQueryTextListener(null)
+        super.onDestroy()
     }
 }
