@@ -9,9 +9,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
-import com.nazmar.musicgym.common.CONFIRMATION_RESULT
-import com.nazmar.musicgym.common.POSITIVE_RESULT
-import com.nazmar.musicgym.common.safeNavigate
+import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentHistoryBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +21,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
 
     override fun onStart() {
         super.onStart()
+        requireActivity().showBottomNavBar()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
             if (bundle.getBoolean(POSITIVE_RESULT)) viewModel.deleteHistoryItem()
         }

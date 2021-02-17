@@ -30,6 +30,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
     override fun onStart() {
         super.onStart()
+        requireActivity().showBottomNavBar()
         setFragmentResultListener(TEXT_INPUT_RESULT) { _, bundle ->
             bundle.getString(INPUT_TEXT)?.let { viewModel.addExercise(it) }
         }
@@ -41,7 +42,6 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentExerciseListBinding.inflate(inflater)
-        requireActivity().showBottomNavBar()
 
         ExerciseAdapter(ExerciseAdapter.OnClickListener {
             showExerciseView(it.id)

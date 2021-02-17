@@ -28,6 +28,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
     override fun onStart() {
         super.onStart()
+        requireActivity().showBottomNavBar()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
             if (bundle.getBoolean(POSITIVE_RESULT)) {
                 viewModel.sessionToStartId?.let {
@@ -37,11 +38,6 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().showBottomNavBar()
     }
 
     override fun onCreateView(
