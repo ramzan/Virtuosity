@@ -58,7 +58,10 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
     override fun onStart() {
         super.onStart()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
-            if (bundle.getBoolean(POSITIVE_RESULT)) viewModel.deleteExercise()
+            if (bundle.getBoolean(POSITIVE_RESULT)) {
+                viewModel.deleteExercise()
+                goBack()
+            }
         }
         setFragmentResultListener(TEXT_INPUT_RESULT) { _, bundle ->
             bundle.getString(INPUT_TEXT)?.let { viewModel.renameExercise(it) }
@@ -83,7 +86,6 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                 title = it?.name ?: ""
                 menu.getItem(0).isEnabled = it !== null
                 menu.getItem(1).isEnabled = it !== null
-                if (viewModel.exerciseDeleted) goBack()
             }
 
             // Rename button
@@ -108,6 +110,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             binding.historyRangerSpinner.adapter = adapter
         }
 
+
         binding.historyGraph.apply {
             description = null
             axisRight.isEnabled = false
@@ -116,9 +119,12 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             viewModel.history.observe(viewLifecycleOwner) { state ->
                 when (state) {
                     is ExerciseDetailUseCase.GraphState.Loading -> {
-
+                        binding.loadingIndicator.visibility = View.VISIBLE
+                        binding.historyGraph.visibility = View.GONE
                     }
                     is ExerciseDetailUseCase.GraphState.Loaded -> {
+                        binding.loadingIndicator.visibility = View.GONE
+                        binding.historyGraph.visibility = View.VISIBLE
                         val dataSet = LineDataSet(state.data, "BPM")
                         data = LineData(dataSet)
                         invalidate()
@@ -137,13 +143,12 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                     position: Int,
                     id: Long
                 ) {
-                    when (position) {
-                        0 -> setGraphWeek()
-                        1 -> setGraphMonth()
-                        2 -> setGraphQuarter()
-                        3 -> setGraphYear()
-                        4 -> setGraphAll()
+                    binding.historyGraph.xAxis.valueFormatter = when (position) {
+                        0, 1, 2 -> dayMonthFormatter
+                        3, 4 -> monthYearFormatter
+                        else -> throw Exception("Illegal spinner position: $position")
                     }
+                    viewModel.getHistory(position)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -152,31 +157,6 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             }
 
         return binding.root
-    }
-
-    private fun setGraphWeek() {
-        viewModel.getWeekHistory()
-        binding.historyGraph.xAxis.valueFormatter = dayMonthFormatter
-    }
-
-    private fun setGraphMonth() {
-        viewModel.getMonthHistory()
-        binding.historyGraph.xAxis.valueFormatter = dayMonthFormatter
-    }
-
-    private fun setGraphQuarter() {
-        viewModel.getQuarterHistory()
-        binding.historyGraph.xAxis.valueFormatter = dayMonthFormatter
-    }
-
-    private fun setGraphYear() {
-        viewModel.getYearHistory()
-        binding.historyGraph.xAxis.valueFormatter = monthYearFormatter
-    }
-
-    private fun setGraphAll() {
-        viewModel.getAllHistory()
-        binding.historyGraph.xAxis.valueFormatter = monthYearFormatter
     }
 
     private fun showDeleteDialog() {

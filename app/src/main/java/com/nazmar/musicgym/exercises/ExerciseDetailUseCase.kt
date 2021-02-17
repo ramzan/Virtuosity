@@ -29,7 +29,7 @@ class ExerciseDetailUseCase @Inject constructor(private val dao: ExerciseDetailD
         val history = dao.getExerciseHistorySince(exerciseId, startTime).map {
             Entry(it.time.toFloat(), it.bpm.toFloat())
         }
-        _graphState.emit(GraphState.Loaded((history.maxOfOrNull { it.y } ?: 0f) * 1.1f, history))
+        _graphState.emit(GraphState.Loaded((history.maxOfOrNull { it.y } ?: 0f) * 1.05f, history))
     }
 
     fun renameExercise(exercise: Exercise, newName: String) {

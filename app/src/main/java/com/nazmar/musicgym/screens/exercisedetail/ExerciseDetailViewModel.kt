@@ -1,7 +1,6 @@
 package com.nazmar.musicgym.screens.exercisedetail
 
 import androidx.lifecycle.*
-import com.github.mikephil.charting.data.Entry
 import com.nazmar.musicgym.exercises.ExerciseDetailUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -23,14 +22,7 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     val exercise = useCase.getExercise(exerciseId).asLiveData()
 
-    private var _exerciseDeleted = false
-
-    val exerciseDeleted get() = _exerciseDeleted
-
-    fun deleteExercise() = exercise.value?.let {
-        useCase.deleteExercise(it)
-        _exerciseDeleted = true
-    }
+    fun deleteExercise() = exercise.value?.let { useCase.deleteExercise(it) }
 
     fun renameExercise(newName: String) =
         exercise.value?.let { useCase.renameExercise(it, newName) }
@@ -43,55 +35,33 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            useCase.graphState.collect {
-                _history.value = it
+            useCase.run {
+                graphState.collect {
+                    _history.value = it
+                }
+                getExerciseHistorySince(
+                    exerciseId,
+                    System.currentTimeMillis() - DURATION_WEEK
+                )
             }
         }
     }
 
-    fun getWeekHistory() {
+    fun getHistory(spinnerPosition: Int) {
         viewModelScope.launch {
             useCase.getExerciseHistorySince(
                 exerciseId,
-                System.currentTimeMillis() - DURATION_WEEK
+                when (spinnerPosition) {
+                    0 -> System.currentTimeMillis() - DURATION_WEEK
+                    1 -> System.currentTimeMillis() - DURATION_MONTH
+                    2 -> System.currentTimeMillis() - DURATION_QUARTER
+                    3 -> System.currentTimeMillis() - DURATION_YEAR
+                    4 -> 0L
+                    else -> throw Exception("Illegal spinner position: $spinnerPosition")
+                }
             )
         }
-    }
 
-    fun getMonthHistory() {
-        viewModelScope.launch {
-            useCase.getExerciseHistorySince(
-                exerciseId,
-                System.currentTimeMillis() - DURATION_MONTH
-            )
-        }
-    }
-
-    fun getQuarterHistory() {
-        viewModelScope.launch {
-            useCase.getExerciseHistorySince(
-                exerciseId,
-                System.currentTimeMillis() - DURATION_QUARTER
-            )
-        }
-    }
-
-    fun getYearHistory() {
-        viewModelScope.launch {
-            useCase.getExerciseHistorySince(
-                exerciseId,
-                System.currentTimeMillis() - DURATION_YEAR
-            )
-        }
-    }
-
-    fun getAllHistory() {
-        viewModelScope.launch {
-            useCase.getExerciseHistorySince(
-                exerciseId,
-                0L
-            )
-        }
     }
 
     // Factory -----------------------------------------------------------------------------------
@@ -113,8 +83,3 @@ class ExerciseDetailViewModel @AssistedInject constructor(
         }
     }
 }
-
-data class HistoryGraphData(
-    val points: List<Entry>,
-    val maxBpm: Float
-)
