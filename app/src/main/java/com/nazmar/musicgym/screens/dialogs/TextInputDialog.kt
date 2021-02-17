@@ -66,6 +66,7 @@ class TextInputDialog : DialogFragment() {
             imm.showKeyboard()
             text.requestFocus()
             text.setSelection(text.text.length)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = text.text.isNotEmpty()
         }
         return dialog
     }
