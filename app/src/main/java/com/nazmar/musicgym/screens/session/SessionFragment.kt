@@ -83,13 +83,6 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 timerService.updateRoutineName(it)
             }
 
-            viewModel.editorTime.observe(viewLifecycleOwner) {
-                it?.let {
-                    timer.updateTimeLeft(it)
-                    viewModel.clearEditorTime()
-                }
-            }
-
             binding.apply {
                 nextExerciseButton.setOnClickListener {
                     viewModel.nextExercise()
@@ -144,7 +137,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             requireContext().bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
         setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
-            bundle.getLong(DURATION_VALUE).let { viewModel.updateEditorTime(it) }
+            timer.updateTimeLeft(bundle.getLong(DURATION_VALUE))
         }
 
     }

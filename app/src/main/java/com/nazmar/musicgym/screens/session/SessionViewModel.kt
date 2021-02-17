@@ -98,21 +98,6 @@ class SessionViewModel @AssistedInject constructor(
 
     fun completeSession() = summaryList.value?.let { useCase.completeSession(it) }
 
-    // Timer editor
-
-    private var _editorTime = MutableLiveData<Long?>(null)
-
-    val editorTime: LiveData<Long?>
-        get() = _editorTime
-
-    fun updateEditorTime(time: Long) {
-        _editorTime.value = time
-    }
-
-    fun clearEditorTime() {
-        _editorTime.value = null
-    }
-
     // Factory -----------------------------------------------------------------------------------
 
     @AssistedFactory
