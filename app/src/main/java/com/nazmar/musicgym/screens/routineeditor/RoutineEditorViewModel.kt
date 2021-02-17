@@ -62,7 +62,6 @@ class RoutineEditorViewModel @AssistedInject constructor(
     fun deleteRoutine() {
         (state.value as? RoutineEditorState.Editing)?.let {
             useCase.deleteRoutine(it.routine)
-            _state.value = RoutineEditorState.Deleted
         }
     }
 
@@ -122,11 +121,6 @@ sealed class RoutineEditorState {
     }
 
     object Loading : RoutineEditorState() {
-        override val exercises = mutableListOf<RoutineExercise>()
-        override var nameInputText: String = ""
-    }
-
-    object Deleted : RoutineEditorState() {
         override val exercises = mutableListOf<RoutineExercise>()
         override var nameInputText: String = ""
     }

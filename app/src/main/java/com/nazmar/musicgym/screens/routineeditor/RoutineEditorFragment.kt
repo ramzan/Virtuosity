@@ -88,10 +88,13 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     override fun onStart() {
         super.onStart()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
-            if (bundle.getBoolean(POSITIVE_RESULT)) viewModel.deleteRoutine()
+            if (bundle.getBoolean(POSITIVE_RESULT)) {
+                viewModel.deleteRoutine()
+                goBack()
+            }
         }
         setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
-            bundle.getLong(DURATION_VALUE).let { viewModel.updateDuration(it) }
+            viewModel.updateDuration(bundle.getLong(DURATION_VALUE))
         }
     }
 
@@ -185,7 +188,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                     saveButton.isVisible = true
                     imm.showKeyboard()
                 }
-                RoutineEditorState.Deleted -> goBack()
             }
         }
         return binding.root
