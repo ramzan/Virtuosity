@@ -5,6 +5,7 @@ import com.nazmar.musicgym.common.room.ExerciseDetailDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,7 +15,7 @@ class ExerciseDetailUseCase @Inject constructor(private val dao: ExerciseDetailD
 
     private val _graphState = MutableStateFlow<GraphState>(GraphState.Loading)
 
-    val graphState get() = _graphState
+    val graphState: StateFlow<GraphState> get() = _graphState
 
     sealed class GraphState {
         object Loading : GraphState()
