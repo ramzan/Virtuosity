@@ -30,10 +30,11 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.timer_notification_channel_id),
             getString(R.string.timer_notification_channel_name)
         )
-        createChannel(
-            getString(R.string.metronome_notification_channel_id),
-            getString(R.string.metronome_notification_channel_name)
-        )
+        // TODO Implement metronome
+//        createChannel(
+//            getString(R.string.metronome_notification_channel_id),
+//            getString(R.string.metronome_notification_channel_name)
+//        )
     }
 
     private fun createChannel(channelId: String, channelName: String) {
