@@ -35,8 +35,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
     }
 
     private val dayMonthFormatter = object : ValueFormatter() {
-        // TODO MM format is a number and not text on Nougat
-        private val format = DateTimeFormatter.ofPattern("dd MM")
+        private val format = DateTimeFormatter.ofPattern("dd MMM")
 
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return Instant.ofEpochMilli(value.toLong()).run {
