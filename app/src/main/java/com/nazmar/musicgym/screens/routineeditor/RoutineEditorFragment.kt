@@ -171,6 +171,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 RoutineEditorState.Loading -> {
+                    /* no-op */
                 }
                 is RoutineEditorState.Editing -> {
                     binding.apply {

@@ -45,13 +45,19 @@ class TextInputDialog : DialogFragment() {
             .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
                 setFragmentResult(TEXT_INPUT_RESULT, bundleOf(INPUT_TEXT to nameInputText))
             }
-            .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ -> }
+            .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ ->
+                /* no-op */
+            }
             .create()
 
         text.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                /* no-op */
+            }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                /* no-op */
+            }
 
             override fun afterTextChanged(p0: Editable?) {
                 val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)

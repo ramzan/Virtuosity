@@ -19,7 +19,9 @@ class ConfirmationDialog : DialogFragment() {
             .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
                 setFragmentResult(CONFIRMATION_RESULT, bundleOf(POSITIVE_RESULT to true))
             }
-            .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ -> }
+            .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ ->
+                /* no-op */
+            }
             .show()
     }
 }

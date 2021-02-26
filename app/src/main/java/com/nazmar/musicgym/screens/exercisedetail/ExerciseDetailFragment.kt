@@ -171,7 +171,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
-                    // Do nothing
+                    /* no-op */
                 }
             }
 
