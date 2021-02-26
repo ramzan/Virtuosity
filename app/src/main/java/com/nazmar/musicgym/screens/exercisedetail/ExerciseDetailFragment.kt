@@ -1,18 +1,26 @@
 package com.nazmar.musicgym.screens.exercisedetail
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.MarkerView
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.utils.MPPointF
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
@@ -22,7 +30,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
@@ -52,6 +62,10 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                 format.format(this.atZone(ZoneId.systemDefault()))
             }
         }
+    }
+
+    private val yAxisFormatter = object : ValueFormatter() {
+        override fun getAxisLabel(value: Float, axis: AxisBase?) = value.toInt().toString()
     }
 
     override fun onStart() {
@@ -114,6 +128,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             description = null
             axisRight.isEnabled = false
             axisLeft.axisMinimum = 0f
+            axisLeft.valueFormatter = yAxisFormatter
 
             viewModel.history.observe(viewLifecycleOwner) { state ->
                 when (state) {
@@ -131,6 +146,11 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                     }
                 }
             }
+
+            // create marker to display box when values are selected
+            val mv = MyMarkerView(requireContext(), R.layout.custom_marker_view)
+            mv.chartView = this
+            marker = mv
         }
 
 
@@ -178,4 +198,21 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
     private fun goBack() {
         findNavController().popBackStack(R.id.exerciseListFragment, false)
     }
+}
+
+@SuppressLint("ViewConstructor")
+class MyMarkerView(context: Context, @LayoutRes layoutResource: Int) :
+    MarkerView(context, layoutResource) {
+    private val bpmText: TextView = findViewById(R.id.bpm_text)
+    private val dateText: TextView = findViewById(R.id.date_text)
+
+    override fun refreshContent(entry: Entry, highlight: Highlight) {
+        val bpm = "${entry.y.toInt()} BPM"
+        val date = "${Date(entry.x.toLong())}"
+        bpmText.text = bpm
+        dateText.text = date
+        super.refreshContent(entry, highlight)
+    }
+
+    override fun getOffset() = MPPointF((-(width / 2)).toFloat(), (-height).toFloat())
 }
