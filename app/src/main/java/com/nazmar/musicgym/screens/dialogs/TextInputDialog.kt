@@ -40,7 +40,7 @@ class TextInputDialog : DialogFragment() {
         text.setText(nameInputText)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.rename)
+            .setTitle(requireArguments().getInt("titleId"))
             .setView(layout)
             .setPositiveButton(getString(R.string.dialog_positive_button_label)) { _, _ ->
                 setFragmentResult(TEXT_INPUT_RESULT, bundleOf(INPUT_TEXT to nameInputText))
