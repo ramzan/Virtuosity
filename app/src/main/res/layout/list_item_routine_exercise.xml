@@ -1,42 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_margin="4dp">
 
         <TextView
             android:id="@+id/exercise_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textColor="?android:attr/textColorSecondary"
-            android:layout_weight="1"
-            tools:text="C# Melodic Minor Scale" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/duration"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="C# Harmonic Minor Scale Ascending" />
 
         <TextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="viewEnd"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="05:00" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/drag_handle"
+            app:layout_constraintStart_toEndOf="@id/exercise_name"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="00:05:00" />
 
         <ImageView
             android:id="@+id/drag_handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_baseline_drag_handle_24" />
+            android:layout_marginStart="32dp"
+            android:contentDescription="@string/drag_handle_description"
+            android:src="@drawable/ic_baseline_drag_handle_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/duration"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
