@@ -113,7 +113,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
     }
 
     private fun startSession(id: Long) {
-        findNavController().navigate(
+        findNavController().safeNavigate(
             RoutineListFragmentDirections.actionRoutineListFragmentToSessionFragment(id)
         )
     }
