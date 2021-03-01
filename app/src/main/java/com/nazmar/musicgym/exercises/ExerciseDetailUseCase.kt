@@ -19,8 +19,11 @@ class ExerciseDetailUseCase @Inject constructor(private val dao: ExerciseDetailD
 
     sealed class GraphState {
         object Loading : GraphState()
+        object NoData : GraphState()
         data class Loaded(
             val maxBpm: Float,
+            val minBpm: Float,
+            val periodImprovement: Long,
             val data: List<Entry>
         ) : GraphState()
     }
@@ -30,7 +33,15 @@ class ExerciseDetailUseCase @Inject constructor(private val dao: ExerciseDetailD
         val history = dao.getExerciseHistorySince(exerciseId, startTime).map {
             Entry(it.time.toFloat(), it.bpm.toFloat())
         }
-        _graphState.emit(GraphState.Loaded((history.maxOfOrNull { it.y } ?: 0f) * 1.05f, history))
+        _graphState.emit(
+            if (history.isEmpty()) GraphState.NoData
+            else GraphState.Loaded(
+                history.maxOf { it.y },
+                history.minOf { it.y },
+                (history.last().y - history.first().y).toLong(),
+                history
+            )
+        )
     }
 
     fun renameExercise(exercise: Exercise, newName: String) {

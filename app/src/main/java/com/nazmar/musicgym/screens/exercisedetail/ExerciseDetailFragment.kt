@@ -132,17 +132,24 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
 
             viewModel.history.observe(viewLifecycleOwner) { state ->
                 when (state) {
-                    is ExerciseDetailUseCase.GraphState.Loading -> {
+                    ExerciseDetailUseCase.GraphState.Loading -> {
                         binding.loadingIndicator.visibility = View.VISIBLE
                         binding.historyGraph.visibility = View.GONE
+                        binding.noDataMessage.visibility = View.GONE
+                    }
+                    ExerciseDetailUseCase.GraphState.NoData -> {
+                        binding.loadingIndicator.visibility = View.GONE
+                        binding.historyGraph.visibility = View.GONE
+                        binding.noDataMessage.visibility = View.VISIBLE
                     }
                     is ExerciseDetailUseCase.GraphState.Loaded -> {
                         binding.loadingIndicator.visibility = View.GONE
                         binding.historyGraph.visibility = View.VISIBLE
+                        binding.noDataMessage.visibility = View.GONE
                         val dataSet = LineDataSet(state.data, "BPM")
                         data = LineData(dataSet)
                         invalidate()
-                        axisLeft.axisMaximum = state.maxBpm // TODO if 0 then show no data screen
+                        axisLeft.axisMaximum = state.maxBpm * 1.05f
                     }
                 }
             }

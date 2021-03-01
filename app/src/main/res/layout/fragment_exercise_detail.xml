@@ -28,18 +28,31 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <TextView
+        android:id="@+id/history_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:padding="4dp"
+        android:text="@string/history"
+        app:layout_constraintEnd_toStartOf="@id/history_ranger_spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar" />
+
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/history_ranger_spinner"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:padding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/history_heading"
         app:layout_constraintTop_toBottomOf="@id/app_bar" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/history_graph"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="4dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,5 +70,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/history_ranger_spinner"
         tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/no_data_message"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_exercise_history_data_message"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/history_ranger_spinner"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
