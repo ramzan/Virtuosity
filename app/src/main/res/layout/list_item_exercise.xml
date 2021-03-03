@@ -29,6 +29,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/exercise_name"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="420 BPM" />
+        tools:text="123 BPM" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
