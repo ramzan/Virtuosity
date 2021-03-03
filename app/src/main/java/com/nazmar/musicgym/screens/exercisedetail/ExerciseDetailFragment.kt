@@ -148,8 +148,24 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                         binding.noDataMessage.visibility = View.GONE
                         val dataSet = LineDataSet(state.data, "BPM")
                         data = LineData(dataSet)
-                        invalidate()
                         axisLeft.axisMaximum = state.maxBpm * 1.05f
+                        binding.apply {
+                            bpmSlowest.text = getString(
+                                R.string.history_stats_slowest_message,
+                                state.minBpm.toLong()
+                            )
+                            bpmFastest.text = getString(
+                                R.string.history_stats_fastest_message,
+                                state.maxBpm.toLong()
+                            )
+                            bpmProgress.text = getString(
+                                if (state.periodImprovement < 0) {
+                                    R.string.history_stats_progress_negative_message
+                                } else R.string.history_stats_progress_message,
+                                state.periodImprovement
+                            )
+                        }
+                        invalidate()
                     }
                 }
             }

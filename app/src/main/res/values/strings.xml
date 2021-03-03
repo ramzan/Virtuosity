@@ -49,6 +49,10 @@
     <string name="timer_notification_time_remaining_prefix">Time remaining:</string>
     <string name="no_exercise_history_data_message">No data for this period</string>
     <string name="drag_handle_description">Drag handle</string>
+    <string name="history_stats_slowest_message">Slowest BPM: %d</string>
+    <string name="history_stats_fastest_message">Fastest BPM: %d</string>
+    <string name="history_stats_progress_message">Progress over period: +%d BPM</string>
+    <string name="history_stats_progress_negative_message">Progress over period: %d BPM</string>
     <string-array name="history_range_array">
         <item>7 days</item>
         <item>30 days</item>

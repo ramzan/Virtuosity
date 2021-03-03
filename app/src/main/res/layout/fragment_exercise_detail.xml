@@ -32,9 +32,9 @@
         android:id="@+id/history_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceHeadline6"
         android:padding="4dp"
         android:text="@string/history"
+        android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintEnd_toStartOf="@id/history_ranger_spinner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar" />
@@ -44,9 +44,45 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/history_heading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/history_heading"
         app:layout_constraintTop_toBottomOf="@id/app_bar" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/stats_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/history_ranger_spinner">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/bpm_slowest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="@string/history_stats_slowest_message" />
+
+            <TextView
+                android:id="@+id/bpm_fastest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="@string/history_stats_fastest_message" />
+
+            <TextView
+                android:id="@+id/bpm_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="@string/history_stats_progress_message" />
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/history_graph"
@@ -57,7 +93,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/history_ranger_spinner"
+        app:layout_constraintTop_toBottomOf="@id/stats_card"
         tools:visibility="visible" />
 
     <ProgressBar
@@ -73,14 +109,13 @@
 
     <TextView
         android:id="@+id/no_data_message"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_exercise_history_data_message"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/history_ranger_spinner"
-        />
+        app:layout_constraintTop_toBottomOf="@id/history_ranger_spinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
