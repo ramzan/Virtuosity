@@ -1,5 +1,6 @@
 package com.nazmar.musicgym.screens.routinelist
 
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.nazmar.musicgym.routine.RoutineListUseCase
@@ -11,5 +12,9 @@ class RoutineListViewModel @Inject constructor(val useCase: RoutineListUseCase) 
 
     var sessionToStartId: Long? = null
 
-    val routines = useCase.getAllRoutines().asLiveData()
+    private val routines = useCase.getAllRoutines().asLiveData()
+
+    val routineCards = Transformations.map(routines) { list ->
+        list.map { RoutineListCard.RoutineCard(it.id, it.name) }
+    }
 }

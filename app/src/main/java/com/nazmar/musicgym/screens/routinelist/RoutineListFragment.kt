@@ -12,10 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
 import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
-import com.nazmar.musicgym.routine.Routine
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,13 +47,15 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
         _binding = FragmentRoutineListBinding.inflate(inflater)
 
-        if (prefs.contains(SAVED_SESSION_ID)) showSavedSessionCard() else hideSavedSessionCard()
+        RoutineListCardAdapter(
+            object : RoutineListCardAdapter.OnClickListener {
+                override fun onEdit(routine: RoutineListCard.RoutineCard) =
+                    showRoutineEditor(routine.id)
 
-        RoutineAdapter(
-            object : RoutineAdapter.OnClickListener {
-                override fun onEdit(routine: Routine) = showRoutineEditor(routine.id)
+                override fun onStart(routine: RoutineListCard.RoutineCard) =
+                    checkSessionSaved(routine.id)
 
-                override fun onStart(routine: Routine) = checkSessionSaved(routine.id)
+                override fun onResumeSession() = resumeSession()
             }
         ).run {
             this.stateRestorationPolicy =
@@ -63,8 +63,14 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
             binding.routineList.adapter = this
 
-            viewModel.routines.observe(viewLifecycleOwner, {
-                this.submitList(it)
+            viewModel.routineCards.observe(viewLifecycleOwner, { list ->
+                if (prefs.contains(SAVED_SESSION_ID)) {
+                    this.addSavedSessionCardAndSubmitList(
+                        list,
+                        prefs.getString(SAVED_SESSION_NAME, "").toString(),
+                        prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
+                    )
+                } else this.submitList(list)
             })
         }
 
@@ -72,44 +78,19 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
             showRoutineEditor(0)
         }
 
-        binding.resumeSessionBtn.setOnClickListener {
-            with(prefs.getLong(SAVED_SESSION_ID, 0)) {
-                if (this > 0) startSession(this)
-            }
-
-        }
-
         return binding.root
-    }
-
-    private fun showSavedSessionCard() {
-        binding.apply {
-            savedSessionCard.visibility = View.VISIBLE
-            savedSessionName.text = prefs.getString(SAVED_SESSION_NAME, "")
-            savedSessionDate.text = Date(
-                prefs.getLong(
-                    SAVED_SESSION_TIME,
-                    System.currentTimeMillis()
-                )
-            ).toString()
-            resumeSessionBtn.isEnabled = true
-
-        }
-    }
-
-    private fun hideSavedSessionCard() {
-        binding.apply {
-            savedSessionCard.visibility = View.GONE
-            savedSessionName.text = ""
-            savedSessionDate.text = ""
-            resumeSessionBtn.isEnabled = false
-        }
     }
 
     private fun showRoutineEditor(id: Long) {
         findNavController().safeNavigate(
             RoutineListFragmentDirections.actionRoutineListFragmentToRoutineEditorFragment(id)
         )
+    }
+
+    private fun resumeSession() {
+        prefs.getLong(SAVED_SESSION_ID, 0).run {
+            if (this > 0) startSession(this)
+        }
     }
 
     private fun startSession(id: Long) {
