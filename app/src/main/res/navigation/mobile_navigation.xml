@@ -110,5 +110,19 @@
         <action
             android:id="@+id/action_sessionFragment_to_durationPickerDialogFragment"
             app:destination="@id/durationPickerDialogFragment" />
+        <action
+            android:id="@+id/action_sessionFragment_to_infoDialog"
+            app:destination="@id/infoDialog" />
     </fragment>
+    <dialog
+        android:id="@+id/infoDialog"
+        android:name="com.nazmar.musicgym.screens.dialogs.InfoDialog"
+        android:label="InfoDialog">
+        <argument
+            android:name="titleId"
+            app:argType="reference" />
+        <argument
+            android:name="messageId"
+            app:argType="reference" />
+    </dialog>
 </navigation>

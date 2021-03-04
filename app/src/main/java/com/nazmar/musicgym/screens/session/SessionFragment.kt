@@ -188,13 +188,6 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
                 when (state) {
-                    SessionState.EmptyRoutine -> {
-                        binding.sessionProgressBar.visibility = View.GONE
-                        // TODO() show error dialog
-                    }
-                    SessionState.Loading -> {
-                        /* no-op */
-                    }
                     is SessionState.PracticeScreen -> {
                         binding.apply {
                             sessionProgressBar.visibility = View.GONE
@@ -229,7 +222,22 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                             bpmInput.isEnabled = false
                         }
                     }
-
+                    SessionState.Loading -> {
+                        /* no-op */
+                    }
+                    SessionState.EmptyRoutine -> {
+                        binding.apply {
+                            sessionProgressBar.visibility = View.GONE
+                            previousExerciseButton.visibility = View.GONE
+                        }
+                        viewModel.cancelSession()
+                        findNavController().safeNavigate(
+                            SessionFragmentDirections.actionSessionFragmentToInfoDialog(
+                                R.string.empty_routine_dialog_title,
+                                R.string.empty_routine_dialog_message
+                            )
+                        )
+                    }
                 }
             }
         }

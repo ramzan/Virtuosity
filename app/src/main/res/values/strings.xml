@@ -62,5 +62,7 @@
         <item>Year</item>
         <item>All</item>
     </string-array>
+    <string name="empty_routine_dialog_title">No exercises found</string>
+    <string name="empty_routine_dialog_message">This routine does not contain any exercises. You can add exercises by tapping the Edit button in the main menu.</string>
 
 </resources>

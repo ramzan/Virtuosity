@@ -66,7 +66,7 @@ class SessionUseCase @Inject constructor(
         clearSavedSession()
     }
 
-    private fun clearSavedSession() {
+    fun clearSavedSession() {
         prefs.edit {
             remove(SAVED_SESSION_NAME)
             remove(SAVED_SESSION_TIME)

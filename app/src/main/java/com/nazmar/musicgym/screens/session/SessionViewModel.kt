@@ -79,6 +79,8 @@ class SessionViewModel @AssistedInject constructor(
         useCase.completeSession((_state.value as SessionState.SummaryScreen).summaryList)
     }
 
+    fun cancelSession() = useCase.clearSavedSession()
+
     // region Factory ------------------------------------------------------------------------------
 
     @AssistedFactory
