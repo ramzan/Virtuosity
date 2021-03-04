@@ -15,6 +15,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
@@ -25,6 +26,7 @@ import com.nazmar.musicgym.session.timer.Timer
 import com.nazmar.musicgym.session.timer.TimerService
 import com.nazmar.musicgym.session.timer.TimerState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,8 +51,6 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             val timerService = service as TimerService.TimerBinder
             timer = timerService.getTimer()
             bound = true
-
-            timer.setUpTimer(viewModel.currentExercise.value)
 
             timer.timeString.observe(viewLifecycleOwner) {
                 binding.timer.text = it
@@ -78,45 +78,15 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 }
             }
 
-            viewModel.sessionName.observe(viewLifecycleOwner) {
-                binding.sessionToolbar.title = it
-                timerService.updateRoutineName(it)
-            }
-
-            binding.apply {
-                nextExerciseButton.setOnClickListener {
-                    viewModel.nextExercise()
-                }
-
-                previousExerciseButton.setOnClickListener {
-                    viewModel.previousExercise()
-                }
-
-                bpmInput.doOnTextChanged { text, _, _, _ ->
-                    text?.let {
-                        viewModel.updateBpm(it.toString().trimStart('0'))
+            lifecycleScope.launchWhenStarted {
+                viewModel.state.collect { state ->
+                    when (state) {
+                        is SessionState.PracticeScreen -> {
+                            timerService.updateRoutineName(state.sessionName)
+                            timer.setUpTimer(state.currentExercise)
+                        }
+                        else -> timer.clearExercise()
                     }
-                }
-
-                doneButton.setOnClickListener {
-                    viewModel.completeSession()
-                    goBack()
-                }
-
-                pauseTimerButton.setOnClickListener {
-                    this@SessionFragment.timer.pauseTimer()
-                }
-
-                startTimerButton.setOnClickListener {
-                    this@SessionFragment.timer.startTimer()
-                }
-
-                restartTimerButton.setOnClickListener {
-                    this@SessionFragment.timer.restartTimer()
-                }
-
-                timerEditor.setOnClickListener {
-                    showTimerEditor()
                 }
             }
         }
@@ -167,48 +137,99 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
         _binding = FragmentSessionBinding.inflate(inflater)
 
-        viewModel.exercises.observe(viewLifecycleOwner) {
-            if (viewModel.currentIndex.value == -1) {
+        binding.apply {
+            nextExerciseButton.setOnClickListener {
                 viewModel.nextExercise()
+            }
+
+            previousExerciseButton.setOnClickListener {
+                viewModel.previousExercise()
+            }
+
+            bpmInput.doOnTextChanged { text, _, _, _ ->
+                text?.let {
+                    viewModel.updateBpm(it.toString().trimStart('0'))
+                }
+            }
+
+            doneButton.setOnClickListener {
+                viewModel.completeSession()
+                goBack()
+            }
+
+            pauseTimerButton.setOnClickListener {
+                if (bound) this@SessionFragment.timer.pauseTimer()
+            }
+
+            startTimerButton.setOnClickListener {
+                if (bound) this@SessionFragment.timer.startTimer()
+            }
+
+            restartTimerButton.setOnClickListener {
+                if (bound) this@SessionFragment.timer.restartTimer()
+            }
+
+            timerEditor.setOnClickListener {
+                showTimerEditor()
+            }
+
+            sessionToolbar.setNavigationOnClickListener {
+                goBack()
             }
         }
 
-        binding.sessionToolbar.setNavigationOnClickListener {
-            goBack()
-        }
-
-        SummaryExerciseAdapter().let { adapter ->
+        val adapter = SummaryExerciseAdapter().also { adapter ->
             adapter.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
             binding.summaryList.adapter = adapter
-
-            viewModel.summaryList.observe(viewLifecycleOwner) {
-                adapter.submitList(it)
-            }
         }
 
-        viewModel.currentExercise.observe(viewLifecycleOwner) {
-            binding.apply {
-                previousExerciseButton.isEnabled = viewModel.previousButtonEnabled
-                setButtonVisibility()
-                if (bound) this@SessionFragment.timer.setUpTimer(viewModel.currentExercise.value)
-
-                if (it == null) {
-                    if (bound) this@SessionFragment.timer.clearTimer()
-                    summaryView.visibility = View.VISIBLE
-                    exerciseView.visibility = View.GONE
-                    bpmInput.isEnabled = false
-                } else {
-                    summaryView.visibility = View.GONE
-                    exerciseView.visibility = View.VISIBLE
-                    sessionCurrentExerciseName.text = viewModel.currentExerciseName
-                    bpmInput.apply {
-                        text = Editable.Factory.getInstance().newEditable(viewModel.newExerciseBpm)
-                        hint = viewModel.currentExerciseBpmRecord
-                        isEnabled = true
-                        setSelection(text.length.coerceAtLeast(0))
+        lifecycleScope.launchWhenStarted {
+            viewModel.state.collect { state ->
+                when (state) {
+                    SessionState.EmptyRoutine -> {
+                        binding.sessionProgressBar.visibility = View.GONE
+                        // TODO() show error dialog
                     }
+                    SessionState.Loading -> {
+                        /* no-op */
+                    }
+                    is SessionState.PracticeScreen -> {
+                        binding.apply {
+                            sessionProgressBar.visibility = View.GONE
+                            summaryView.visibility = View.GONE
+                            exerciseView.visibility = View.VISIBLE
+
+                            sessionToolbar.title = state.sessionName
+
+                            previousExerciseButton.isEnabled = state.previousButtonEnabled
+                            nextExerciseButton.visibility = View.VISIBLE
+                            doneButton.visibility = View.GONE
+
+                            sessionCurrentExerciseName.text = state.currentExerciseName
+                            bpmInput.apply {
+                                text =
+                                    Editable.Factory.getInstance().newEditable(state.newExerciseBpm)
+                                hint = state.currentExerciseBpmRecord
+                                isEnabled = true
+                                setSelection(text.length.coerceAtLeast(0))
+                            }
+                        }
+                    }
+                    is SessionState.SummaryScreen -> {
+                        binding.sessionProgressBar.visibility = View.GONE
+                        adapter.submitList(state.summaryList)
+                        binding.nextExerciseButton.visibility = View.GONE
+                        binding.doneButton.visibility = View.VISIBLE
+
+                        binding.apply {
+                            summaryView.visibility = View.VISIBLE
+                            exerciseView.visibility = View.GONE
+                            bpmInput.isEnabled = false
+                        }
+                    }
+
                 }
             }
         }
@@ -219,19 +240,6 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         requireContext().stopService(Intent(requireContext(), TimerService::class.java))
         imm.hideKeyboard(requireView().windowToken)
         findNavController().popBackStack(R.id.routineListFragment, false)
-    }
-
-    private fun setButtonVisibility() {
-        when (viewModel.nextButtonEnabled) {
-            true -> {
-                binding.nextExerciseButton.visibility = View.VISIBLE
-                binding.doneButton.visibility = View.GONE
-            }
-            else -> {
-                binding.nextExerciseButton.visibility = View.GONE
-                binding.doneButton.visibility = View.VISIBLE
-            }
-        }
     }
 
     private fun showTimerEditor() {

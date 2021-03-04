@@ -30,7 +30,7 @@ class Timer(
     private val vibrator: Vibrator?
 ) {
 
-    private var notification = stoppedNotification
+    var notification = stoppedNotification
 
     private fun updateTimerNotification() {
         notification.run {
@@ -69,9 +69,7 @@ class Timer(
     val status: LiveData<TimerState>
         get() = _status
 
-    // TODO fix ugly hack
-    private var currentExercise: SessionExercise? =
-        SessionExercise(-1, -1, "", -1, -1)
+    private var currentExercise: SessionExercise? = null
 
     private val currentExerciseDuration
         get() = currentExercise?.duration ?: 0L
@@ -101,14 +99,13 @@ class Timer(
         updateTimerNotification()
     }
 
-    fun setUpTimer(newExercise: SessionExercise?) {
-        if (newExercise != currentExercise) {
-            currentExercise = newExercise
-            clearTimer()
-            if (currentExerciseDuration != 0L) {
-                createTimer()
-                startTimer()
-            }
+    fun setUpTimer(newExercise: SessionExercise) {
+        if (newExercise == currentExercise) return
+        currentExercise = newExercise
+        clearTimer()
+        if (currentExerciseDuration != 0L) {
+            createTimer()
+            startTimer()
         }
     }
 
@@ -150,6 +147,12 @@ class Timer(
         _timeString.value = millisToTimerString(0L)
         notification = pausedNotification
         showStoppedNotification()
+    }
+
+    fun clearExercise() {
+        clearTimer()
+        currentExercise = null
+        notification = stoppedNotification
     }
 
     fun updateTimeLeft(newTime: Long) {

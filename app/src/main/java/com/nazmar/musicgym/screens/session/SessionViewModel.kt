@@ -1,11 +1,15 @@
 package com.nazmar.musicgym.screens.session
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.nazmar.musicgym.session.SessionExercise
 import com.nazmar.musicgym.session.SessionUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SessionViewModel @AssistedInject constructor(
@@ -14,91 +18,68 @@ class SessionViewModel @AssistedInject constructor(
 ) :
     ViewModel() {
 
-    private var _sessionName = MutableLiveData("")
+    private val _state = MutableStateFlow<SessionState>(SessionState.Loading)
 
-    val sessionName get() = _sessionName
-
-    init {
-        viewModelScope.launch {
-            _sessionName.value = useCase.getRoutineName(routineId)
-        }
-    }
-
-    private var _exercises = MutableLiveData<MutableList<SessionExercise>>()
-
-    val exercises: LiveData<MutableList<SessionExercise>>
-        get() = _exercises
-
-    val summaryList = Transformations.map(exercises) {
-        it.filter { e -> e.newBpm.isNotEmpty() && e.newBpm != "0" }
-    }
+    val state: StateFlow<SessionState> get() = _state
 
     init {
         viewModelScope.launch {
-            _exercises.value = useCase.getSession(routineId)
+            val name = useCase.getRoutineName(routineId)
+            val exercises = useCase.getSession(routineId)
+            _state.emit(
+                if (exercises.isEmpty()) {
+                    SessionState.EmptyRoutine
+                } else {
+                    SessionState.PracticeScreen(
+                        name,
+                        exercises,
+                        0
+                    )
+                }
+            )
         }
     }
-
-    private var _currentIndex = MutableLiveData(-1)
-
-    val currentIndex: LiveData<Int>
-        get() = _currentIndex
 
     fun nextExercise() {
-        _currentIndex.value = _currentIndex.value!! + 1
+        viewModelScope.launch {
+            (_state.value as SessionState.PracticeScreen).run {
+                _state.emit(
+                    if (this.currentIndex + 1 == this.sessionExercises.size) {
+                        SessionState.SummaryScreen(this)
+                    } else this.copy(currentIndex = this.currentIndex + 1)
+                )
+            }
+        }
     }
 
     fun previousExercise() {
-        _currentIndex.value = _currentIndex.value!! - 1
-    }
-
-    val currentExercise = Transformations.map(currentIndex) {
-        exercises.value?.let { exercises ->
-            when (it) {
-                exercises.size, -1 -> null
-                else -> exercises[it]
+        viewModelScope.launch {
+            when (val oldState = _state.value) {
+                is SessionState.PracticeScreen -> {
+                    _state.emit(oldState.copy(currentIndex = oldState.currentIndex - 1))
+                }
+                is SessionState.SummaryScreen -> {
+                    _state.emit(oldState.backState)
+                }
             }
         }
     }
-
-    val currentExerciseName: String
-        get() = currentExercise.value?.name ?: ""
-
-    val currentExerciseBpmRecord: String
-        get() = (currentExercise.value?.bpmRecord ?: 0).toString()
-
-    val newExerciseBpm: String
-        get() = currentExercise.value?.newBpm ?: ""
-
-    val nextButtonEnabled: Boolean
-        get() = currentIndex.value!! > -1 && currentIndex.value!! < exercises.value!!.size
-
-    val previousButtonEnabled: Boolean
-        get() = currentIndex.value!! > 0
 
     fun updateBpm(bpm: String) {
-        currentIndex.value?.let {
-            _exercises.updateBpm(it, bpm)
-            _exercises.value?.let { exerciseList ->
-                useCase.updateSessionState(exerciseList[it])
+        viewModelScope.launch {
+            (_state.value as? SessionState.PracticeScreen)?.let { oldState ->
+                val newState = oldState.copy(sessionExercises = oldState.updateBpm(bpm))
+                useCase.updateSessionState(newState.currentExercise)
+                _state.emit(newState)
             }
-
         }
     }
 
-    private fun MutableLiveData<MutableList<SessionExercise>>.updateBpm(
-        index: Int,
-        updatedBpm: String
-    ) {
-        val value = this.value?.toMutableList() ?: mutableListOf()
-        value[index] = value[index].copy(newBpm = updatedBpm)
-        this.value = value
-
+    fun completeSession() {
+        useCase.completeSession((_state.value as SessionState.SummaryScreen).summaryList)
     }
 
-    fun completeSession() = summaryList.value?.let { useCase.completeSession(it) }
-
-    // Factory -----------------------------------------------------------------------------------
+    // region Factory ------------------------------------------------------------------------------
 
     @AssistedFactory
     interface Factory {
@@ -114,6 +95,48 @@ class SessionViewModel @AssistedInject constructor(
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return assistedFactory.create(routineId) as T
             }
+        }
+    }
+    // endregion Factory ---------------------------------------------------------------------------
+}
+
+sealed class SessionState {
+    object Loading : SessionState()
+
+    object EmptyRoutine : SessionState()
+
+    data class SummaryScreen(
+        val backState: PracticeScreen
+    ) : SessionState() {
+        val summaryList
+            get() = backState.sessionExercises.filter { e -> e.newBpm.isNotEmpty() && e.newBpm != "0" }
+    }
+
+    data class PracticeScreen(
+        val sessionName: String,
+        val sessionExercises: MutableList<SessionExercise>,
+        val currentIndex: Int
+    ) : SessionState() {
+
+        val currentExercise: SessionExercise
+            get() = sessionExercises[currentIndex]
+
+        val currentExerciseName: String
+            get() = currentExercise.name
+
+        val currentExerciseBpmRecord: String
+            get() = currentExercise.bpmRecord.toString()
+
+        val newExerciseBpm: String
+            get() = currentExercise.newBpm
+
+        val previousButtonEnabled: Boolean
+            get() = currentIndex > 0
+
+        fun updateBpm(updatedBpm: String): MutableList<SessionExercise> {
+            sessionExercises[currentIndex] =
+                sessionExercises[currentIndex].copy(newBpm = updatedBpm)
+            return sessionExercises
         }
     }
 }

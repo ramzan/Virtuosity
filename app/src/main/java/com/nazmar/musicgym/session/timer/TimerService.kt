@@ -75,7 +75,7 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(TIMER_NOTIFICATION_ID, stoppedNotification.build())
+        startForeground(TIMER_NOTIFICATION_ID, timer.notification.build())
         return START_NOT_STICKY
     }
 

@@ -53,6 +53,8 @@
     <string name="history_stats_fastest_message">Fastest BPM: %d</string>
     <string name="history_stats_progress_message">Progress over period: +%d BPM</string>
     <string name="history_stats_progress_negative_message">Progress over period: %d BPM</string>
+    <string name="timer_editor_hint">Timer duration</string>
+    <string name="session_summary_title">Summary</string>
     <string-array name="history_range_array">
         <item>7 days</item>
         <item>30 days</item>
