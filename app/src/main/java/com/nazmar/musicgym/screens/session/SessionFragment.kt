@@ -52,14 +52,16 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             timer = timerService.getTimer()
             bound = true
 
-            timer.timeString.observe(viewLifecycleOwner) {
-                binding.timer.text = it
-                binding.timerEditor.setText(it)
+            lifecycleScope.launchWhenStarted {
+                timer.timeString.collect { string ->
+                    binding.timer.text = string
+                    binding.timerEditor.setText(string)
+                }
             }
 
-            timer.status.observe(viewLifecycleOwner) {
-                it?.let {
-                    when (it) {
+            lifecycleScope.launchWhenStarted {
+                timer.status.collect { status ->
+                    when (status) {
                         TimerState.RUNNING -> {
                             binding.pauseTimerButton.visibility = View.VISIBLE
                             binding.startTimerButton.visibility = View.GONE
@@ -75,6 +77,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                             binding.timer.visibility = View.GONE
                         }
                     }
+
                 }
             }
 

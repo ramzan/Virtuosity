@@ -42,7 +42,7 @@ class SessionViewModel @AssistedInject constructor(
 
     fun nextExercise() {
         viewModelScope.launch {
-            (_state.value as SessionState.PracticeScreen).run {
+            (_state.value as? SessionState.PracticeScreen)?.run {
                 _state.emit(
                     if (this.currentIndex + 1 == this.sessionExercises.size) {
                         SessionState.SummaryScreen(this)

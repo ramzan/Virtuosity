@@ -12,6 +12,9 @@ import androidx.core.app.NotificationCompat
 import com.nazmar.musicgym.*
 import com.nazmar.musicgym.common.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import java.util.*
 import javax.inject.Inject
 
@@ -41,6 +44,9 @@ class TimerService : Service() {
 
     private lateinit var stoppedNotification: NotificationCompat.Builder
 
+    private val serviceJob = Job()
+    private val serviceScope = CoroutineScope(context = Dispatchers.Main + serviceJob)
+
 
     override fun onCreate() {
         super.onCreate()
@@ -62,7 +68,8 @@ class TimerService : Service() {
             getString(R.string.timer_notification_time_remaining_prefix),
             getString(R.string.timer_notification_time_up_message),
             mediaPlayer,
-            vibrator
+            vibrator,
+            serviceScope
         )
         timerReceiver = TimerReceiver(timer)
         IntentFilter().apply {
@@ -72,6 +79,8 @@ class TimerService : Service() {
         }.also {
             registerReceiver(timerReceiver, it)
         }
+
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -84,6 +93,7 @@ class TimerService : Service() {
         unregisterReceiver(timerReceiver)
         timer.clearTimer()
         notificationManager.cancel(TIMER_NOTIFICATION_ID)
+        serviceJob.cancel()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

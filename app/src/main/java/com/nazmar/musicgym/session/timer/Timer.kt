@@ -6,12 +6,16 @@ import android.os.CountDownTimer
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.nazmar.musicgym.common.TIMER_NOTIFICATION_ID
 import com.nazmar.musicgym.common.isOreoOrAbove
 import com.nazmar.musicgym.common.millisToTimerString
 import com.nazmar.musicgym.session.SessionExercise
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 enum class TimerState {
     STOPPED,
@@ -27,7 +31,8 @@ class Timer(
     private val timeRemainingPrefix: String,
     private val timeUpString: String,
     private val mediaPlayer: MediaPlayer,
-    private val vibrator: Vibrator?
+    private val vibrator: Vibrator?,
+    private val timerScope: CoroutineScope
 ) {
 
     var notification = stoppedNotification
@@ -54,19 +59,19 @@ class Timer(
 
     private var timer: CountDownTimer? = null
 
-    private var _timeLeft = MutableLiveData<Long?>(null)
+    private var _timeLeft = MutableStateFlow<Long?>(null)
 
-    val timeLeft: LiveData<Long?>
+    val timeLeft: StateFlow<Long?>
         get() = _timeLeft
 
-    private val _timeString = MutableLiveData("")
+    private val _timeString = MutableStateFlow("")
 
-    val timeString: LiveData<String>
+    val timeString: StateFlow<String>
         get() = _timeString
 
-    private var _status = MutableLiveData(TimerState.STOPPED)
+    private var _status = MutableStateFlow(TimerState.STOPPED)
 
-    val status: LiveData<TimerState>
+    val status: StateFlow<TimerState>
         get() = _status
 
     private var currentExercise: SessionExercise? = null
@@ -78,24 +83,30 @@ class Timer(
         get() = currentExercise?.name ?: ""
 
     private fun createTimer() {
-        with(timeLeft.value ?: currentExerciseDuration) {
-            timer = object : CountDownTimer(this, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    _timeLeft.value = millisUntilFinished
-                    _timeString.value = millisToTimerString(millisUntilFinished)
-                    updateTimerNotification()
+        val initialTime = timeLeft.value ?: currentExerciseDuration
+        timer = object : CountDownTimer(initialTime, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timerScope.launch(Dispatchers.Main) {
+                    _timeLeft.emit(millisUntilFinished)
+                    _timeString.emit(millisToTimerString(millisUntilFinished))
                 }
 
-                override fun onFinish() {
-                    clearTimer()
-                    showTimeUpNotification()
-                    vibrator?.vibrate()
-                    mediaPlayer.start()
-                }
+                updateTimerNotification()
             }
-            _timeString.value = millisToTimerString(this)
-            _timeLeft.value = this
+
+            override fun onFinish() {
+                clearTimer()
+                showTimeUpNotification()
+                vibrator?.vibrate()
+                mediaPlayer.start()
+            }
         }
+
+        GlobalScope.launch(Dispatchers.Main) {
+            _timeLeft.emit(initialTime)
+            _timeString.emit(millisToTimerString(initialTime))
+        }
+
         updateTimerNotification()
     }
 
