@@ -54,6 +54,11 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        binding.historyList.adapter = null
+        super.onDestroyView()
+    }
+
     private fun deleteSessionHistory(id: Long) {
         viewModel.pendingDeleteId = id
         findNavController().safeNavigate(
