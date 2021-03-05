@@ -17,6 +17,7 @@ import com.nazmar.musicgym.common.showBottomNavBar
 import com.nazmar.musicgym.databinding.FragmentHistoryBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
@@ -32,6 +33,8 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
         }
     }
 
+    private var job: Job? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,13 +48,18 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
 
         binding.historyList.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        job = lifecycleScope.launchWhenStarted {
             viewModel.history.collectLatest {
                 adapter.submitData(it)
             }
         }
 
         return binding.root
+    }
+
+    override fun onStop() {
+        job?.cancel()
+        super.onStop()
     }
 
     override fun onDestroyView() {
