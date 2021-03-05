@@ -15,7 +15,6 @@ import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
@@ -72,7 +71,6 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
                     RoutineListState.Loading -> {
                         binding.routineList.visibility = View.GONE
                         binding.routineListProgressBar.visibility = View.VISIBLE
-                        delay(1000)
                     }
 
                     is RoutineListState.Loaded -> {

@@ -137,9 +137,9 @@ sealed class SessionState {
             get() = currentIndex > 0
 
         fun updateBpm(updatedBpm: String): MutableList<SessionExercise> {
-            sessionExercises[currentIndex] =
-                sessionExercises[currentIndex].copy(newBpm = updatedBpm)
-            return sessionExercises
+            val newList = sessionExercises.toMutableList()
+            newList[currentIndex] = newList[currentIndex].copy(newBpm = updatedBpm)
+            return newList
         }
     }
 }
