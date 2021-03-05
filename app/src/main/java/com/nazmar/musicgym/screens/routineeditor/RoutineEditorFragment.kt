@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_IDLE
@@ -20,6 +21,7 @@ import com.nazmar.musicgym.databinding.FragmentRoutineEditorBinding
 import com.nazmar.musicgym.exercises.Exercise
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -51,27 +53,23 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                if (viewHolder.itemViewType != target.itemViewType) {
-                    return false
-                }
+                if (viewHolder.itemViewType != target.itemViewType) return false
+
                 val fromPos = viewHolder.bindingAdapterPosition
                 val toPos = target.bindingAdapterPosition
-                viewModel.state.value?.moveItem(fromPos, toPos)
+                viewModel.moveItem(fromPos, toPos)
                 adapter.notifyItemMoved(fromPos, toPos)
                 return true
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                viewModel.state.value?.deleteItem(viewHolder.bindingAdapterPosition)
+                viewModel.deleteItem(viewHolder.bindingAdapterPosition)
                 adapter.notifyItemRemoved(viewHolder.bindingAdapterPosition)
             }
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
-
-                if (actionState != ACTION_STATE_IDLE) {
-                    viewHolder?.itemView?.alpha = 0.5f
-                }
+                if (actionState != ACTION_STATE_IDLE) viewHolder?.itemView?.alpha = 0.5f
             }
 
             override fun clearView(
@@ -136,58 +134,53 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
             }
 
             nameInput.doOnTextChanged { text, _, _, _ ->
-                viewModel.state.value?.nameInputText = text.toString().trim().replace('\n', ' ')
+                viewModel.state.value.nameInputText = text.toString().trim().replace('\n', ' ')
             }
 
             exerciseSpinner.apply {
                 onItemClickListener = AdapterView.OnItemClickListener { _, _, pos, _ ->
-                    viewModel.state.value?.let {
-                        it.addExercise(this.adapter.getItem(pos) as Exercise)
-                        binding.routineExerciseList.adapter?.notifyItemInserted(it.exercises.size)
-                        setText("")
-                    }
+                    viewModel.addExercise(this.adapter.getItem(pos) as Exercise)
+                    binding.routineExerciseList.adapter?.notifyItemInserted(viewModel.state.value.exercises.size)
+                    setText("")
                 }
             }
 
             // Populate exercise autocomplete
-            viewModel.allExercises.observe(viewLifecycleOwner, {
-                exerciseSpinner.setAdapter(
-                    ArrayAdapter(
-                        requireContext(),
-                        R.layout.list_item_exercise_spinner,
-                        it
+            lifecycleScope.launchWhenStarted {
+                viewModel.allExercises.collect { list ->
+                    exerciseSpinner.setAdapter(
+                        ArrayAdapter(requireContext(), R.layout.list_item_exercise_spinner, list)
                     )
-                )
-            })
+                }
+            }
         }
 
         binding.routineExerciseList.adapter = simpleItemTouchCallback.adapter
         itemTouchHelper.attachToRecyclerView(binding.routineExerciseList)
 
-        viewModel.exercises.observe(viewLifecycleOwner) {
-            simpleItemTouchCallback.adapter.submitList(it)
-        }
-
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                RoutineEditorState.Loading -> {
-                    /* no-op */
-                }
-                is RoutineEditorState.Editing -> {
-                    binding.apply {
-                        editorToolbar.title = getString(R.string.editorTitleEdit)
-                        if (firstRun) {
-                            nameInput.setText(state.nameInputText)
-                        }
-                        nameInput.setSelection(state.nameInputText.length)
-                        deleteButton.isVisible = true
-                        saveButton.isVisible = true
+        lifecycleScope.launchWhenStarted {
+            viewModel.state.collect { state ->
+                simpleItemTouchCallback.adapter.submitList(state.exercises)
+                when (state) {
+                    RoutineEditorState.Loading -> {
+                        /* no-op */
                     }
-                }
-                is RoutineEditorState.New -> {
-                    binding.editorToolbar.title = getString(R.string.editorTitleNew)
-                    saveButton.isVisible = true
-                    imm.showKeyboard()
+                    is RoutineEditorState.Editing -> {
+                        binding.apply {
+                            editorToolbar.title = getString(R.string.editorTitleEdit)
+                            if (firstRun) {
+                                nameInput.setText(state.nameInputText)
+                            }
+                            nameInput.setSelection(state.nameInputText.length)
+                            deleteButton.isVisible = true
+                            saveButton.isVisible = true
+                        }
+                    }
+                    is RoutineEditorState.New -> {
+                        binding.editorToolbar.title = getString(R.string.editorTitleNew)
+                        saveButton.isVisible = true
+                        imm.showKeyboard()
+                    }
                 }
             }
         }

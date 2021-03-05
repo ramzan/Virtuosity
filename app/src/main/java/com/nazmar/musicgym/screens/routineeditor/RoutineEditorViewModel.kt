@@ -1,6 +1,8 @@
 package com.nazmar.musicgym.screens.routineeditor
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.nazmar.musicgym.common.DEFAULT_TIMER_DURATION
 import com.nazmar.musicgym.exercises.Exercise
 import com.nazmar.musicgym.routine.Routine
@@ -9,6 +11,8 @@ import com.nazmar.musicgym.routine.RoutineExercise
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class RoutineEditorViewModel @AssistedInject constructor(
@@ -16,16 +20,11 @@ class RoutineEditorViewModel @AssistedInject constructor(
     private val useCase: RoutineEditorUseCase
 ) : ViewModel() {
 
-    val allExercises = useCase.getAllExercises().asLiveData()
+    val allExercises = useCase.getAllExercises()
 
-    private var _state = MutableLiveData<RoutineEditorState>(RoutineEditorState.Loading)
-
-    val state: LiveData<RoutineEditorState>
+    private var _state = MutableStateFlow<RoutineEditorState>(RoutineEditorState.Loading)
+    val state: StateFlow<RoutineEditorState>
         get() = _state
-
-    val exercises = Transformations.map(state) {
-        it.exercises
-    }
 
     var indexPendingDurationChange: Int? = null
 
@@ -77,7 +76,28 @@ class RoutineEditorViewModel @AssistedInject constructor(
         }
     }
 
-    // Factory -----------------------------------------------------------------------------------
+    fun moveItem(fromPos: Int, toPos: Int): Boolean {
+        _state.value.exercises.run {
+            this.add(toPos, this.removeAt(fromPos))
+        }
+        return true
+    }
+
+    fun deleteItem(index: Int) {
+        _state.value.exercises.removeAt(index)
+    }
+
+    fun addExercise(exercise: Exercise) {
+        _state.value.exercises.add(
+            RoutineExercise(
+                exercise.id,
+                exercise.name,
+                DEFAULT_TIMER_DURATION
+            )
+        )
+    }
+
+    // region Factory -----------------------------------------------------------------------------------
 
     @AssistedFactory
     interface Factory {
@@ -95,30 +115,13 @@ class RoutineEditorViewModel @AssistedInject constructor(
             }
         }
     }
+
+    // endregion Factory -----------------------------------------------------------------------------------
 }
 
 sealed class RoutineEditorState {
     abstract val exercises: MutableList<RoutineExercise>
     abstract var nameInputText: String
-
-    fun moveItem(fromPos: Int, toPos: Int): Boolean {
-        exercises.add(toPos, exercises.removeAt(fromPos))
-        return true
-    }
-
-    fun deleteItem(index: Int) {
-        exercises.removeAt(index)
-    }
-
-    fun addExercise(exercise: Exercise) {
-        exercises.add(
-            RoutineExercise(
-                exercise.id,
-                exercise.name,
-                DEFAULT_TIMER_DURATION
-            )
-        )
-    }
 
     object Loading : RoutineEditorState() {
         override val exercises = mutableListOf<RoutineExercise>()
