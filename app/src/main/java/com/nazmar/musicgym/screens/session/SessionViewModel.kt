@@ -45,7 +45,10 @@ class SessionViewModel @AssistedInject constructor(
             (_state.value as? SessionState.PracticeScreen)?.run {
                 _state.emit(
                     if (this.currentIndex + 1 == this.sessionExercises.size) {
-                        SessionState.SummaryScreen(this)
+                        SessionState.SummaryScreen(
+                            this,
+                            this.sessionExercises.filter { e -> e.newBpm.isNotEmpty() && e.newBpm != "0" }
+                        )
                     } else this.copy(currentIndex = this.currentIndex + 1)
                 )
             }
@@ -108,11 +111,9 @@ sealed class SessionState {
     object EmptyRoutine : SessionState()
 
     data class SummaryScreen(
-        val backState: PracticeScreen
-    ) : SessionState() {
-        val summaryList
-            get() = backState.sessionExercises.filter { e -> e.newBpm.isNotEmpty() && e.newBpm != "0" }
-    }
+        val backState: PracticeScreen,
+        val summaryList: List<SessionExercise>,
+    ) : SessionState()
 
     data class PracticeScreen(
         val sessionName: String,

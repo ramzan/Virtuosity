@@ -217,6 +217,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                         adapter.submitList(state.summaryList)
 
                         binding.apply {
+                            sessionToolbar.title = state.backState.sessionName
                             sessionProgressBar.visibility = View.GONE
                             nextExerciseButton.visibility = View.GONE
                             doneButton.visibility = View.VISIBLE
