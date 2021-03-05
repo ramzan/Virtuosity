@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
@@ -16,6 +17,7 @@ import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentExerciseListBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,15 +47,17 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
         ExerciseAdapter(ExerciseAdapter.OnClickListener {
             showExerciseView(it.id)
-        }).run {
-            this.stateRestorationPolicy =
+        }).also { adapter ->
+            adapter.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
-            binding.exerciseList.adapter = this
+            binding.exerciseList.adapter = adapter
 
-            viewModel.filteredExercises.observe(viewLifecycleOwner, {
-                this.submitList(it)
-            })
+            lifecycleScope.launchWhenStarted {
+                viewModel.filteredExercises.collect { list ->
+                    adapter.submitList(list)
+                }
+            }
         }
 
         binding.fab.setOnClickListener {
