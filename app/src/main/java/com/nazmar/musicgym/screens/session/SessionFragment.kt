@@ -214,12 +214,14 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                         }
                     }
                     is SessionState.SummaryScreen -> {
-                        binding.sessionProgressBar.visibility = View.GONE
                         adapter.submitList(state.summaryList)
-                        binding.nextExerciseButton.visibility = View.GONE
-                        binding.doneButton.visibility = View.VISIBLE
 
                         binding.apply {
+                            sessionProgressBar.visibility = View.GONE
+                            nextExerciseButton.visibility = View.GONE
+                            doneButton.visibility = View.VISIBLE
+                            previousExerciseButton.isEnabled = true
+
                             summaryView.visibility = View.VISIBLE
                             exerciseView.visibility = View.GONE
                             bpmInput.isEnabled = false
