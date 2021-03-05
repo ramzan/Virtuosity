@@ -43,20 +43,29 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
     ): View {
         _binding = FragmentExerciseListBinding.inflate(inflater)
 
-        ExerciseAdapter(ExerciseAdapter.OnClickListener {
-            showExerciseView(it.id)
-        }).also { adapter ->
-            adapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        val adapter = ExerciseAdapter { exercise -> showExerciseView(exercise.id) }
 
-            binding.exerciseList.adapter = adapter
+        adapter.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
-            lifecycleScope.launchWhenStarted {
-                viewModel.filteredExercises.collect { list ->
-                    adapter.submitList(list)
+        binding.exerciseList.adapter = adapter
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.state.collect { state ->
+                when (state) {
+                    is ExerciseListState.Loaded -> {
+                        binding.exerciseList.visibility = View.VISIBLE
+                        binding.exerciseListProgressBar.visibility = View.GONE
+                        adapter.submitList(state.filteredExercises)
+                    }
+                    ExerciseListState.Loading -> {
+                        binding.exerciseList.visibility = View.GONE
+                        binding.exerciseListProgressBar.visibility = View.VISIBLE
+                    }
                 }
             }
         }
+
 
         binding.fab.setOnClickListener {
             showNewExerciseDialog()

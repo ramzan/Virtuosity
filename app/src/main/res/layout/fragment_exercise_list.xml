@@ -19,16 +19,30 @@
             app:title="@string/exercises" />
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/exercise_list"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="0dp"
-        android:paddingTop="?attr/actionBarSize"
-        app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/list_item_exercise" />
+        android:orientation="vertical"
+        android:paddingTop="?attr/actionBarSize">
 
+        <ProgressBar
+            android:id="@+id/exercise_list_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            tools:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/exercise_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="0dp"
+            android:visibility="gone"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/list_item_exercise"
+            tools:visibility="visible" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

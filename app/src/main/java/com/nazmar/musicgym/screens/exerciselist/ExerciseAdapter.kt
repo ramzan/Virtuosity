@@ -10,19 +10,15 @@ import com.nazmar.musicgym.databinding.ListItemExerciseBinding
 import com.nazmar.musicgym.exercises.ExerciseMaxBpm
 
 
-class ExerciseAdapter(private val onClickListener: OnClickListener) :
+class ExerciseAdapter(private val onClickListener: (ExerciseMaxBpm) -> Unit) :
     ListAdapter<ExerciseMaxBpm, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.itemView.setOnClickListener {
-            onClickListener.onClick(item)
+            onClickListener(item)
         }
         holder.bind(item)
-    }
-
-    class OnClickListener(val clickListener: (lift: ExerciseMaxBpm) -> Unit) {
-        fun onClick(lift: ExerciseMaxBpm) = clickListener(lift)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
