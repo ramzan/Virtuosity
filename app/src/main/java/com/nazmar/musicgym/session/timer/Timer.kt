@@ -111,7 +111,7 @@ class Timer(
     }
 
     fun setUpTimer(newExercise: SessionExercise) {
-        if (newExercise == currentExercise) return
+        if (newExercise.order == currentExercise?.order) return
         currentExercise = newExercise
         clearTimer()
         if (currentExerciseDuration != 0L) {
