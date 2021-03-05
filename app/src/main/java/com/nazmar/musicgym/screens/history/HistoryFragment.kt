@@ -45,7 +45,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
 
         binding.historyList.adapter = adapter
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.history.collectLatest {
                 adapter.submitData(it)
             }

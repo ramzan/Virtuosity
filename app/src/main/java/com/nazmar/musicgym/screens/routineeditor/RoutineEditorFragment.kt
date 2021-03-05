@@ -146,7 +146,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
             }
 
             // Populate exercise autocomplete
-            lifecycleScope.launchWhenStarted {
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.allExercises.collect { list ->
                     exerciseSpinner.setAdapter(
                         ArrayAdapter(requireContext(), R.layout.list_item_exercise_spinner, list)
@@ -158,7 +158,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         binding.routineExerciseList.adapter = simpleItemTouchCallback.adapter
         itemTouchHelper.attachToRecyclerView(binding.routineExerciseList)
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
                 simpleItemTouchCallback.adapter.submitList(state.exercises)
                 when (state) {

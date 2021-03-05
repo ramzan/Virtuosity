@@ -136,7 +136,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             axisLeft.axisMinimum = 0f
             axisLeft.valueFormatter = yAxisFormatter
 
-            lifecycleScope.launchWhenStarted {
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.history.collect { state ->
                     when (state) {
                         ExerciseDetailUseCase.GraphState.Loading -> {

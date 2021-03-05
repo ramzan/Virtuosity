@@ -65,7 +65,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
         binding.routineList.adapter = adapter
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
                 when (state) {
                     RoutineListState.Loading -> {

@@ -52,14 +52,14 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             timer = timerService.getTimer()
             bound = true
 
-            lifecycleScope.launchWhenStarted {
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 timer.timeString.collect { string ->
                     binding.timer.text = string
                     binding.timerEditor.setText(string)
                 }
             }
 
-            lifecycleScope.launchWhenStarted {
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 timer.status.collect { status ->
                     when (status) {
                         TimerState.RUNNING -> {
@@ -81,7 +81,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 }
             }
 
-            lifecycleScope.launchWhenStarted {
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.state.collect { state ->
                     when (state) {
                         is SessionState.PracticeScreen -> {
@@ -188,7 +188,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             binding.summaryList.adapter = adapter
         }
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
                 when (state) {
                     is SessionState.PracticeScreen -> {

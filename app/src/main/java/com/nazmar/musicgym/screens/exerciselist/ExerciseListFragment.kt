@@ -50,7 +50,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
         binding.exerciseList.adapter = adapter
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
                 when (state) {
                     is ExerciseListState.Loaded -> {
