@@ -3,10 +3,13 @@ package com.nazmar.musicgym.history
 import android.graphics.Color
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
-import androidx.paging.toLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.map
 import com.nazmar.musicgym.common.room.HistoryDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,9 +23,11 @@ class HistoryUseCase @Inject constructor(private val dao: HistoryDao) {
         }
     }
 
-    fun getSessionHistory() = dao.getSessionHistories()
-        .map { toSessionHistoryDisplay(it) }
-        .toLiveData(pageSize = 50)
+    val history = Pager(PagingConfig(50)) {
+        dao.getSessionHistories()
+    }.flow.map { pagingData ->
+        pagingData.map { toSessionHistoryDisplay(it) }
+    }
 
     private fun toSessionHistoryDisplay(history: SessionHistoryEntity): SessionHistory {
         return SessionHistory(

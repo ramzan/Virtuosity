@@ -1,6 +1,6 @@
 package com.nazmar.musicgym.common.room
 
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.nazmar.musicgym.exercises.Exercise
 import com.nazmar.musicgym.exercises.ExerciseHistory
@@ -171,7 +171,7 @@ interface HistoryDao {
     suspend fun getSessionHistory(id: Long): SessionHistoryEntity?
 
     @Query("SELECT * FROM session_history_table ORDER BY time DESC")
-    fun getSessionHistories(): DataSource.Factory<Int, SessionHistoryEntity>
+    fun getSessionHistories(): PagingSource<Int, SessionHistoryEntity>
 }
 
 @Dao

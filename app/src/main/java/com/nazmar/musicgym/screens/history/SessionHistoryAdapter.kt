@@ -3,7 +3,7 @@ package com.nazmar.musicgym.screens.history
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.databinding.ListItemHistoryBinding
@@ -12,19 +12,19 @@ import java.util.*
 
 
 class SessionHistoryDisplayAdapter(private val onDelete: (Long) -> Unit) :
-    PagedListAdapter<SessionHistory, SessionHistoryDisplayAdapter.ViewHolder>(
+    PagingDataAdapter<SessionHistory, SessionHistoryDisplayAdapter.HistoryViewHolder>(
         SessionHistoryDisplayDiffCallback()
     ) {
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         holder.bind(getItem(position), onDelete)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
+        return HistoryViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(private val binding: ListItemHistoryBinding) :
+    class HistoryViewHolder private constructor(private val binding: ListItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: SessionHistory?, onDelete: (Long) -> Unit) {
@@ -45,13 +45,13 @@ class SessionHistoryDisplayAdapter(private val onDelete: (Long) -> Unit) :
         }
 
         companion object {
-            fun from(parent: ViewGroup): ViewHolder {
+            fun from(parent: ViewGroup): HistoryViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
 
                 val binding =
                     ListItemHistoryBinding.inflate(layoutInflater, parent, false)
 
-                return ViewHolder(binding)
+                return HistoryViewHolder(binding)
             }
         }
     }
