@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.MarkerView
@@ -27,6 +28,7 @@ import com.nazmar.musicgym.databinding.FragmentExerciseDetailBinding
 import com.nazmar.musicgym.exercises.ExerciseDetailUseCase
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -95,16 +97,20 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                 goBack()
             }
 
-            viewModel.exercise.observe(viewLifecycleOwner) {
-                title = it?.name ?: ""
-                menu.getItem(0).isEnabled = it !== null
-                menu.getItem(1).isEnabled = it !== null
-            }
+            lifecycleScope.launchWhenStarted {
+                viewModel.exercise.collect { state ->
+                    if (state is ExerciseDetailState.Loaded) {
+                        title = state.exercise.name
+                        menu.getItem(0).isEnabled = true
+                        menu.getItem(1).isEnabled = true
 
-            // Rename button
-            menu.getItem(0).setOnMenuItemClickListener {
-                showRenameDialog()
-                true
+                        // Rename button
+                        menu.getItem(0).setOnMenuItemClickListener {
+                            showRenameDialog(state.exercise.name)
+                            true
+                        }
+                    }
+                }
             }
 
             // Delete button
@@ -130,42 +136,44 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             axisLeft.axisMinimum = 0f
             axisLeft.valueFormatter = yAxisFormatter
 
-            viewModel.history.observe(viewLifecycleOwner) { state ->
-                when (state) {
-                    ExerciseDetailUseCase.GraphState.Loading -> {
-                        binding.loadingIndicator.visibility = View.VISIBLE
-                        binding.historyGraph.visibility = View.GONE
-                        binding.noDataMessage.visibility = View.GONE
-                    }
-                    ExerciseDetailUseCase.GraphState.NoData -> {
-                        binding.loadingIndicator.visibility = View.GONE
-                        binding.historyGraph.visibility = View.GONE
-                        binding.noDataMessage.visibility = View.VISIBLE
-                    }
-                    is ExerciseDetailUseCase.GraphState.Loaded -> {
-                        binding.loadingIndicator.visibility = View.GONE
-                        binding.historyGraph.visibility = View.VISIBLE
-                        binding.noDataMessage.visibility = View.GONE
-                        val dataSet = LineDataSet(state.data, "BPM")
-                        data = LineData(dataSet)
-                        axisLeft.axisMaximum = state.maxBpm * 1.05f
-                        binding.apply {
-                            bpmSlowest.text = getString(
-                                R.string.history_stats_slowest_message,
-                                state.minBpm.toLong()
-                            )
-                            bpmFastest.text = getString(
-                                R.string.history_stats_fastest_message,
-                                state.maxBpm.toLong()
-                            )
-                            bpmProgress.text = getString(
-                                if (state.periodImprovement < 0) {
-                                    R.string.history_stats_progress_negative_message
-                                } else R.string.history_stats_progress_message,
-                                state.periodImprovement
-                            )
+            lifecycleScope.launchWhenStarted {
+                viewModel.history.collect { state ->
+                    when (state) {
+                        ExerciseDetailUseCase.GraphState.Loading -> {
+                            binding.loadingIndicator.visibility = View.VISIBLE
+                            binding.historyGraph.visibility = View.GONE
+                            binding.noDataMessage.visibility = View.GONE
                         }
-                        invalidate()
+                        ExerciseDetailUseCase.GraphState.NoData -> {
+                            binding.loadingIndicator.visibility = View.GONE
+                            binding.historyGraph.visibility = View.GONE
+                            binding.noDataMessage.visibility = View.VISIBLE
+                        }
+                        is ExerciseDetailUseCase.GraphState.Loaded -> {
+                            binding.loadingIndicator.visibility = View.GONE
+                            binding.historyGraph.visibility = View.VISIBLE
+                            binding.noDataMessage.visibility = View.GONE
+                            val dataSet = LineDataSet(state.data, "BPM")
+                            data = LineData(dataSet)
+                            axisLeft.axisMaximum = state.maxBpm * 1.05f
+                            binding.apply {
+                                bpmSlowest.text = getString(
+                                    R.string.history_stats_slowest_message,
+                                    state.minBpm.toLong()
+                                )
+                                bpmFastest.text = getString(
+                                    R.string.history_stats_fastest_message,
+                                    state.maxBpm.toLong()
+                                )
+                                bpmProgress.text = getString(
+                                    if (state.periodImprovement < 0) {
+                                        R.string.history_stats_progress_negative_message
+                                    } else R.string.history_stats_progress_message,
+                                    state.periodImprovement
+                                )
+                            }
+                            invalidate()
+                        }
                     }
                 }
             }
@@ -209,11 +217,11 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
         )
     }
 
-    private fun showRenameDialog() {
+    private fun showRenameDialog(oldName: String) {
         findNavController().safeNavigate(
             ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToTextInputDialog(
                 R.string.rename,
-                viewModel.exercise.value?.name ?: ""
+                oldName
             )
         )
     }

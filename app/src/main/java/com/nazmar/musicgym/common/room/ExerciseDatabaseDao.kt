@@ -145,7 +145,7 @@ interface ExerciseDetailDao {
     suspend fun delete(exercise: Exercise)
 
     @Query("SELECT * FROM exercise_table WHERE id = :key")
-    fun getExercise(key: Long): Flow<Exercise?>
+    fun getExercise(key: Long): Flow<Exercise>
 
     @Query(
         """

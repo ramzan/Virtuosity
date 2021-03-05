@@ -1,10 +1,14 @@
 package com.nazmar.musicgym.screens.exercisedetail
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.nazmar.musicgym.exercises.Exercise
 import com.nazmar.musicgym.exercises.ExerciseDetailUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -20,25 +24,38 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     // Exercise -----------------------------------------------------------------------------------
 
-    val exercise = useCase.getExercise(exerciseId).asLiveData()
+    val exercise = MutableStateFlow<ExerciseDetailState>(ExerciseDetailState.Loading)
 
-    fun deleteExercise() = exercise.value?.let { useCase.deleteExercise(it) }
+    init {
+        viewModelScope.launch {
+            useCase.getExercise(exerciseId).collect { e ->
+                exercise.emit(ExerciseDetailState.Loaded(e))
+            }
+        }
+    }
 
-    fun renameExercise(newName: String) =
-        exercise.value?.let { useCase.renameExercise(it, newName) }
+    fun deleteExercise() {
+        (exercise.value as? ExerciseDetailState.Loaded)?.run {
+            useCase.deleteExercise(this.exercise)
+        }
+    }
+
+    fun renameExercise(newName: String) {
+        (exercise.value as? ExerciseDetailState.Loaded)?.run {
+            useCase.renameExercise(
+                this.exercise,
+                newName
+            )
+        }
+    }
 
     // History -----------------------------------------------------------------------------------
 
-    private val _history = MutableLiveData<ExerciseDetailUseCase.GraphState>()
-
-    val history get() = _history
+    val history = useCase.graphState
 
     init {
         viewModelScope.launch {
             useCase.run {
-                graphState.collect {
-                    _history.value = it
-                }
                 getExerciseHistorySince(
                     exerciseId,
                     System.currentTimeMillis() - DURATION_WEEK
@@ -82,4 +99,10 @@ class ExerciseDetailViewModel @AssistedInject constructor(
             }
         }
     }
+}
+
+sealed class ExerciseDetailState {
+    object Loading : ExerciseDetailState()
+
+    data class Loaded(val exercise: Exercise) : ExerciseDetailState()
 }
