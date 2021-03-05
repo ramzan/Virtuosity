@@ -15,6 +15,7 @@ import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
@@ -49,7 +50,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
         _binding = FragmentRoutineListBinding.inflate(inflater)
 
-        RoutineListCardAdapter(
+        val adapter = RoutineListCardAdapter(
             object : RoutineListCardAdapter.OnClickListener {
                 override fun onEdit(routine: RoutineListCard.RoutineCard) =
                     showRoutineEditor(routine.id)
@@ -59,21 +60,33 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
                 override fun onResumeSession() = resumeSession()
             }
-        ).also { adapter ->
-            adapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        )
+        adapter.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
-            binding.routineList.adapter = adapter
+        binding.routineList.adapter = adapter
 
-            lifecycleScope.launchWhenStarted {
-                viewModel.routineCards.collect { list ->
-                    if (prefs.contains(SAVED_SESSION_ID)) {
-                        adapter.addSavedSessionCardAndSubmitList(
-                            list,
-                            prefs.getString(SAVED_SESSION_NAME, "").toString(),
-                            prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
-                        )
-                    } else adapter.submitList(list)
+        lifecycleScope.launchWhenStarted {
+            viewModel.state.collect { state ->
+                when (state) {
+                    RoutineListState.Loading -> {
+                        binding.routineList.visibility = View.GONE
+                        binding.routineListProgressBar.visibility = View.VISIBLE
+                        delay(1000)
+                    }
+
+                    is RoutineListState.Loaded -> {
+                        binding.routineList.visibility = View.VISIBLE
+                        binding.routineListProgressBar.visibility = View.GONE
+
+                        if (prefs.contains(SAVED_SESSION_ID)) {
+                            adapter.addSavedSessionCardAndSubmitList(
+                                state.routineCards,
+                                prefs.getString(SAVED_SESSION_NAME, "").toString(),
+                                prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
+                            )
+                        } else adapter.submitList(state.routineCards)
+                    }
                 }
             }
         }
