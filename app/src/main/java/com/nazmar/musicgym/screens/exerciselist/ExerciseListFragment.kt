@@ -28,8 +28,6 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
     private val viewModel: ExerciseListViewModel by activityViewModels()
 
-    private var searchView: SearchView? = null
-
     override fun onStart() {
         super.onStart()
         requireActivity().showBottomNavBar()
@@ -65,7 +63,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
         }
 
         binding.exercisesToolbar.menu.findItem(R.id.search).apply {
-            searchView = (actionView as SearchView).apply {
+            (actionView as SearchView).apply {
                 isIconified = false
                 queryHint = getString(R.string.exercises_search_hint)
                 setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -94,10 +92,14 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
                     imm.hideKeyboard(requireView().windowToken)
                     return true
                 }
-
             })
         }
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        binding.exerciseList.adapter = null
+        super.onDestroyView()
     }
 
     private fun showExerciseView(id: Long) {
@@ -119,10 +121,5 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
         viewModel.setNameQuery("")
         imm.hideKeyboard(requireView().windowToken)
         super.onStop()
-    }
-
-    override fun onDestroy() {
-        searchView?.setOnQueryTextListener(null)
-        super.onDestroy()
     }
 }
