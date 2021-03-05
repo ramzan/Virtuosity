@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nazmar.musicgym.R
@@ -14,6 +15,7 @@ import com.nazmar.musicgym.common.*
 import com.nazmar.musicgym.databinding.FragmentRoutineListBinding
 import com.nazmar.musicgym.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -57,21 +59,23 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
                 override fun onResumeSession() = resumeSession()
             }
-        ).run {
-            this.stateRestorationPolicy =
+        ).also { adapter ->
+            adapter.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
-            binding.routineList.adapter = this
+            binding.routineList.adapter = adapter
 
-            viewModel.routineCards.observe(viewLifecycleOwner, { list ->
-                if (prefs.contains(SAVED_SESSION_ID)) {
-                    this.addSavedSessionCardAndSubmitList(
-                        list,
-                        prefs.getString(SAVED_SESSION_NAME, "").toString(),
-                        prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
-                    )
-                } else this.submitList(list)
-            })
+            lifecycleScope.launchWhenStarted {
+                viewModel.routineCards.collect { list ->
+                    if (prefs.contains(SAVED_SESSION_ID)) {
+                        adapter.addSavedSessionCardAndSubmitList(
+                            list,
+                            prefs.getString(SAVED_SESSION_NAME, "").toString(),
+                            prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
+                        )
+                    } else adapter.submitList(list)
+                }
+            }
         }
 
         binding.fab.setOnClickListener {
@@ -79,6 +83,11 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         }
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        binding.routineList.adapter = null
+        super.onDestroyView()
     }
 
     private fun showRoutineEditor(id: Long) {
