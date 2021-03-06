@@ -26,7 +26,7 @@ class RoutineEditorViewModel @AssistedInject constructor(
     val state: StateFlow<RoutineEditorState>
         get() = _state
 
-    var indexPendingDurationChange: Int? = null
+    var indexToUpdate: Int = -1
 
     init {
         if (routineId == 0L) {
@@ -48,14 +48,18 @@ class RoutineEditorViewModel @AssistedInject constructor(
     }
 
     fun updateDuration(newDuration: Long) {
-        (_state.value as RoutineEditorState.Editing).let {
-            indexPendingDurationChange?.let { index ->
-                val newExercises = it.exercises.toMutableList()
-                newExercises[index] = newExercises[index].copy(duration = newDuration)
-                _state.value = it.copy(exercises = newExercises)
-                indexPendingDurationChange = null
-            }
+        if (indexToUpdate == -1) return
+        val oldState = _state.value
+        val newExercises = oldState.exercises.toMutableList().apply {
+            set(indexToUpdate, get(indexToUpdate).copy(duration = newDuration))
         }
+
+        if (oldState is RoutineEditorState.Editing) {
+            _state.value = oldState.copy(exercises = newExercises)
+        } else if (oldState is RoutineEditorState.New) {
+            _state.value = oldState.copy(exercises = newExercises)
+        }
+        indexToUpdate = -1
     }
 
     fun deleteRoutine() {
@@ -97,7 +101,7 @@ class RoutineEditorViewModel @AssistedInject constructor(
         )
     }
 
-    // region Factory ------------------------------------------------------------------------------
+// region Factory ------------------------------------------------------------------------------
 
     @AssistedFactory
     interface Factory {
@@ -116,7 +120,7 @@ class RoutineEditorViewModel @AssistedInject constructor(
         }
     }
 
-    // endregion Factory ---------------------------------------------------------------------------
+// endregion Factory ---------------------------------------------------------------------------
 }
 
 sealed class RoutineEditorState {

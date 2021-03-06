@@ -169,9 +169,8 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                     is RoutineEditorState.Editing -> {
                         binding.apply {
                             editorToolbar.title = getString(R.string.editorTitleEdit)
-                            if (firstRun) {
-                                nameInput.setText(state.nameInputText)
-                            }
+                            if (firstRun) nameInput.setText(state.nameInputText)
+
                             nameInput.setSelection(state.nameInputText.length)
                             deleteButton.isVisible = true
                             saveButton.isVisible = true
@@ -180,7 +179,10 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                     is RoutineEditorState.New -> {
                         binding.editorToolbar.title = getString(R.string.editorTitleNew)
                         saveButton.isVisible = true
-                        imm.showKeyboard()
+                        if (firstRun) {
+                            binding.nameInput.requestFocus()
+                            imm.showKeyboard()
+                        }
                     }
                 }
             }
@@ -189,7 +191,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     }
 
     private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
-        viewModel.indexPendingDurationChange = exerciseIndex
+        viewModel.indexToUpdate = exerciseIndex
         findNavController().safeNavigate(
             RoutineEditorFragmentDirections.actionRoutineEditorFragmentToDurationPickerDialogFragment(
                 duration
