@@ -109,7 +109,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                             showRenameDialog(state.exercise.name)
                             true
                         }
-                    }
+                    } else if (state is ExerciseDetailState.Deleted) goBack()
                 }
             }
 

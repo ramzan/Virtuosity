@@ -29,7 +29,9 @@ class ExerciseDetailViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             useCase.getExercise(exerciseId).collect { e ->
-                exercise.emit(ExerciseDetailState.Loaded(e))
+                exercise.emit(e?.let {
+                    ExerciseDetailState.Loaded(it)
+                } ?: ExerciseDetailState.Deleted)
             }
         }
     }
@@ -103,6 +105,8 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
 sealed class ExerciseDetailState {
     object Loading : ExerciseDetailState()
+
+    object Deleted : ExerciseDetailState()
 
     data class Loaded(val exercise: Exercise) : ExerciseDetailState()
 }

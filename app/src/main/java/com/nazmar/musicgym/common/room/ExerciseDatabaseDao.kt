@@ -46,7 +46,7 @@ interface RoutineEditorDao {
     suspend fun delete(routine: Routine)
 
     @Query("SELECT * FROM routine_table WHERE id = :key")
-    suspend fun getRoutine(key: Long): Routine
+    suspend fun getRoutine(key: Long): Routine?
 
     @Query("SELECT * FROM exercise_table ORDER BY name COLLATE NOCASE ASC")
     fun getAllExercises(): Flow<List<Exercise>>
@@ -145,7 +145,7 @@ interface ExerciseDetailDao {
     suspend fun delete(exercise: Exercise)
 
     @Query("SELECT * FROM exercise_table WHERE id = :key")
-    fun getExercise(key: Long): Flow<Exercise>
+    fun getExercise(key: Long): Flow<Exercise?>
 
     @Query(
         """

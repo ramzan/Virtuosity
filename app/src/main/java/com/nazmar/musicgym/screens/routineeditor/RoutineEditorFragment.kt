@@ -165,6 +165,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                     RoutineEditorState.Loading -> {
                         /* no-op */
                     }
+                    RoutineEditorState.Deleted -> goBack()
                     is RoutineEditorState.Editing -> {
                         binding.apply {
                             editorToolbar.title = getString(R.string.editorTitleEdit)

@@ -36,13 +36,13 @@ class RoutineEditorViewModel @AssistedInject constructor(
             )
         } else {
             viewModelScope.launch {
-                useCase.getRoutine(routineId).let {
-                    _state.value = RoutineEditorState.Editing(
+                _state.value = useCase.getRoutine(routineId)?.let {
+                    RoutineEditorState.Editing(
                         routine = it,
                         exercises = useCase.getRoutineExerciseNames(routineId).toMutableList(),
                         nameInputText = it.name
                     )
-                }
+                } ?: RoutineEditorState.Deleted
             }
         }
     }
@@ -97,7 +97,7 @@ class RoutineEditorViewModel @AssistedInject constructor(
         )
     }
 
-    // region Factory -----------------------------------------------------------------------------------
+    // region Factory ------------------------------------------------------------------------------
 
     @AssistedFactory
     interface Factory {
@@ -116,7 +116,7 @@ class RoutineEditorViewModel @AssistedInject constructor(
         }
     }
 
-    // endregion Factory -----------------------------------------------------------------------------------
+    // endregion Factory ---------------------------------------------------------------------------
 }
 
 sealed class RoutineEditorState {
@@ -124,6 +124,11 @@ sealed class RoutineEditorState {
     abstract var nameInputText: String
 
     object Loading : RoutineEditorState() {
+        override val exercises = mutableListOf<RoutineExercise>()
+        override var nameInputText: String = ""
+    }
+
+    object Deleted : RoutineEditorState() {
         override val exercises = mutableListOf<RoutineExercise>()
         override var nameInputText: String = ""
     }
