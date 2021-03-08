@@ -6,7 +6,7 @@
     app:startDestination="@id/routineListFragment">
     <fragment
         android:id="@+id/exerciseListFragment"
-        android:name="com.nazmar.musicgym.screens.exerciselist.ExerciseListFragment"
+        android:name="ca.ramzan.virtuosity.screens.exerciselist.ExerciseListFragment"
         android:label="@string/exercises"
         tools:layout="@layout/fragment_exercise_list">
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/routineListFragment"
-        android:name="com.nazmar.musicgym.screens.routinelist.RoutineListFragment"
+        android:name="ca.ramzan.virtuosity.screens.routinelist.RoutineListFragment"
         android:label="@string/practice"
         tools:layout="@layout/fragment_routine_list">
         <action
@@ -33,12 +33,12 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.nazmar.musicgym.screens.settings.SettingsFragment"
+        android:name="ca.ramzan.virtuosity.screens.settings.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/exerciseDetailFragment"
-        android:name="com.nazmar.musicgym.screens.exercisedetail.ExerciseDetailFragment"
+        android:name="ca.ramzan.virtuosity.screens.exercisedetail.ExerciseDetailFragment"
         android:label="ExerciseDetailFragment">
         <argument
             android:name="exerciseId"
@@ -52,7 +52,7 @@
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.nazmar.musicgym.screens.history.HistoryFragment"
+        android:name="ca.ramzan.virtuosity.screens.history.HistoryFragment"
         android:label="@string/history"
         tools:layout="@layout/fragment_history">
         <action
@@ -61,7 +61,7 @@
     </fragment>
     <dialog
         android:id="@+id/confirmationDialog"
-        android:name="com.nazmar.musicgym.screens.dialogs.ConfirmationDialog"
+        android:name="ca.ramzan.virtuosity.screens.dialogs.ConfirmationDialog"
         android:label="ConfirmationDialog">
         <argument
             android:name="titleId"
@@ -69,7 +69,7 @@
     </dialog>
     <dialog
         android:id="@+id/textInputDialog"
-        android:name="com.nazmar.musicgym.screens.dialogs.TextInputDialog"
+        android:name="ca.ramzan.virtuosity.screens.dialogs.TextInputDialog"
         android:label="TextInputDialog">
         <argument
             android:name="titleId"
@@ -80,7 +80,7 @@
     </dialog>
     <fragment
         android:id="@+id/routineEditorFragment"
-        android:name="com.nazmar.musicgym.screens.routineeditor.RoutineEditorFragment"
+        android:name="ca.ramzan.virtuosity.screens.routineeditor.RoutineEditorFragment"
         android:label="RoutineEditorFragment">
         <argument
             android:name="routineId"
@@ -94,7 +94,7 @@
     </fragment>
     <dialog
         android:id="@+id/durationPickerDialogFragment"
-        android:name="com.nazmar.musicgym.screens.dialogs.DurationPickerDialogFragment"
+        android:name="ca.ramzan.virtuosity.screens.dialogs.DurationPickerDialogFragment"
         android:label="TimerEditorDialogFragment">
         <argument
             android:name="initialDuration"
@@ -102,7 +102,7 @@
     </dialog>
     <fragment
         android:id="@+id/sessionFragment"
-        android:name="com.nazmar.musicgym.screens.session.SessionFragment"
+        android:name="ca.ramzan.virtuosity.screens.session.SessionFragment"
         android:label="SessionFragment">
         <argument
             android:name="routineId"
@@ -116,7 +116,7 @@
     </fragment>
     <dialog
         android:id="@+id/infoDialog"
-        android:name="com.nazmar.musicgym.screens.dialogs.InfoDialog"
+        android:name="ca.ramzan.virtuosity.screens.dialogs.InfoDialog"
         android:label="InfoDialog">
         <argument
             android:name="titleId"

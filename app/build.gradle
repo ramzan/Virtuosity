@@ -11,7 +11,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.nazmar.musicgym"
+        applicationId "ca.ramzan.virtuosity"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
