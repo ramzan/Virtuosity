@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.CONFIRMATION_RESULT
@@ -43,14 +44,26 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
 
         val adapter = SessionHistoryDisplayAdapter(::deleteSessionHistory)
 
-        adapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-
         binding.historyList.adapter = adapter
 
-        job = lifecycleScope.launchWhenStarted {
+        job = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.history.collectLatest {
                 adapter.submitData(it)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            adapter.loadStateFlow.collectLatest { state ->
+                when (state.refresh) {
+                    is LoadState.Loading -> {
+                        binding.historyProgressBar.visibility = View.VISIBLE
+                        binding.historyList.visibility = View.GONE
+                    }
+                    else -> {
+                        binding.historyProgressBar.visibility = View.GONE
+                        binding.historyList.visibility = View.VISIBLE
+                    }
+                }
             }
         }
 
