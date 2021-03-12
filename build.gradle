@@ -6,6 +6,7 @@ buildscript {
         navigation_version = "2.3.3"
         paging_version = "3.0.0-beta01"
         hilt_version = '2.33-beta'
+        lifecycle_version = "2.3.0"
     }
     repositories {
         google()
