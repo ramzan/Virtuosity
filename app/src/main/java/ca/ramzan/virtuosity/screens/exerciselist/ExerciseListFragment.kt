@@ -73,6 +73,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
 
         binding.exercisesToolbar.menu.findItem(R.id.search).apply {
             (actionView as SearchView).apply {
+                maxWidth = Integer.MAX_VALUE
                 isIconified = false
                 queryHint = getString(R.string.exercises_search_hint)
                 setOnQueryTextListener(object : SearchView.OnQueryTextListener {
