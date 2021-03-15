@@ -2,10 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/exerciseListFragment"
-        android:icon="@drawable/ic_baseline_format_list_bulleted_24"
-        android:title="@string/exercises" />
-    <item
         android:id="@+id/historyFragment"
         android:icon="@drawable/ic_baseline_history_24"
         android:title="@string/history" />
@@ -13,7 +9,10 @@
         android:id="@+id/routineListFragment"
         android:icon="@drawable/ic_baseline_music_note_24"
         android:title="@string/practice" />
-
+    <item
+        android:id="@+id/exerciseListFragment"
+        android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+        android:title="@string/exercises" />
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_baseline_settings_24"
