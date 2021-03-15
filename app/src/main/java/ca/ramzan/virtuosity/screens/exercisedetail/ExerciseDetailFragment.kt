@@ -14,6 +14,11 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import ca.ramzan.virtuosity.R
+import ca.ramzan.virtuosity.common.*
+import ca.ramzan.virtuosity.databinding.FragmentExerciseDetailBinding
+import ca.ramzan.virtuosity.exercises.ExerciseDetailUseCase
+import ca.ramzan.virtuosity.screens.BaseFragment
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
@@ -22,11 +27,6 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
-import ca.ramzan.virtuosity.R
-import ca.ramzan.virtuosity.common.*
-import ca.ramzan.virtuosity.databinding.FragmentExerciseDetailBinding
-import ca.ramzan.virtuosity.exercises.ExerciseDetailUseCase
-import ca.ramzan.virtuosity.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.time.Instant
@@ -64,6 +64,13 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                 format.format(this.atZone(ZoneId.systemDefault()))
             }
         }
+    }
+
+    private val bpmFormatter = object : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            return value.toInt().toString()
+        }
+
     }
 
     private val yAxisFormatter = object : ValueFormatter() {
@@ -140,30 +147,43 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                 viewModel.history.collect { state ->
                     when (state) {
                         ExerciseDetailUseCase.GraphState.Loading -> {
-                            binding.loadingIndicator.visibility = View.VISIBLE
-                            binding.historyGraph.visibility = View.GONE
-                            binding.noDataMessage.visibility = View.GONE
+                            binding.apply {
+                                loadingIndicator.visibility = View.VISIBLE
+                                historyGraph.visibility = View.GONE
+                                statsCard.visibility = View.GONE
+                                noDataMessage.visibility = View.GONE
+                            }
                         }
                         ExerciseDetailUseCase.GraphState.NoData -> {
-                            binding.loadingIndicator.visibility = View.GONE
-                            binding.historyGraph.visibility = View.GONE
-                            binding.noDataMessage.visibility = View.VISIBLE
+                            binding.apply {
+                                loadingIndicator.visibility = View.GONE
+                                historyGraph.visibility = View.GONE
+                                statsCard.visibility = View.GONE
+                                noDataMessage.visibility = View.VISIBLE
+                            }
                         }
                         is ExerciseDetailUseCase.GraphState.Loaded -> {
-                            binding.loadingIndicator.visibility = View.GONE
-                            binding.historyGraph.visibility = View.VISIBLE
-                            binding.noDataMessage.visibility = View.GONE
-                            val dataSet = LineDataSet(state.data, "BPM")
-                            data = LineData(dataSet)
-                            axisLeft.axisMaximum = state.maxBpm * 1.05f
                             binding.apply {
+                                loadingIndicator.visibility = View.GONE
+                                historyGraph.visibility = View.VISIBLE
+                                statsCard.visibility = View.VISIBLE
+                                noDataMessage.visibility = View.GONE
+                                val dataSet = LineDataSet(state.data, "BPM")
+                                data = LineData(dataSet)
+                                data.setValueFormatter(bpmFormatter)
+                                axisLeft.axisMaximum = state.maxBpm * 1.05f
+
                                 bpmSlowest.text = getString(
                                     R.string.history_stats_slowest_message,
-                                    state.minBpm.toLong()
+                                    state.minBpm.toInt()
                                 )
                                 bpmFastest.text = getString(
                                     R.string.history_stats_fastest_message,
-                                    state.maxBpm.toLong()
+                                    state.maxBpm.toInt()
+                                )
+                                bpmAverage.text = getString(
+                                    R.string.history_stats_average_message,
+                                    state.avgBpm
                                 )
                                 bpmProgress.text = getString(
                                     if (state.periodImprovement < 0) {

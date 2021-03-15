@@ -49,10 +49,11 @@
     <string name="timer_notification_time_remaining_prefix">Time remaining:</string>
     <string name="no_exercise_history_data_message">No data for this period</string>
     <string name="drag_handle_description">Drag handle</string>
-    <string name="history_stats_slowest_message">Slowest BPM: %d</string>
-    <string name="history_stats_fastest_message">Fastest BPM: %d</string>
-    <string name="history_stats_progress_message">Progress over period: +%d BPM</string>
-    <string name="history_stats_progress_negative_message">Progress over period: %d BPM</string>
+    <string name="history_stats_average_message">Average: %d BPM</string>
+    <string name="history_stats_slowest_message">Slowest: %d BPM</string>
+    <string name="history_stats_fastest_message">Fastest: %d BPM</string>
+    <string name="history_stats_progress_message">Progress: +%d BPM</string>
+    <string name="history_stats_progress_negative_message">Progress: %d BPM</string>
     <string name="timer_editor_hint">Timer duration</string>
     <string name="session_summary_title">Summary</string>
     <string-array name="history_range_array">
@@ -64,5 +65,6 @@
     </string-array>
     <string name="empty_routine_dialog_title">No exercises found</string>
     <string name="empty_routine_dialog_message">This routine does not contain any exercises. You can add exercises by tapping the Edit button in the main menu.</string>
+    <string name="stats_card_title">Stats for period</string>
 
 </resources>

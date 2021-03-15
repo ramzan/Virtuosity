@@ -1,7 +1,7 @@
 package ca.ramzan.virtuosity.exercises
 
-import com.github.mikephil.charting.data.Entry
 import ca.ramzan.virtuosity.common.room.ExerciseDetailDao
+import com.github.mikephil.charting.data.Entry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +23,8 @@ class ExerciseDetailUseCase @Inject constructor(private val dao: ExerciseDetailD
         data class Loaded(
             val maxBpm: Float,
             val minBpm: Float,
-            val periodImprovement: Long,
+            val avgBpm: Int,
+            val periodImprovement: Int,
             val data: List<Entry>
         ) : GraphState()
     }
@@ -38,7 +39,8 @@ class ExerciseDetailUseCase @Inject constructor(private val dao: ExerciseDetailD
             else GraphState.Loaded(
                 history.maxOf { it.y },
                 history.minOf { it.y },
-                (history.last().y - history.first().y).toLong(),
+                history.map { it.y }.average().toInt(),
+                (history.last().y - history.first().y).toInt(),
                 history
             )
         )
