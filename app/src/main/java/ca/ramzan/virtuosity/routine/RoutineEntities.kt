@@ -50,3 +50,9 @@ data class RoutineExercise(
 
     val duration: Long
 )
+
+data class RoutineDisplay(
+    val routine: Routine,
+
+    val exercises: List<String>
+)

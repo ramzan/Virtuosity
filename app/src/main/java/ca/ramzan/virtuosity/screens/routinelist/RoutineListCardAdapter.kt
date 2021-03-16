@@ -1,5 +1,6 @@
 package ca.ramzan.virtuosity.screens.routinelist
 
+import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -48,6 +49,7 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
 
         fun bind(item: RoutineListCard.RoutineCard, onClickListener: OnClickListener) {
             binding.routineTitle.text = item.name
+            binding.routinePreview.text = item.preview
             binding.editRoutineButton.setOnClickListener {
                 onClickListener.onEdit(item)
             }
@@ -132,6 +134,7 @@ sealed class RoutineListCard {
 
     data class RoutineCard(
         override val id: Long,
-        val name: String
+        val name: String,
+        val preview: SpannedString
     ) : RoutineListCard()
 }

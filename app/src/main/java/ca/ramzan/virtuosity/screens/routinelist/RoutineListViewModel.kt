@@ -1,5 +1,7 @@
 package ca.ramzan.virtuosity.screens.routinelist
 
+import android.text.SpannedString
+import androidx.core.text.buildSpannedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.ramzan.virtuosity.routine.RoutineListUseCase
@@ -21,11 +23,19 @@ class RoutineListViewModel @Inject constructor(val useCase: RoutineListUseCase) 
             useCase.getAllRoutines().collect { list ->
                 state.emit(RoutineListState.Loaded(list.map {
                     RoutineListCard.RoutineCard(
-                        it.id,
-                        it.name
+                        it.routine.id,
+                        it.routine.name,
+                        getPreview(it.exercises)
                     )
                 }))
             }
+        }
+    }
+
+    private fun getPreview(list: List<String>): SpannedString {
+        var i = 1
+        return buildSpannedString {
+            list.map { exercise -> append("${i++}. $exercise\n") }
         }
     }
 }

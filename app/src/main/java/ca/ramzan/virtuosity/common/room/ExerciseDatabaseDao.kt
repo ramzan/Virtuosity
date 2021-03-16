@@ -8,10 +8,12 @@ import ca.ramzan.virtuosity.exercises.ExerciseMaxBpm
 import ca.ramzan.virtuosity.exercises.HistoryGraphDataPoint
 import ca.ramzan.virtuosity.history.SessionHistoryEntity
 import ca.ramzan.virtuosity.routine.Routine
+import ca.ramzan.virtuosity.routine.RoutineDisplay
 import ca.ramzan.virtuosity.routine.RoutineExercise
 import ca.ramzan.virtuosity.routine.RoutineExerciseEntity
 import ca.ramzan.virtuosity.session.SessionExercise
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @Dao
 interface ExerciseListDao {
@@ -178,4 +180,19 @@ interface HistoryDao {
 interface RoutineListDao {
     @Query("SELECT * FROM routine_table ORDER BY name COLLATE NOCASE ASC")
     fun getAllRoutines(): Flow<List<Routine>>
+
+    @Query(
+        """
+        SELECT name
+        FROM routine_exercise_table JOIN exercise_table ON exerciseId = exercise_table.id 
+        WHERE routineId = :routineId ORDER BY `order`
+        """
+    )
+    suspend fun getRoutinePreview(routineId: Long): List<String>
+
+    fun getRoutinesWithPreviews(): Flow<List<RoutineDisplay>> {
+        return getAllRoutines().map { list ->
+            list.map { routine -> RoutineDisplay(routine, getRoutinePreview(routine.id)) }
+        }
+    }
 }

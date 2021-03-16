@@ -13,7 +13,7 @@ class RoutineListUseCase @Inject constructor(
     private val prefs: SharedPreferences
 ) {
 
-    fun getAllRoutines() = dao.getAllRoutines()
+    fun getAllRoutines() = dao.getRoutinesWithPreviews()
 
     fun clearSavedSession() {
         prefs.edit {
