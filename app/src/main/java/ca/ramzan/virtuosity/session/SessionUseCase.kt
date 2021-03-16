@@ -17,7 +17,8 @@ class SessionUseCase @Inject constructor(
     private val prefs: SharedPreferences
 ) {
 
-    suspend fun getRoutineName(id: Long) = dao.getRoutineName(id)
+    suspend fun getRoutineName(id: Long) =
+        prefs.getString(SAVED_SESSION_NAME, dao.getRoutineName(id)) ?: ""
 
     suspend fun getSession(routineId: Long): MutableList<SessionExercise> {
         return if (prefs.contains(SAVED_SESSION_NAME)) {
