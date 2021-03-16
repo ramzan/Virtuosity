@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.databinding.ListItemExerciseBinding
 import ca.ramzan.virtuosity.exercises.ExerciseMaxBpm
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+import java.util.*
 
 
 class ExerciseAdapter(private val onClickListener: (ExerciseMaxBpm) -> Unit) :
-    ListAdapter<ExerciseMaxBpm, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()) {
+    ListAdapter<ExerciseMaxBpm, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()),
+    FastScrollRecyclerView.SectionedAdapter {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -43,6 +46,10 @@ class ExerciseAdapter(private val onClickListener: (ExerciseMaxBpm) -> Unit) :
                 return ViewHolder(binding)
             }
         }
+    }
+
+    override fun getSectionName(position: Int): String {
+        return currentList[position].name.first().toString().toUpperCase(Locale.ROOT)
     }
 }
 
