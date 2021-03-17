@@ -33,7 +33,7 @@ class ExerciseAdapter(private val onClickListener: (ExerciseMaxBpm) -> Unit) :
 
         fun bind(item: ExerciseMaxBpm) {
             binding.exerciseName.text = item.name
-            binding.maxBpm.text = (item.bpm ?: 0).toString()
+            binding.maxBpm.text = item.bpmDisplay
         }
 
         companion object {

@@ -1,9 +1,6 @@
 package ca.ramzan.virtuosity.exercises
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import ca.ramzan.virtuosity.history.SessionHistoryEntity
 
 @Entity(tableName = "exercise_table")
@@ -22,7 +19,10 @@ data class ExerciseMaxBpm(
     val id: Long,
     val name: String,
     val bpm: Int?
-)
+) {
+    @Ignore
+    val bpmDisplay = "${bpm ?: 0} BPM"
+}
 
 @Entity(
     tableName = "exercise_history_table",
