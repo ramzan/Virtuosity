@@ -15,7 +15,6 @@
         <item name="colorSurface">@color/surfaceColor</item>
         <item name="backgroundTint">@color/backgroundColor</item>
         <item name="android:colorBackground">@color/backgroundColor</item>
-        <item name="android:editTextColor">@android:color/white</item>
 
     </style>
 
