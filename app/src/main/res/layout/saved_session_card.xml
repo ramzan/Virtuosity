@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/saved_session_card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    style="@style/routine_card_style">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="12dp"
         android:layout_marginHorizontal="0dp"
         android:orientation="vertical">
 
         <TextView
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/resume_session_title" />
+            android:text="@string/resume_session_title"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/saved_session_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:text="Routine name" />
 
         <TextView
             android:id="@+id/saved_session_date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:text="March 4 13:45:12" />
 
         <Button
             android:id="@+id/resume_session_btn"
