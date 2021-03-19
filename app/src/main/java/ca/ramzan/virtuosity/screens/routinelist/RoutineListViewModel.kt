@@ -1,7 +1,5 @@
 package ca.ramzan.virtuosity.screens.routinelist
 
-import android.text.SpannedString
-import androidx.core.text.buildSpannedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.ramzan.virtuosity.routine.RoutineListUseCase
@@ -32,11 +30,9 @@ class RoutineListViewModel @Inject constructor(val useCase: RoutineListUseCase) 
         }
     }
 
-    private fun getPreview(list: List<String>): SpannedString {
+    private fun getPreview(list: List<String>): String {
         var i = 1
-        return buildSpannedString {
-            list.map { exercise -> append("${i++}. $exercise\n") }
-        }
+        return list.joinToString("\n") { exercise -> "${i++}. $exercise" }
     }
 }
 

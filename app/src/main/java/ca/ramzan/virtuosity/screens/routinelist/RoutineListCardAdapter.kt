@@ -1,6 +1,5 @@
 package ca.ramzan.virtuosity.screens.routinelist
 
-import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -135,6 +134,6 @@ sealed class RoutineListCard {
     data class RoutineCard(
         override val id: Long,
         val name: String,
-        val preview: SpannedString
+        val preview: String
     ) : RoutineListCard()
 }
