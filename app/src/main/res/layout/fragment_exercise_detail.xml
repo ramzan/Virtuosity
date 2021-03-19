@@ -49,27 +49,35 @@
         app:layout_constraintStart_toEndOf="@id/history_heading"
         app:layout_constraintTop_toBottomOf="@id/app_bar" />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/history_graph"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/history_graph_card"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="4dp"
+        android:layout_margin="8dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/stats_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/history_ranger_spinner"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/history_graph"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/stats_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/history_graph">
+        app:layout_constraintTop_toBottomOf="@id/history_graph_card">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

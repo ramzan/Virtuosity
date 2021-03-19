@@ -149,7 +149,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                         ExerciseDetailUseCase.GraphState.Loading -> {
                             binding.apply {
                                 loadingIndicator.visibility = View.VISIBLE
-                                historyGraph.visibility = View.GONE
+                                historyGraphCard.visibility = View.GONE
                                 statsCard.visibility = View.GONE
                                 noDataMessage.visibility = View.GONE
                             }
@@ -157,7 +157,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                         ExerciseDetailUseCase.GraphState.NoData -> {
                             binding.apply {
                                 loadingIndicator.visibility = View.GONE
-                                historyGraph.visibility = View.GONE
+                                historyGraphCard.visibility = View.GONE
                                 statsCard.visibility = View.GONE
                                 noDataMessage.visibility = View.VISIBLE
                             }
@@ -165,7 +165,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                         is ExerciseDetailUseCase.GraphState.Loaded -> {
                             binding.apply {
                                 loadingIndicator.visibility = View.GONE
-                                historyGraph.visibility = View.VISIBLE
+                                historyGraphCard.visibility = View.VISIBLE
                                 statsCard.visibility = View.VISIBLE
                                 noDataMessage.visibility = View.GONE
                                 val dataSet = LineDataSet(state.data, "BPM")
