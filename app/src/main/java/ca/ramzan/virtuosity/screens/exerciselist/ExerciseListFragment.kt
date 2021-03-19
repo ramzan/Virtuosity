@@ -54,13 +54,21 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
             viewModel.state.collect { state ->
                 when (state) {
                     is ExerciseListState.Loaded -> {
-                        binding.exerciseList.visibility = View.VISIBLE
-                        binding.exerciseListProgressBar.visibility = View.GONE
                         adapter.submitList(state.filteredExercises)
+                        if (state.filteredExercises.isEmpty()) {
+                            binding.exerciseList.visibility = View.GONE
+                            binding.exerciseListProgressBar.visibility = View.GONE
+                            binding.noExercisesMessage.visibility = View.VISIBLE
+                        } else {
+                            binding.exerciseList.visibility = View.VISIBLE
+                            binding.exerciseListProgressBar.visibility = View.GONE
+                            binding.noExercisesMessage.visibility = View.GONE
+                        }
                     }
                     ExerciseListState.Loading -> {
                         binding.exerciseList.visibility = View.GONE
                         binding.exerciseListProgressBar.visibility = View.VISIBLE
+                        binding.noExercisesMessage.visibility = View.GONE
                     }
                 }
             }
