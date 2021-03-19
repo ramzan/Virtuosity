@@ -67,5 +67,6 @@
     <string name="empty_routine_dialog_message">This routine does not contain any exercises. You can add exercises by tapping the \'Edit\' button in the main menu.</string>
     <string name="stats_card_title">Stats for period</string>
     <string name="no_exercises_message">No exercises found.\nTap the \'+\' button to get started!</string>
+    <string name="no_routines_message">No routines found.\nTap the \'+\' button to get started!</string>
 
 </resources>

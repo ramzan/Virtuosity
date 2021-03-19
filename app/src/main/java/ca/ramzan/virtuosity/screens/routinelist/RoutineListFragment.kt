@@ -71,11 +71,19 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
                     RoutineListState.Loading -> {
                         binding.routineList.visibility = View.GONE
                         binding.routineListProgressBar.visibility = View.VISIBLE
+                        binding.noRoutinesMessage.visibility = View.GONE
                     }
 
                     is RoutineListState.Loaded -> {
-                        binding.routineList.visibility = View.VISIBLE
-                        binding.routineListProgressBar.visibility = View.GONE
+                        if (state.routineCards.isEmpty() && !prefs.contains(SAVED_SESSION_ID)) {
+                            binding.routineList.visibility = View.GONE
+                            binding.routineListProgressBar.visibility = View.GONE
+                            binding.noRoutinesMessage.visibility = View.VISIBLE
+                        } else {
+                            binding.routineList.visibility = View.VISIBLE
+                            binding.routineListProgressBar.visibility = View.GONE
+                            binding.noRoutinesMessage.visibility = View.GONE
+                        }
 
                         if (prefs.contains(SAVED_SESSION_ID)) {
                             adapter.addSavedSessionCardAndSubmitList(

@@ -17,30 +17,34 @@
             app:title="@string/practice" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <ProgressBar
+        android:id="@+id/routine_list_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:paddingTop="?attr/actionBarSize"
+        tools:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/routine_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="?attr/actionBarSize">
+        android:layout_marginHorizontal="0dp"
+        android:paddingTop="?attr/actionBarSize"
+        android:visibility="gone"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/list_item_routine"
+        tools:visibility="visible" />
 
-        <ProgressBar
-            android:id="@+id/routine_list_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            tools:visibility="gone" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/routine_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="0dp"
-            android:visibility="gone"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/list_item_routine"
-            tools:visibility="visible" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/no_routines_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingTop="?attr/actionBarSize"
+        android:text="@string/no_routines_message"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
