@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.databinding.ListItemRoutineBinding
+import ca.ramzan.virtuosity.databinding.ListItemRoutineHeaderBinding
 import ca.ramzan.virtuosity.databinding.SavedSessionCardBinding
 import java.time.Instant
 
 private const val ITEM_VIEW_TYPE_SESSION = 0
 private const val ITEM_VIEW_TYPE_ROUTINE = 1
+private const val ITEM_VIEW_TYPE_ROUTINE_HEADER = 2
 
 class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<RoutineListCard, RecyclerView.ViewHolder>(RoutineListCardDiffCallback()) {
@@ -73,6 +75,21 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
         }
     }
 
+    class RoutineHeaderViewHolder private constructor(binding: ListItemRoutineHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        companion object {
+            fun from(parent: ViewGroup): RoutineHeaderViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+
+                val binding =
+                    ListItemRoutineHeaderBinding.inflate(layoutInflater, parent, false)
+
+                return RoutineHeaderViewHolder(binding)
+            }
+        }
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
         when (holder) {
@@ -84,6 +101,9 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
                 item as RoutineListCard.SavedSessionCard,
                 onClickListener
             )
+            is RoutineHeaderViewHolder -> {
+                /* no-op */
+            }
             else -> throw Exception("Illegal holder type: $holder")
         }
     }
@@ -91,6 +111,7 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_TYPE_ROUTINE -> RoutineCardViewHolder.from(parent)
+            ITEM_VIEW_TYPE_ROUTINE_HEADER -> RoutineHeaderViewHolder.from(parent)
             ITEM_VIEW_TYPE_SESSION -> SavedSessionCardViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
@@ -100,6 +121,7 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
         return when (getItem(position)) {
             is RoutineListCard.RoutineCard -> ITEM_VIEW_TYPE_ROUTINE
             is RoutineListCard.SavedSessionCard -> ITEM_VIEW_TYPE_SESSION
+            RoutineListCard.RoutinesHeader -> ITEM_VIEW_TYPE_ROUTINE_HEADER
         }
     }
 
@@ -128,6 +150,10 @@ class RoutineListCardDiffCallback : DiffUtil.ItemCallback<RoutineListCard>() {
 
 sealed class RoutineListCard {
     abstract val id: Long
+
+    object RoutinesHeader : RoutineListCard() {
+        override val id = -1L
+    }
 
     data class SavedSessionCard(
         val name: String,

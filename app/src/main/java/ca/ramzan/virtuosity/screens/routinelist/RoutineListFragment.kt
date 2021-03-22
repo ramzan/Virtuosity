@@ -90,13 +90,15 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
                             binding.noRoutinesMessage.visibility = View.GONE
                         }
 
+                        val list = listOf(RoutineListCard.RoutinesHeader) + state.routineCards
+
                         if (prefs.contains(SAVED_SESSION_ID)) {
                             adapter.addSavedSessionCardAndSubmitList(
-                                state.routineCards,
+                                list,
                                 prefs.getString(SAVED_SESSION_NAME, "").toString(),
                                 prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
                             )
-                        } else adapter.submitList(state.routineCards)
+                        } else adapter.submitList(list)
                     }
                 }
             }
