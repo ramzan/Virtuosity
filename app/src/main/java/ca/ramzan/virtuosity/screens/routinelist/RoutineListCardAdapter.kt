@@ -19,6 +19,7 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
         fun onEdit(routine: RoutineListCard.RoutineCard)
         fun onStart(routine: RoutineListCard.RoutineCard)
         fun onResumeSession()
+        fun onCancelSession()
     }
 
     class SavedSessionCardViewHolder(private val binding: SavedSessionCardBinding) :
@@ -30,6 +31,9 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
                 savedSessionDate.text = item.time.toString()
                 resumeSessionBtn.setOnClickListener {
                     onClickListener.onResumeSession()
+                }
+                cancelSessionBtn.setOnClickListener {
+                    onClickListener.onCancelSession()
                 }
             }
         }

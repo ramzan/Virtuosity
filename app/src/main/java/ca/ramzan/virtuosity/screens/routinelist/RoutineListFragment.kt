@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
@@ -25,6 +26,8 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
     lateinit var prefs: SharedPreferences
 
     private val viewModel: RoutineListViewModel by viewModels()
+
+    private lateinit var adapter: RoutineListCardAdapter
 
     override fun onStart() {
         super.onStart()
@@ -49,7 +52,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
         _binding = FragmentRoutineListBinding.inflate(inflater)
 
-        val adapter = RoutineListCardAdapter(
+        adapter = RoutineListCardAdapter(
             object : RoutineListCardAdapter.OnClickListener {
                 override fun onEdit(routine: RoutineListCard.RoutineCard) =
                     showRoutineEditor(routine.id)
@@ -58,6 +61,8 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
                     checkSessionSaved(routine.id)
 
                 override fun onResumeSession() = resumeSession()
+
+                override fun onCancelSession() = cancelSession()
             }
         )
         adapter.stateRestorationPolicy =
@@ -102,6 +107,13 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         }
 
         return binding.root
+    }
+
+    private fun cancelSession() {
+        viewModel.useCase.clearSavedSession()
+        (viewModel.state.value as? RoutineListState.Loaded)?.run {
+            adapter.submitList(routineCards)
+        }
     }
 
     override fun onDestroyView() {

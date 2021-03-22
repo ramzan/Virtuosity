@@ -68,5 +68,6 @@
     <string name="stats_card_title">Stats for period</string>
     <string name="no_exercises_message">No exercises found.\nTap the \'+\' button to create one!</string>
     <string name="no_routines_message">No routines found.\nTap the \'+\' button to create one!</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
