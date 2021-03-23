@@ -76,29 +76,18 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
                     RoutineListState.Loading -> {
                         binding.routineList.visibility = View.GONE
                         binding.routineListProgressBar.visibility = View.VISIBLE
-                        binding.noRoutinesMessage.visibility = View.GONE
                     }
 
                     is RoutineListState.Loaded -> {
-                        if (state.routineCards.isEmpty() && !prefs.contains(SAVED_SESSION_ID)) {
-                            binding.routineList.visibility = View.GONE
-                            binding.routineListProgressBar.visibility = View.GONE
-                            binding.noRoutinesMessage.visibility = View.VISIBLE
-                        } else {
-                            binding.routineList.visibility = View.VISIBLE
-                            binding.routineListProgressBar.visibility = View.GONE
-                            binding.noRoutinesMessage.visibility = View.GONE
-                        }
-
-                        val list = listOf(RoutineListCard.RoutinesHeader) + state.routineCards
-
+                        binding.routineList.visibility = View.VISIBLE
+                        binding.routineListProgressBar.visibility = View.GONE
                         if (prefs.contains(SAVED_SESSION_ID)) {
                             adapter.addSavedSessionCardAndSubmitList(
-                                list,
+                                state.routineCards,
                                 prefs.getString(SAVED_SESSION_NAME, "").toString(),
                                 prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
                             )
-                        } else adapter.submitList(list)
+                        } else adapter.submitListWithHeader(state.routineCards)
                     }
                 }
             }
@@ -114,7 +103,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
     private fun cancelSession() {
         viewModel.useCase.clearSavedSession()
         (viewModel.state.value as? RoutineListState.Loaded)?.run {
-            adapter.submitList(routineCards)
+            adapter.submitListWithHeader(routineCards)
         }
     }
 

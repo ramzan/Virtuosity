@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ca.ramzan.virtuosity.databinding.ListItemNoRoutinesBinding
 import ca.ramzan.virtuosity.databinding.ListItemRoutineBinding
 import ca.ramzan.virtuosity.databinding.ListItemRoutineHeaderBinding
 import ca.ramzan.virtuosity.databinding.SavedSessionCardBinding
@@ -13,6 +14,7 @@ import java.time.Instant
 private const val ITEM_VIEW_TYPE_SESSION = 0
 private const val ITEM_VIEW_TYPE_ROUTINE = 1
 private const val ITEM_VIEW_TYPE_ROUTINE_HEADER = 2
+private const val ITEM_VIEW_TYPE_NO_ROUTINES = 3
 
 class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<RoutineListCard, RecyclerView.ViewHolder>(RoutineListCardDiffCallback()) {
@@ -90,6 +92,21 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
         }
     }
 
+    class NoRoutinesMessageViewHolder private constructor(binding: ListItemNoRoutinesBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        companion object {
+            fun from(parent: ViewGroup): NoRoutinesMessageViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+
+                val binding =
+                    ListItemNoRoutinesBinding.inflate(layoutInflater, parent, false)
+
+                return NoRoutinesMessageViewHolder(binding)
+            }
+        }
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
         when (holder) {
@@ -101,7 +118,7 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
                 item as RoutineListCard.SavedSessionCard,
                 onClickListener
             )
-            is RoutineHeaderViewHolder -> {
+            is RoutineHeaderViewHolder, is NoRoutinesMessageViewHolder -> {
                 /* no-op */
             }
             else -> throw Exception("Illegal holder type: $holder")
@@ -113,6 +130,7 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
             ITEM_VIEW_TYPE_ROUTINE -> RoutineCardViewHolder.from(parent)
             ITEM_VIEW_TYPE_ROUTINE_HEADER -> RoutineHeaderViewHolder.from(parent)
             ITEM_VIEW_TYPE_SESSION -> SavedSessionCardViewHolder.from(parent)
+            ITEM_VIEW_TYPE_NO_ROUTINES -> NoRoutinesMessageViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
@@ -122,6 +140,7 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
             is RoutineListCard.RoutineCard -> ITEM_VIEW_TYPE_ROUTINE
             is RoutineListCard.SavedSessionCard -> ITEM_VIEW_TYPE_SESSION
             RoutineListCard.RoutinesHeader -> ITEM_VIEW_TYPE_ROUTINE_HEADER
+            RoutineListCard.NoRoutinesMessage -> ITEM_VIEW_TYPE_NO_ROUTINES
         }
     }
 
@@ -132,9 +151,18 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
     ) {
         submitList(
             listOf(
-                RoutineListCard.SavedSessionCard(sessionName, Instant.ofEpochMilli(sessionTime))
-            ) + list
+                RoutineListCard.SavedSessionCard(sessionName, Instant.ofEpochMilli(sessionTime)),
+            ) + createList(list)
         )
+    }
+
+    fun submitListWithHeader(list: List<RoutineListCard>) {
+        super.submitList(createList(list))
+    }
+
+    private fun createList(list: List<RoutineListCard>): List<RoutineListCard> {
+        return listOf(RoutineListCard.RoutinesHeader) +
+                (if (list.isEmpty()) listOf(RoutineListCard.NoRoutinesMessage) else list)
     }
 }
 
@@ -153,6 +181,10 @@ sealed class RoutineListCard {
 
     object RoutinesHeader : RoutineListCard() {
         override val id = -1L
+    }
+
+    object NoRoutinesMessage : RoutineListCard() {
+        override val id = -2L
     }
 
     data class SavedSessionCard(
