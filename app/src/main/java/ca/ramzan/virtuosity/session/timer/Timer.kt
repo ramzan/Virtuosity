@@ -66,7 +66,7 @@ class Timer(
         get() = _timeLeft
 
     val timeLeftPercent = timeLeft.map { time ->
-        if (currentExerciseDuration == 0L || time == null) 0 else (time * 100 / startingTime).toInt()
+        if (startingTime == 0L || time == null) 0 else (time * 100 / startingTime).toInt()
     }
 
     private var startingTime = 0L
@@ -83,15 +83,11 @@ class Timer(
 
     private var currentExercise: SessionExercise? = null
 
-    private val currentExerciseDuration
-        get() = currentExercise?.duration ?: 0L
-
     private val currentExerciseName
         get() = currentExercise?.name ?: ""
 
     private fun createTimer() {
-        val initialTime = timeLeft.value ?: currentExerciseDuration
-        startingTime = initialTime
+        val initialTime = timeLeft.value ?: startingTime
         timer = object : CountDownTimer(initialTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timerScope.launch(Dispatchers.Main) {
@@ -121,8 +117,9 @@ class Timer(
     fun setUpTimer(newExercise: SessionExercise) {
         if (newExercise.order == currentExercise?.order) return
         currentExercise = newExercise
+        startingTime = newExercise.duration
         clearTimer()
-        if (currentExerciseDuration != 0L) {
+        if (startingTime != 0L) {
             createTimer()
             startTimer()
         }
@@ -146,7 +143,7 @@ class Timer(
     fun restartTimer() {
         timer?.cancel()
         _timeLeft.value = null
-        if (currentExerciseDuration != 0L) {
+        if (startingTime != 0L) {
             createTimer()
             if (status.value == TimerState.RUNNING) {
                 startTimer()
@@ -176,9 +173,11 @@ class Timer(
 
     fun updateTimeLeft(newTime: Long) {
         timer?.cancel()
-        startingTime = newTime
-        _timeLeft.value = newTime
-        if (newTime != 0L) createTimer()
+        if (newTime != 0L) {
+            startingTime = newTime
+            _timeLeft.value = newTime
+            createTimer()
+        }
     }
 
     @Suppress("DEPRECATION")
