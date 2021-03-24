@@ -196,3 +196,15 @@ interface RoutineListDao {
         }
     }
 }
+
+@Dao
+interface SummaryDao {
+
+    @Query(
+        """
+            SELECT MAX(time) as time, title, exercises, bpms, improvements, id 
+            FROM session_history_table 
+            """
+    )
+    fun getLatestHistory(): Flow<SessionHistoryEntity>
+}

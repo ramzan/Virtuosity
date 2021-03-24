@@ -17,7 +17,6 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentSessionBinding
@@ -118,7 +117,12 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
             timer.updateTimeLeft(bundle.getLong(DURATION_VALUE))
         }
-
+        setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
+            if (bundle.getBoolean(POSITIVE_RESULT)) {
+                viewModel.completeSession()
+                gotToSummary()
+            }
+        }
     }
 
     override fun onStop() {
@@ -161,9 +165,9 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 }
             }
 
-            doneButton.setOnClickListener {
-                viewModel.completeSession()
-                goBack()
+            sessionToolbar.menu.getItem(0).setOnMenuItemClickListener {
+                confirmFinishSession()
+                true
             }
 
             pauseTimerButton.setOnClickListener {
@@ -187,27 +191,17 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             }
         }
 
-        val adapter = SummaryExerciseAdapter().also { adapter ->
-            adapter.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-
-            binding.summaryList.adapter = adapter
-        }
-
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
                 when (state) {
                     is SessionState.PracticeScreen -> {
                         binding.apply {
                             sessionProgressBar.visibility = View.GONE
-                            summaryView.visibility = View.GONE
-                            exerciseView.visibility = View.VISIBLE
 
                             sessionToolbar.title = state.sessionName
 
                             previousExerciseButton.isEnabled = state.previousButtonEnabled
-                            nextExerciseButton.visibility = View.VISIBLE
-                            doneButton.visibility = View.GONE
+                            nextExerciseButton.isEnabled = state.nextButtonEnabled
 
                             sessionCurrentExerciseName.text = state.currentExerciseName
                             bpmInput.apply {
@@ -219,21 +213,6 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                             }
                         }
                     }
-                    is SessionState.SummaryScreen -> {
-                        adapter.submitList(state.summaryList)
-
-                        binding.apply {
-                            sessionToolbar.title = state.backState.sessionName
-                            sessionProgressBar.visibility = View.GONE
-                            nextExerciseButton.visibility = View.GONE
-                            doneButton.visibility = View.VISIBLE
-                            previousExerciseButton.isEnabled = true
-
-                            summaryView.visibility = View.VISIBLE
-                            exerciseView.visibility = View.GONE
-                            bpmInput.isEnabled = false
-                        }
-                    }
                     SessionState.Loading -> {
                         /* no-op */
                     }
@@ -241,6 +220,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                         binding.apply {
                             sessionProgressBar.visibility = View.GONE
                             previousExerciseButton.visibility = View.GONE
+                            nextExerciseButton.visibility = View.GONE
                         }
                         viewModel.cancelSession()
                         findNavController().safeNavigate(
@@ -267,6 +247,22 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             SessionFragmentDirections.actionSessionFragmentToDurationPickerDialogFragment(
                 timer.timeLeft.value ?: 0L
             )
+        )
+    }
+
+    private fun confirmFinishSession() {
+        imm.hideKeyboard(requireView().windowToken)
+        findNavController().safeNavigate(
+            SessionFragmentDirections.actionSessionFragmentToConfirmationDialog(R.string.session_finish_dialog_title)
+        )
+    }
+
+    private fun gotToSummary() {
+        requireContext().stopService(Intent(requireContext(), TimerService::class.java))
+        imm.hideKeyboard(requireView().windowToken)
+        findNavController().popBackStack(R.id.sessionFragment, false)
+        findNavController().navigate(
+            SessionFragmentDirections.actionSessionFragmentToSummaryFragment()
         )
     }
 }

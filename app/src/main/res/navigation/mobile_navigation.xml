@@ -113,6 +113,13 @@
         <action
             android:id="@+id/action_sessionFragment_to_infoDialog"
             app:destination="@id/infoDialog" />
+        <action
+            android:id="@+id/action_sessionFragment_to_summaryFragment"
+            app:destination="@id/summaryFragment"
+            app:popUpTo="@id/routineListFragment" />
+        <action
+            android:id="@+id/action_sessionFragment_to_confirmationDialog"
+            app:destination="@id/confirmationDialog" />
     </fragment>
     <dialog
         android:id="@+id/infoDialog"
@@ -125,4 +132,8 @@
             android:name="messageId"
             app:argType="reference" />
     </dialog>
+    <fragment
+        android:id="@+id/summaryFragment"
+        android:name="ca.ramzan.virtuosity.screens.summary.SummaryFragment"
+        android:label="SummaryFragment" />
 </navigation>

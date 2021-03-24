@@ -38,6 +38,10 @@ class AppModule {
 
     @Provides
     @Singleton
+    fun summaryDao(db: ExerciseDatabase) = db.summaryDao
+
+    @Provides
+    @Singleton
     fun routineEditorDao(db: ExerciseDatabase) = db.routineEditorDao
 
     @Provides

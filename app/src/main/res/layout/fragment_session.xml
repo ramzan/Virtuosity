@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/session_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/sessionToolbar"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:menu="@menu/session_menu"
             app:navigationIcon="@drawable/ic_baseline_close_24"
             tools:title="Routine Name">
 
@@ -25,138 +27,110 @@
     <ProgressBar
         android:id="@+id/session_progress_bar"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/session_app_bar"
         tools:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/exercise_view"
+    <TextView
+        android:id="@+id/session_current_exercise_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        app:layout_constraintTop_toBottomOf="@id/session_app_bar"
+        tools:text="Exercise Name" />
 
-        <TextView
-            android:id="@+id/session_current_exercise_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Exercise Name" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/timer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceHeadline5"
-                android:textColor="?android:attr/textColorSecondary"
-                tools:text="10:12" />
-
-            <EditText
-                android:id="@+id/timer_editor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:hint="@string/timer_editor_hint"
-                android:importantForAutofill="no"
-                android:inputType="none"
-                android:textAppearance="?attr/textAppearanceHeadline5"
-                android:textColor="?android:attr/textColorSecondary"
-                android:visibility="gone"
-                tools:text="10:12"
-                tools:visibility="visible" />
-
-            <ImageButton
-                android:id="@+id/start_timer_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/start_timer"
-                android:src="@drawable/ic_baseline_play_arrow_24" />
-
-            <ImageButton
-                android:id="@+id/pause_timer_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/pause_timer"
-                android:src="@drawable/ic_baseline_pause_24"
-                android:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/restart_timer_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/restart_timer"
-                android:src="@drawable/ic_baseline_replay_24" />
-
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/bpm_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autofillHints="@string/bpm"
-            android:digits="0123456789"
-            android:hint="@string/bpm"
-            android:inputType="numberDecimal"
-            android:maxLength="3"
-            tools:text="120" />
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/timer_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="100" />
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/done_button"
+    <TextView
+        android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/done"
-        android:visibility="gone" />
+        android:textAppearance="?attr/textAppearanceHeadline5"
+        android:textColor="?android:attr/textColorSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/session_current_exercise_name"
+        tools:text="10:12" />
+
+    <EditText
+        android:id="@+id/timer_editor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:hint="@string/timer_editor_hint"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:textAppearance="?attr/textAppearanceHeadline5"
+        android:textColor="?android:attr/textColorSecondary"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/session_current_exercise_name"
+        tools:text="10:12"
+        tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/start_timer_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/start_timer"
+        android:src="@drawable/ic_baseline_play_arrow_24"
+        app:layout_constraintEnd_toStartOf="@id/restart_timer_button"
+        app:layout_constraintTop_toBottomOf="@id/session_current_exercise_name" />
+
+    <ImageButton
+        android:id="@+id/pause_timer_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/pause_timer"
+        android:src="@drawable/ic_baseline_pause_24"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/restart_timer_button"
+        app:layout_constraintTop_toBottomOf="@id/session_current_exercise_name" />
+
+    <ImageButton
+        android:id="@+id/restart_timer_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/restart_timer"
+        android:src="@drawable/ic_baseline_replay_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/session_current_exercise_name" />
+
+    <EditText
+        android:id="@+id/bpm_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/bpm"
+        android:digits="0123456789"
+        android:hint="@string/bpm"
+        android:inputType="numberDecimal"
+        android:maxLength="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/restart_timer_button"
+        tools:text="120" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/timer_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:max="100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/restart_timer_button" />
 
     <Button
         android:id="@+id/next_exercise_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next"
-        android:visibility="gone" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bpm_input" />
 
     <Button
         android:id="@+id/previous_exercise_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back" />
+        android:text="@string/back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bpm_input" />
 
-    <LinearLayout
-        android:id="@+id/summary_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/session_summary_title"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            android:textColor="?android:attr/textColorSecondary" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/summary_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="0dp"
-            android:paddingTop="?attr/actionBarSize"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/list_item_summary" />
-
-    </LinearLayout>
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

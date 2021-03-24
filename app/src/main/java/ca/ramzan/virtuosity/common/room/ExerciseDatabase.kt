@@ -38,6 +38,7 @@ abstract class ExerciseDatabase : RoomDatabase() {
     abstract val sessionDao: SessionDao
     abstract val routineEditorDao: RoutineEditorDao
     abstract val routineListDao: RoutineListDao
+    abstract val summaryDao: SummaryDao
 
     companion object {
         @Volatile

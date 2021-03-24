@@ -44,12 +44,7 @@ class SessionViewModel @AssistedInject constructor(
         viewModelScope.launch {
             (_state.value as? SessionState.PracticeScreen)?.run {
                 _state.emit(
-                    if (this.currentIndex + 1 == this.sessionExercises.size) {
-                        SessionState.SummaryScreen(
-                            this,
-                            this.sessionExercises.filter { e -> e.newBpm.isNotEmpty() && e.newBpm != "0" }
-                        )
-                    } else this.copy(currentIndex = this.currentIndex + 1)
+                    this.copy(currentIndex = this.currentIndex + 1)
                 )
             }
         }
@@ -60,9 +55,6 @@ class SessionViewModel @AssistedInject constructor(
             when (val oldState = _state.value) {
                 is SessionState.PracticeScreen -> {
                     _state.emit(oldState.copy(currentIndex = oldState.currentIndex - 1))
-                }
-                is SessionState.SummaryScreen -> {
-                    _state.emit(oldState.backState)
                 }
             }
         }
@@ -79,7 +71,7 @@ class SessionViewModel @AssistedInject constructor(
     }
 
     fun completeSession() {
-        useCase.completeSession((_state.value as SessionState.SummaryScreen).summaryList)
+        useCase.completeSession((_state.value as SessionState.PracticeScreen).sessionExercises.filter { e -> e.newBpm.isNotEmpty() && e.newBpm != "0" })
     }
 
     fun cancelSession() = useCase.clearSavedSession()
@@ -110,11 +102,6 @@ sealed class SessionState {
 
     object EmptyRoutine : SessionState()
 
-    data class SummaryScreen(
-        val backState: PracticeScreen,
-        val summaryList: List<SessionExercise>,
-    ) : SessionState()
-
     data class PracticeScreen(
         val sessionName: String,
         val sessionExercises: MutableList<SessionExercise>,
@@ -135,6 +122,9 @@ sealed class SessionState {
 
         val previousButtonEnabled: Boolean
             get() = currentIndex > 0
+
+        val nextButtonEnabled: Boolean
+            get() = currentIndex < sessionExercises.size - 1
 
         fun updateBpm(updatedBpm: String): MutableList<SessionExercise> {
             val newList = sessionExercises.toMutableList()

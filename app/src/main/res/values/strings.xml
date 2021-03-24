@@ -70,5 +70,7 @@
     <string name="no_routines_message">No routines found.\nTap the \'+\' button to create one!</string>
     <string name="cancel">Cancel</string>
     <string name="routines">Routines</string>
+    <string name="session_menu_finish_text">FINISH</string>
+    <string name="session_finish_dialog_title">Are you finished?</string>
 
 </resources>
