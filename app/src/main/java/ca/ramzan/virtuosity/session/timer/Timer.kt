@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 enum class TimerState {
@@ -64,6 +65,12 @@ class Timer(
     val timeLeft: StateFlow<Long?>
         get() = _timeLeft
 
+    val timeLeftPercent = timeLeft.map { time ->
+        if (currentExerciseDuration == 0L || time == null) 0 else (time * 100 / startingTime).toInt()
+    }
+
+    private var startingTime = 0L
+
     private val _timeString = MutableStateFlow("")
 
     val timeString: StateFlow<String>
@@ -84,6 +91,7 @@ class Timer(
 
     private fun createTimer() {
         val initialTime = timeLeft.value ?: currentExerciseDuration
+        startingTime = initialTime
         timer = object : CountDownTimer(initialTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timerScope.launch(Dispatchers.Main) {
@@ -168,6 +176,7 @@ class Timer(
 
     fun updateTimeLeft(newTime: Long) {
         timer?.cancel()
+        startingTime = newTime
         _timeLeft.value = newTime
         if (newTime != 0L) createTimer()
     }

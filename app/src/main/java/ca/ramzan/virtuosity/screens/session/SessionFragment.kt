@@ -60,6 +60,12 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             }
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                timer.timeLeftPercent.collect { timeLeft ->
+                    binding.timerProgressBar.setProgressCompat(timeLeft, true)
+                }
+            }
+
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 timer.status.collect { status ->
                     when (status) {
                         TimerState.RUNNING -> {

@@ -15,7 +15,6 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="0dp"
             app:navigationIcon="@drawable/ic_baseline_close_24"
             tools:title="Routine Name">
 
@@ -105,6 +104,12 @@
             android:inputType="numberDecimal"
             android:maxLength="3"
             tools:text="120" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/timer_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100" />
 
     </LinearLayout>
 
