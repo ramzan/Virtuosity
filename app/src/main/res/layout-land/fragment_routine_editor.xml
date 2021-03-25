@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/editor_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/editor_toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/routine_editor_menu"
+            app:navigationIcon="@drawable/ic_baseline_close_24"
+            tools:title="@string/editorTitleNew">
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/name_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="6dp"
+        android:hint="@string/nameInputHint"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toStartOf="@id/routine_exercise_list"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editor_app_bar">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/exercise_spinner_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="6dp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toStartOf="@id/routine_exercise_list"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name_input_layout">
+
+        <AutoCompleteTextView
+            android:id="@+id/exercise_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_an_exercise"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/list_header_exercise"
+        style="@style/TextAppearance.MaterialComponents.Overline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:paddingVertical="12dp"
+        android:text="@string/routine_editor_exercise_header"
+        app:layout_constraintStart_toStartOf="@id/routine_exercise_list"
+        app:layout_constraintTop_toBottomOf="@id/editor_app_bar" />
+
+    <TextView
+        android:id="@+id/list_header_duration"
+        style="@style/TextAppearance.MaterialComponents.Overline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="96dp"
+        android:paddingVertical="12dp"
+        android:text="@string/routine_editor_duration_header"
+        app:layout_constraintEnd_toEndOf="@id/routine_exercise_list"
+        app:layout_constraintTop_toBottomOf="@id/editor_app_bar" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/routine_exercise_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingHorizontal="16dp"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/name_input_layout"
+        app:layout_constraintTop_toBottomOf="@id/list_header_exercise"
+        tools:listitem="@layout/list_item_routine_exercise" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
