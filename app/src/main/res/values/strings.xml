@@ -72,5 +72,7 @@
     <string name="routines">Routines</string>
     <string name="session_menu_finish_text">FINISH</string>
     <string name="session_finish_dialog_title">Are you finished?</string>
+    <string name="routine_editor_exercise_header">Exercise</string>
+    <string name="routine_editor_duration_header">Duration</string>
 
 </resources>

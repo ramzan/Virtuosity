@@ -4,19 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="6dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp">
+        android:padding="4dp">
 
         <TextView
             android:id="@+id/exercise_name"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/duration"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,10 +28,11 @@
 
         <TextView
             android:id="@+id/duration"
+            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/drag_handle"
             app:layout_constraintStart_toEndOf="@id/exercise_name"
@@ -37,9 +41,11 @@
 
         <ImageView
             android:id="@+id/drag_handle"
+            style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="12dp"
             android:contentDescription="@string/drag_handle_description"
             android:src="@drawable/ic_baseline_drag_handle_24"
             app:layout_constraintBottom_toBottomOf="parent"
