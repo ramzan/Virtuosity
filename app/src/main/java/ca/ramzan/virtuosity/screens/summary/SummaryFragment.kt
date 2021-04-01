@@ -13,7 +13,6 @@ import ca.ramzan.virtuosity.databinding.FragmentSummaryBinding
 import ca.ramzan.virtuosity.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import java.util.*
 
 @AndroidEntryPoint
 class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
@@ -39,7 +38,7 @@ class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
             viewModel.summary.collect { summary ->
                 binding.summaryView.apply {
                     historyTitle.text = summary.title
-                    historyDate.text = Date(summary.time).toString()
+                    historyDate.text = summary.time
                     historyData.text = summary.text
                     historyDeleteBtn.visibility = View.GONE
                 }

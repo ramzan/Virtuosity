@@ -6,6 +6,10 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Entity(tableName = "session_history_table")
 data class SessionHistoryEntity(
@@ -25,29 +29,32 @@ data class SessionHistoryEntity(
     fun toSessionHistoryDisplay(): SessionHistory {
         return SessionHistory(
             id,
-            time,
+            Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).format(formatter),
             title,
             text = buildSpannedString {
-                for (i in exercises.indices) {
-                    append("${exercises[i]}: ${bpms[i]} BPM")
+                if (exercises.isEmpty()) return@buildSpannedString
+                for (i in 0 until exercises.size - 1) {
+                    append("${i + 1}. ${exercises[i]}: ${bpms[i]} BPM")
                     if (improvements[i].isEmpty()) append("\n")
-                    else {
-                        color(
-                            Color.GREEN
-                        ) {
-                            this.append(" ${improvements[i]}\n")
-                        }
-                    }
+                    else color(Color.BLUE) { append(" ${improvements[i]}\n") }
+                }
+                append("${exercises.size}. ${exercises.last()}: ${bpms.last()} BPM")
+                if (improvements.last().isNotEmpty()) {
+                    color(Color.BLUE) { append(" ${improvements.last()}") }
                 }
             }
         )
+    }
+
+    companion object {
+        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("cccc, MMMM d y, h:mm a")
     }
 }
 
 data class SessionHistory(
     val id: Long,
 
-    val time: Long,
+    val time: String,
 
     val title: String,
 

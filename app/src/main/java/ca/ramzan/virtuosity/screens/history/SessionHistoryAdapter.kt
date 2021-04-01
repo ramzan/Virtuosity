@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.databinding.ListItemHistoryBinding
 import ca.ramzan.virtuosity.history.SessionHistory
-import java.util.*
 
 
 class SessionHistoryDisplayAdapter(private val onDelete: (Long) -> Unit) :
@@ -34,7 +33,7 @@ class SessionHistoryDisplayAdapter(private val onDelete: (Long) -> Unit) :
                         onDelete(item.id)
                     }
                     historyTitle.text = title
-                    historyDate.text = Date(time).toString()
+                    historyDate.text = time
                     historyData.text = text
                 } ?: run {
                     historyTitle.text = ""
