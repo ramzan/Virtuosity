@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class ExerciseListUseCase @Inject constructor(private val dao: ExerciseListDao) {
 
-    fun getAllExerciseMaxBPMs() = dao.getAllExerciseMaxBPMs()
+    fun getAllExerciseMaxBPMs() = dao.getAllExerciseLatestBpms()
 
     fun addExercise(name: String) {
         CoroutineScope(Dispatchers.IO).launch {

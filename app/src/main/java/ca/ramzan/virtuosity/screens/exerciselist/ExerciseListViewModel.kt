@@ -2,8 +2,8 @@ package ca.ramzan.virtuosity.screens.exerciselist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ca.ramzan.virtuosity.exercises.ExerciseLatestBpm
 import ca.ramzan.virtuosity.exercises.ExerciseListUseCase
-import ca.ramzan.virtuosity.exercises.ExerciseMaxBpm
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -42,7 +42,10 @@ class ExerciseListViewModel @Inject constructor(private val useCase: ExerciseLis
 sealed class ExerciseListState {
     object Loading : ExerciseListState()
 
-    data class Loaded(private val allExercises: List<ExerciseMaxBpm>, private val query: String) :
+    data class Loaded(
+        private val allExercises: List<ExerciseLatestBpm>,
+        private val query: String
+    ) :
         ExerciseListState() {
 
         val filteredExercises = allExercises.filter { exercise ->

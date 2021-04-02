@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.*
 import ca.ramzan.virtuosity.exercises.Exercise
 import ca.ramzan.virtuosity.exercises.ExerciseHistory
-import ca.ramzan.virtuosity.exercises.ExerciseMaxBpm
+import ca.ramzan.virtuosity.exercises.ExerciseLatestBpm
 import ca.ramzan.virtuosity.exercises.HistoryGraphDataPoint
 import ca.ramzan.virtuosity.history.SessionHistoryEntity
 import ca.ramzan.virtuosity.routine.Routine
@@ -22,12 +22,13 @@ interface ExerciseListDao {
 
     @Query(
         """
-        SELECT id, name, MAX(bpm) AS bpm FROM exercise_table
+        SELECT id, name, bpm FROM exercise_table
         LEFT OUTER JOIN exercise_history_table ON exerciseId = id
-        GROUP BY id ORDER BY name COLLATE NOCASE ASC
+        GROUP BY id
+        ORDER BY name COLLATE NOCASE ASC, time DESC
         """
     )
-    fun getAllExerciseMaxBPMs(): Flow<List<ExerciseMaxBpm>>
+    fun getAllExerciseLatestBpms(): Flow<List<ExerciseLatestBpm>>
 }
 
 @Dao

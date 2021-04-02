@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.databinding.ListItemExerciseBinding
-import ca.ramzan.virtuosity.exercises.ExerciseMaxBpm
+import ca.ramzan.virtuosity.exercises.ExerciseLatestBpm
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import java.util.*
 
 
-class ExerciseAdapter(private val onClickListener: (ExerciseMaxBpm) -> Unit) :
-    ListAdapter<ExerciseMaxBpm, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()),
+class ExerciseAdapter(private val onClickListener: (ExerciseLatestBpm) -> Unit) :
+    ListAdapter<ExerciseLatestBpm, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()),
     FastScrollRecyclerView.SectionedAdapter {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -31,7 +31,7 @@ class ExerciseAdapter(private val onClickListener: (ExerciseMaxBpm) -> Unit) :
     class ViewHolder private constructor(private val binding: ListItemExerciseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ExerciseMaxBpm) {
+        fun bind(item: ExerciseLatestBpm) {
             binding.exerciseName.text = item.name
             binding.maxBpm.text = item.bpmDisplay
         }
@@ -53,12 +53,15 @@ class ExerciseAdapter(private val onClickListener: (ExerciseMaxBpm) -> Unit) :
     }
 }
 
-class ExerciseDiffCallback : DiffUtil.ItemCallback<ExerciseMaxBpm>() {
-    override fun areItemsTheSame(oldItem: ExerciseMaxBpm, newItem: ExerciseMaxBpm): Boolean {
+class ExerciseDiffCallback : DiffUtil.ItemCallback<ExerciseLatestBpm>() {
+    override fun areItemsTheSame(oldItem: ExerciseLatestBpm, newItem: ExerciseLatestBpm): Boolean {
         return oldItem.name == newItem.name && oldItem.bpm == newItem.bpm
     }
 
-    override fun areContentsTheSame(oldItem: ExerciseMaxBpm, newItem: ExerciseMaxBpm): Boolean {
+    override fun areContentsTheSame(
+        oldItem: ExerciseLatestBpm,
+        newItem: ExerciseLatestBpm
+    ): Boolean {
         return oldItem == newItem
     }
 }

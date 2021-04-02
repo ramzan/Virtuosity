@@ -15,7 +15,7 @@ data class Exercise(
     }
 }
 
-data class ExerciseMaxBpm(
+data class ExerciseLatestBpm(
     val id: Long,
     val name: String,
     val bpm: Int?
