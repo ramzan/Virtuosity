@@ -11,6 +11,7 @@ import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.hideBottomNavBar
 import ca.ramzan.virtuosity.databinding.FragmentSummaryBinding
 import ca.ramzan.virtuosity.screens.BaseFragment
+import ca.ramzan.virtuosity.screens.history.HistoryInnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -38,8 +39,8 @@ class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
             viewModel.summary.collect { summary ->
                 binding.summaryView.apply {
                     historyTitle.text = summary.title
-                    historyDate.text = summary.time
-                    historyData.text = summary.text
+                    historyDate.text = summary.displayTime
+                    historyData.adapter = HistoryInnerAdapter(summary.exercises, summary.bpms)
                     historyDeleteBtn.visibility = View.GONE
                 }
             }

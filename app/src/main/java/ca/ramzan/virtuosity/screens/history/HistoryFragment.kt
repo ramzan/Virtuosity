@@ -9,7 +9,6 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.CONFIRMATION_RESULT
 import ca.ramzan.virtuosity.common.POSITIVE_RESULT
@@ -42,7 +41,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
     ): View {
         _binding = FragmentHistoryBinding.inflate(inflater)
 
-        val adapter = SessionHistoryDisplayAdapter(::deleteSessionHistory)
+        val adapter = HistoryOuterAdapter(::deleteSessionHistory)
 
         binding.historyList.adapter = adapter
 

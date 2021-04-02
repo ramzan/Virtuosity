@@ -24,7 +24,7 @@
 
     <include
         android:id="@+id/summary_view"
-        layout="@layout/list_item_history" />
+        layout="@layout/list_item_history_outer" />
 
 </LinearLayout>
 
