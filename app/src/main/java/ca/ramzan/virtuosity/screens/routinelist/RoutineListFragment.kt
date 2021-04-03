@@ -82,7 +82,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
                         binding.routineList.visibility = View.VISIBLE
                         binding.routineListProgressBar.visibility = View.GONE
                         if (prefs.contains(SAVED_SESSION_ID)) {
-                            adapter.addSavedSessionCardAndSubmitList(
+                            adapter.submitListWithSavedSession(
                                 state.routineCards,
                                 prefs.getString(SAVED_SESSION_NAME, "").toString(),
                                 prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())

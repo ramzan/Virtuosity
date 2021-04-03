@@ -10,6 +10,8 @@ import ca.ramzan.virtuosity.databinding.ListItemRoutineBinding
 import ca.ramzan.virtuosity.databinding.ListItemRoutineHeaderBinding
 import ca.ramzan.virtuosity.databinding.SavedSessionCardBinding
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 private const val ITEM_VIEW_TYPE_SESSION = 0
 private const val ITEM_VIEW_TYPE_ROUTINE = 1
@@ -32,7 +34,8 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
         fun bind(item: RoutineListCard.SavedSessionCard, onClickListener: OnClickListener) {
             binding.apply {
                 savedSessionName.text = item.name
-                savedSessionDate.text = item.time.toString()
+                savedSessionDate.text = item.time.atZone(ZoneId.systemDefault())
+                    .format(DateTimeFormatter.ofPattern("EEEE, MMMM d y, h:mm a"))
                 resumeSessionBtn.setOnClickListener {
                     onClickListener.onResumeSession()
                 }
@@ -144,7 +147,7 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
         }
     }
 
-    fun addSavedSessionCardAndSubmitList(
+    fun submitListWithSavedSession(
         list: List<RoutineListCard>,
         sessionName: String,
         sessionTime: Long
