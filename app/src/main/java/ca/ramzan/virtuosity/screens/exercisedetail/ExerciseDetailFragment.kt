@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.collect
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.inject.Inject
 
 
@@ -259,7 +258,7 @@ class MyMarkerView(context: Context, @LayoutRes layoutResource: Int) :
 
     override fun refreshContent(entry: Entry, highlight: Highlight) {
         val bpm = "${entry.y.toInt()} BPM"
-        val date = "${Date(entry.x.toLong())}"
+        val date = DateFormatter.fromMilli(entry.x.toLong())
         bpmText.text = bpm
         dateText.text = date
         super.refreshContent(entry, highlight)

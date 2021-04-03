@@ -2,9 +2,7 @@ package ca.ramzan.virtuosity.history
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import ca.ramzan.virtuosity.common.DateFormatter
 
 @Entity(tableName = "session_history_table")
 data class SessionHistoryEntity(
@@ -21,11 +19,5 @@ data class SessionHistoryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 ) {
-
-    val displayTime: String
-        get() = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).format(formatter)
-
-    companion object {
-        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE, MMMM d y, h:mm a")
-    }
+    val displayTime: String get() = DateFormatter.fromMilli(time)
 }

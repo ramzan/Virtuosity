@@ -7,8 +7,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import ca.ramzan.virtuosity.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
 fun Activity.hideBottomNavBar() {
@@ -45,4 +48,14 @@ fun NavController.safeNavigate(directions: NavDirections) {
     currentDestination?.getAction(directions.actionId)?.run {
         navigate(directions)
     }
+}
+
+object DateFormatter {
+    private val formatter: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("EEEE, MMMM d y, h:mm a")
+
+    fun fromMilli(time: Long): String = fromInstant(Instant.ofEpochMilli(time))
+
+    fun fromInstant(instant: Instant): String =
+        instant.atZone(ZoneId.systemDefault()).format(formatter)
 }
