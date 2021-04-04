@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="@dimen/card_padding">
 
         <ImageButton
             android:id="@+id/history_delete_btn"
