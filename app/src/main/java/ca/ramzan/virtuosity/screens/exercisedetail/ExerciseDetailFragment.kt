@@ -258,11 +258,16 @@ class MyMarkerView(context: Context, @LayoutRes layoutResource: Int) :
 
     override fun refreshContent(entry: Entry, highlight: Highlight) {
         val bpm = "${entry.y.toInt()} BPM"
-        val date = DateFormatter.fromMilli(entry.x.toLong())
+        val date =
+            Instant.ofEpochMilli(entry.x.toLong()).atZone(ZoneId.systemDefault()).format(formatter)
         bpmText.text = bpm
         dateText.text = date
         super.refreshContent(entry, highlight)
     }
 
     override fun getOffset() = MPPointF((-(width / 2)).toFloat(), (-height).toFloat())
+
+    companion object {
+        private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    }
 }
