@@ -55,18 +55,11 @@ class ExerciseDetailViewModel @AssistedInject constructor(
 
     val history = useCase.graphState
 
-    init {
-        viewModelScope.launch {
-            useCase.run {
-                getExerciseHistorySince(
-                    exerciseId,
-                    System.currentTimeMillis() - DURATION_WEEK
-                )
-            }
-        }
-    }
+    private var oldPosition = -1
 
     fun getHistory(spinnerPosition: Int) {
+        if (spinnerPosition == oldPosition) return
+        oldPosition = spinnerPosition
         viewModelScope.launch {
             useCase.getExerciseHistorySince(
                 exerciseId,

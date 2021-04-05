@@ -24,7 +24,6 @@ import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
@@ -153,33 +152,29 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                         ExerciseDetailUseCase.GraphState.Loading -> {
                             binding.apply {
                                 loadingIndicator.visibility = View.VISIBLE
-                                historyGraph.visibility = View.GONE
+                                historyGraph.visibility = View.INVISIBLE
                                 statsLayout.visibility = View.INVISIBLE
                             }
                         }
                         ExerciseDetailUseCase.GraphState.NoData -> {
+                            data = null
+                            invalidate()
                             binding.apply {
                                 loadingIndicator.visibility = View.GONE
                                 historyGraph.visibility = View.VISIBLE
                                 statsLayout.visibility = View.INVISIBLE
                             }
-                            data = null
-                            invalidate()
                         }
                         is ExerciseDetailUseCase.GraphState.Loaded -> {
                             binding.apply {
-                                loadingIndicator.visibility = View.GONE
-                                historyGraph.visibility = View.VISIBLE
-                                statsLayout.visibility = View.VISIBLE
-
-                                val dataSet = LineDataSet(state.data, null).apply {
+                                state.dataSet.apply {
                                     circleColors = listOf(graphColor)
                                     color = graphColor
                                     highLightColor = graphColor
                                     setDrawHorizontalHighlightIndicator(false)
                                 }
 
-                                data = LineData(dataSet)
+                                data = LineData(state.dataSet)
                                 data.setValueFormatter(bpmFormatter)
 
                                 bpmSlowest.text = getString(
@@ -202,6 +197,11 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                                 )
                             }
                             invalidate()
+                            binding.apply {
+                                loadingIndicator.visibility = View.GONE
+                                historyGraph.visibility = View.VISIBLE
+                                statsLayout.visibility = View.VISIBLE
+                            }
                         }
                     }
                 }
