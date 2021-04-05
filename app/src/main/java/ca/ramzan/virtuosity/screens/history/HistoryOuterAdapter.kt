@@ -36,7 +36,7 @@ class HistoryOuterAdapter(private val onDelete: (Long) -> Unit) :
                     }
                     historyTitle.text = title
                     historyDate.text = displayTime
-                    historyData.adapter = HistoryInnerAdapter(exercises, bpms)
+                    historyData.adapter = HistoryInnerAdapter(exercises, bpms, improvements)
                 } ?: run {
                     historyTitle.text = ""
                     historyDate.text = ""

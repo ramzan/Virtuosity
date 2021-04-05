@@ -5,11 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.databinding.ListItemHistoryInnerBinding
 
-class HistoryInnerAdapter(private val nameList: List<String>, private val bpmList: List<String>) :
+class HistoryInnerAdapter(
+    private val nameList: List<String>,
+    private val bpmList: List<String>,
+    private val improvements: List<String>
+) :
     RecyclerView.Adapter<HistoryInnerAdapter.HistoryInnerViewHolder>() {
 
     override fun onBindViewHolder(holder: HistoryInnerViewHolder, position: Int) {
-        holder.bind(nameList[position], bpmList[position])
+        holder.bind(nameList[position], bpmList[position], improvements[position])
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryInnerViewHolder {
@@ -19,9 +23,10 @@ class HistoryInnerAdapter(private val nameList: List<String>, private val bpmLis
     class HistoryInnerViewHolder private constructor(private val binding: ListItemHistoryInnerBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(name: String, bpm: String) {
+        fun bind(name: String, bpm: String, improvement: String) {
             binding.exerciseName.text = name
             binding.maxBpm.text = bpm
+            binding.improvement.text = improvement
         }
 
         companion object {

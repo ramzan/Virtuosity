@@ -21,11 +21,22 @@
         android:id="@+id/max_bpm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/improvement"
         app:layout_constraintStart_toEndOf="@id/exercise_name"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="123" />
+
+    <TextView
+        android:id="@+id/improvement"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_blue_bright"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/max_bpm"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="+200" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

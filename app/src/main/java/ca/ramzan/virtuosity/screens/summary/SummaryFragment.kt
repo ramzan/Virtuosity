@@ -40,7 +40,11 @@ class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
                 binding.summaryView.apply {
                     historyTitle.text = summary.title
                     historyDate.text = summary.displayTime
-                    historyData.adapter = HistoryInnerAdapter(summary.exercises, summary.bpms)
+                    historyData.adapter = HistoryInnerAdapter(
+                        summary.exercises,
+                        summary.bpms,
+                        summary.improvements
+                    )
                     historyDeleteBtn.visibility = View.GONE
                 }
             }
