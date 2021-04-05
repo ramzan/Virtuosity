@@ -21,6 +21,7 @@ import ca.ramzan.virtuosity.exercises.ExerciseDetailUseCase
 import ca.ramzan.virtuosity.screens.BaseFragment
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.MarkerView
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -135,12 +136,16 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             binding.historyRangerSpinner.adapter = adapter
         }
 
+        val graphColor = resources.getColor(R.color.pink1, null)
 
         binding.historyGraph.apply {
             description = null
+            legend.isEnabled = false
             axisRight.isEnabled = false
-            axisLeft.axisMinimum = 0f
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
             axisLeft.valueFormatter = yAxisFormatter
+            setNoDataText(getString(R.string.no_exercise_history_data_message))
+            setNoDataTextColor(R.color.design_default_color_on_primary)
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.history.collect { state ->
@@ -148,29 +153,34 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                         ExerciseDetailUseCase.GraphState.Loading -> {
                             binding.apply {
                                 loadingIndicator.visibility = View.VISIBLE
-                                historyGraphCard.visibility = View.GONE
-                                statsCard.visibility = View.GONE
-                                noDataMessage.visibility = View.GONE
+                                historyGraph.visibility = View.GONE
+                                statsLayout.visibility = View.INVISIBLE
                             }
                         }
                         ExerciseDetailUseCase.GraphState.NoData -> {
                             binding.apply {
                                 loadingIndicator.visibility = View.GONE
-                                historyGraphCard.visibility = View.GONE
-                                statsCard.visibility = View.GONE
-                                noDataMessage.visibility = View.VISIBLE
+                                historyGraph.visibility = View.VISIBLE
+                                statsLayout.visibility = View.INVISIBLE
                             }
+                            data = null
+                            invalidate()
                         }
                         is ExerciseDetailUseCase.GraphState.Loaded -> {
                             binding.apply {
                                 loadingIndicator.visibility = View.GONE
-                                historyGraphCard.visibility = View.VISIBLE
-                                statsCard.visibility = View.VISIBLE
-                                noDataMessage.visibility = View.GONE
-                                val dataSet = LineDataSet(state.data, "BPM")
+                                historyGraph.visibility = View.VISIBLE
+                                statsLayout.visibility = View.VISIBLE
+
+                                val dataSet = LineDataSet(state.data, null).apply {
+                                    circleColors = listOf(graphColor)
+                                    color = graphColor
+                                    highLightColor = graphColor
+                                    setDrawHorizontalHighlightIndicator(false)
+                                }
+
                                 data = LineData(dataSet)
                                 data.setValueFormatter(bpmFormatter)
-                                axisLeft.axisMaximum = state.maxBpm * 1.05f
 
                                 bpmSlowest.text = getString(
                                     R.string.history_stats_slowest_message,
