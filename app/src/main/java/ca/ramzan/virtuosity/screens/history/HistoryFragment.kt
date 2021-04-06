@@ -33,8 +33,6 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
         }
     }
 
-    private var job: Job? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,7 +43,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
 
         binding.historyList.adapter = adapter
 
-        job = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.history.collectLatest {
                 adapter.submitData(it)
             }
@@ -67,11 +65,6 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
         }
 
         return binding.root
-    }
-
-    override fun onStop() {
-        job?.cancel()
-        super.onStop()
     }
 
     override fun onDestroyView() {
