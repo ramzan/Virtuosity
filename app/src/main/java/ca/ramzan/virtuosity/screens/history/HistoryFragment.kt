@@ -17,7 +17,6 @@ import ca.ramzan.virtuosity.common.showBottomNavBar
 import ca.ramzan.virtuosity.databinding.FragmentHistoryBinding
 import ca.ramzan.virtuosity.screens.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
@@ -53,12 +52,22 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
             adapter.loadStateFlow.collectLatest { state ->
                 when (state.refresh) {
                     is LoadState.Loading -> {
-                        binding.historyProgressBar.visibility = View.VISIBLE
-                        binding.historyList.visibility = View.GONE
+                        if (adapter.itemCount == 0) {
+                            binding.historyProgressBar.visibility = View.VISIBLE
+                            binding.historyList.visibility = View.GONE
+                            binding.noHistoryMessage.visibility = View.GONE
+                        }
                     }
                     else -> {
-                        binding.historyProgressBar.visibility = View.GONE
-                        binding.historyList.visibility = View.VISIBLE
+                        if (adapter.itemCount == 0) {
+                            binding.historyProgressBar.visibility = View.GONE
+                            binding.historyList.visibility = View.GONE
+                            binding.noHistoryMessage.visibility = View.VISIBLE
+                        } else {
+                            binding.historyProgressBar.visibility = View.GONE
+                            binding.historyList.visibility = View.VISIBLE
+                            binding.noHistoryMessage.visibility = View.GONE
+                        }
                     }
                 }
             }

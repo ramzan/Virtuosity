@@ -74,5 +74,6 @@
     <string name="session_finish_dialog_title">Are you finished?</string>
     <string name="routine_editor_exercise_header">Exercise</string>
     <string name="routine_editor_duration_header">Duration</string>
+    <string name="no_history_message">No records found.\n Tap the \'Practice\' tab at the bottom to begin!</string>
 
 </resources>
