@@ -1,8 +1,6 @@
 package ca.ramzan.virtuosity.screens.routineeditor
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.core.text.buildSpannedString
 import androidx.core.text.underline
@@ -15,35 +13,25 @@ import ca.ramzan.virtuosity.routine.RoutineExercise
 
 
 class RoutineExerciseAdapter(
-    private val fragment: RoutineEditorFragment,
-    private val onClickListener: (exerciseIndex: Int, duration: Long) -> Unit
+    private val onDurationClick: (exerciseIndex: Int, duration: Long) -> Unit,
+    private val onDeleteClick: (exerciseIndex: Int) -> Unit
 ) : ListAdapter<RoutineExercise, RoutineExerciseAdapter.ViewHolder>(RoutineDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), onClickListener)
+        holder.bind(getItem(position), onDurationClick, onDeleteClick)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-        return ViewHolder.from(parent).also {
-            it.dragHandle.setOnTouchListener { _, event ->
-                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                    fragment.startDragging(it)
-                }
-                true
-            }
-        }
+        return ViewHolder.from(parent)
     }
 
     class ViewHolder private constructor(private val binding: ListItemRoutineExerciseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        val dragHandle = binding.dragHandle
-
         fun bind(
             item: RoutineExercise,
-            onClickListener: (exerciseIndex: Int, duration: Long) -> Unit
+            onDurationClick: (exerciseIndex: Int, duration: Long) -> Unit,
+            onDeleteClick: (exerciseIndex: Int) -> Unit
         ) {
             binding.apply {
                 exerciseName.text = item.name
@@ -51,7 +39,10 @@ class RoutineExerciseAdapter(
                     underline { append(millisToTimerString(item.duration)) }
                 }
                 duration.setOnClickListener {
-                    onClickListener(bindingAdapterPosition, item.duration)
+                    onDurationClick(bindingAdapterPosition, item.duration)
+                }
+                deleteBtn.setOnClickListener {
+                    onDeleteClick(bindingAdapterPosition)
                 }
             }
         }

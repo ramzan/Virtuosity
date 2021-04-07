@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_IDLE
 import androidx.recyclerview.widget.RecyclerView
-import ca.ramzan.virtuosity.*
+import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentRoutineEditorBinding
 import ca.ramzan.virtuosity.exercises.Exercise
@@ -37,16 +37,13 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         RoutineEditorViewModel.provideFactory(factory, requireArguments().getLong("routineId"))
     }
 
+    private val adapter = RoutineExerciseAdapter(::showDurationPicker, ::deleteItem)
+
     private val simpleItemTouchCallback =
         object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
-            val adapter =
-                RoutineExerciseAdapter(this@RoutineEditorFragment, ::showDurationPicker).also {
-                    it.stateRestorationPolicy =
-                        RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-                }
 
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -63,8 +60,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                viewModel.deleteItem(viewHolder.bindingAdapterPosition)
-                adapter.notifyItemRemoved(viewHolder.bindingAdapterPosition)
+                deleteItem(viewHolder.bindingAdapterPosition)
             }
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -145,7 +141,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                 }
             }
 
-            // Populate exercise autocomplete
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.allExercises.collect { list ->
                     exerciseSpinner.setAdapter(
@@ -155,12 +150,12 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
             }
         }
 
-        binding.routineExerciseList.adapter = simpleItemTouchCallback.adapter
+        binding.routineExerciseList.adapter = adapter
         itemTouchHelper.attachToRecyclerView(binding.routineExerciseList)
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
-                simpleItemTouchCallback.adapter.submitList(state.exercises)
+                adapter.submitList(state.exercises)
                 when (state) {
                     RoutineEditorState.Loading -> {
                         /* no-op */
@@ -199,6 +194,11 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         )
     }
 
+    private fun deleteItem(position: Int) {
+        viewModel.deleteItem(position)
+        adapter.notifyItemRemoved(position)
+    }
+
     private fun showDeleteDialog() {
         findNavController().safeNavigate(
             RoutineEditorFragmentDirections.actionRoutineEditorFragmentToConfirmationDialog(
@@ -210,10 +210,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     private fun goBack() {
         imm.hideKeyboard(requireView().windowToken)
         findNavController().popBackStack(R.id.routineListFragment, false)
-    }
-
-    fun startDragging(viewHolder: RecyclerView.ViewHolder) {
-        itemTouchHelper.startDrag(viewHolder)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
