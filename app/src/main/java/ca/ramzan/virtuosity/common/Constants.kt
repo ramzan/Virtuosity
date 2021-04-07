@@ -20,7 +20,11 @@ const val REQUEST_CODE_RESUME = 2
 
 // Confirmation dialog result
 const val CONFIRMATION_RESULT = "dialog_result"
-const val POSITIVE_RESULT = "positive_result"
+const val DELETE_ROUTINE = "DELETE_ROUTINE"
+const val DELETE_EXERCISE = "DELETE_EXERCISE"
+const val DELETE_HISTORY = "DELETE_HISTORY"
+const val CLEAR_SESSION = "CLEAR_SESSION"
+const val FINISH_SESSION = "FINISH_SESSION"
 
 // Text input dialog result
 const val TEXT_INPUT_RESULT = "text_input_result"

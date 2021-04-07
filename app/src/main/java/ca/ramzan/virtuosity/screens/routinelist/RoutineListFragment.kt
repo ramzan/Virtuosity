@@ -33,7 +33,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         super.onStart()
         requireActivity().showBottomNavBar()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
-            if (bundle.getBoolean(POSITIVE_RESULT)) {
+            if (bundle.getBoolean(CLEAR_SESSION)) {
                 viewModel.sessionToStartId?.let {
                     viewModel.useCase.clearSavedSession()
                     findNavController().popBackStack(R.id.routineListFragment, false)
@@ -135,7 +135,10 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
             viewModel.sessionToStartId = id
             findNavController().safeNavigate(
                 RoutineListFragmentDirections.actionRoutineListFragmentToConfirmationDialog(
-                    R.string.clear_session_dialog_message
+                    R.string.clear_session_dialog_title,
+                    R.string.clear_session_dialog_message,
+                    R.string.clear,
+                    CLEAR_SESSION
                 )
             )
         } else startSession(id)

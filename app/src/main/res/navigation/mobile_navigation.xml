@@ -66,6 +66,15 @@
         <argument
             android:name="titleId"
             app:argType="reference" />
+        <argument
+            android:name="messageId"
+            app:argType="reference" />
+        <argument
+            android:name="positiveButtonMessage"
+            app:argType="reference" />
+        <argument
+            android:name="listenerKey"
+            app:argType="string" />
     </dialog>
     <dialog
         android:id="@+id/textInputDialog"

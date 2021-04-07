@@ -13,9 +13,9 @@
     <string name="exercises_search_hint">Search exercises</string>
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
-    <string name="delete_history_dialog_message">Delete session history</string>
-    <string name="delete_exercise_dialog_message">Delete exercise</string>
-    <string name="delete_routine_dialog_message">Delete routine</string>
+    <string name="delete_history_dialog_title">Delete record?</string>
+    <string name="delete_exercise_dialog_title">Delete exercise?</string>
+    <string name="delete_routine_dialog_title">Delete routine?</string>
     <string name="name">Name</string>
     <string name="save">Save</string>
     <string name="editorTitleEdit">Edit Routine</string>
@@ -36,7 +36,7 @@
     <string name="metronome_notification_channel_name">Metronome</string>
     <string name="timer_notification_channel_id" translatable="false">timer_channel</string>
     <string name="metronome_notification_channel_id" translatable="false">metronome_channel</string>
-    <string name="clear_session_dialog_message">Clear the saved session?</string>
+    <string name="clear_session_dialog_title">Clear the saved session?</string>
     <string name="resume_session_title">Resume session</string>
     <string name="resume">Resume</string>
     <string name="history">History</string>
@@ -77,5 +77,10 @@
     <string name="no_history_message">No records found.\n Tap the \'Practice\' tab at the bottom to begin!</string>
     <string name="routine_editor_exercise_removed_message">Exercise removed</string>
     <string name="undo">Undo</string>
+    <string name="routine_deleted_message">Routine deleted</string>
+    <string name="message_action_cannot_be_undone">This action cannot be undone.</string>
+    <string name="clear_session_dialog_message">Any unsaved progress will be lost.</string>
+    <string name="clear">Clear</string>
+    <string name="session_finish_dialog_message">Exercises with 0 or empty BPM will be discarded.</string>
 
 </resources>

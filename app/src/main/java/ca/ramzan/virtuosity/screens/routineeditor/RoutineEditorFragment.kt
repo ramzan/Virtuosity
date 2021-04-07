@@ -83,9 +83,16 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     override fun onStart() {
         super.onStart()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
-            if (bundle.getBoolean(POSITIVE_RESULT)) {
+            if (bundle.getBoolean(DELETE_ROUTINE)) {
                 viewModel.deleteRoutine()
                 goBack()
+//                Snackbar.make(
+//                    binding.root,
+//                    getString(R.string.routine_deleted_message),
+//                    Snackbar.LENGTH_SHORT
+//                )
+//                    .setAnchorView(R.id.fab)
+//                    .show()
             }
         }
         setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
@@ -213,7 +220,10 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     private fun showDeleteDialog() {
         findNavController().safeNavigate(
             RoutineEditorFragmentDirections.actionRoutineEditorFragmentToConfirmationDialog(
-                R.string.delete_routine_dialog_message
+                R.string.delete_routine_dialog_title,
+                R.string.message_action_cannot_be_undone,
+                R.string.delete,
+                DELETE_ROUTINE
             )
         )
     }

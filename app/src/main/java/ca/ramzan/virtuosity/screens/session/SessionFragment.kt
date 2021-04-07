@@ -118,7 +118,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             timer.updateTimeLeft(bundle.getLong(DURATION_VALUE))
         }
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
-            if (bundle.getBoolean(POSITIVE_RESULT)) {
+            if (bundle.getBoolean(FINISH_SESSION)) {
                 viewModel.completeSession()
                 gotToSummary()
             }
@@ -253,7 +253,12 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
     private fun confirmFinishSession() {
         imm.hideKeyboard(requireView().windowToken)
         findNavController().safeNavigate(
-            SessionFragmentDirections.actionSessionFragmentToConfirmationDialog(R.string.session_finish_dialog_title)
+            SessionFragmentDirections.actionSessionFragmentToConfirmationDialog(
+                R.string.session_finish_dialog_title,
+                R.string.session_finish_dialog_message,
+                R.string.session_menu_finish_text,
+                FINISH_SESSION
+            )
         )
     }
 

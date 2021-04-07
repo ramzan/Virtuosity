@@ -79,7 +79,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
     override fun onStart() {
         super.onStart()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
-            if (bundle.getBoolean(POSITIVE_RESULT)) {
+            if (bundle.getBoolean(DELETE_EXERCISE)) {
                 viewModel.deleteExercise()
                 goBack()
             }
@@ -241,7 +241,10 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
     private fun showDeleteDialog() {
         findNavController().safeNavigate(
             ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToConfirmationDialog(
-                R.string.delete_exercise_dialog_message
+                R.string.delete_exercise_dialog_title,
+                R.string.message_action_cannot_be_undone,
+                R.string.delete,
+                DELETE_EXERCISE
             )
         )
     }
