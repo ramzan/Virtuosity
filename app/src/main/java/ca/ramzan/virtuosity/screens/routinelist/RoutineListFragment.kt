@@ -33,11 +33,16 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         super.onStart()
         requireActivity().showBottomNavBar()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
-            if (bundle.getBoolean(CLEAR_SESSION)) {
+            if (bundle.getBoolean(CLEAR_SESSION_AND_START)) {
                 viewModel.sessionToStartId?.let {
                     viewModel.useCase.clearSavedSession()
                     findNavController().popBackStack(R.id.routineListFragment, false)
                     startSession(it)
+                }
+            } else if (bundle.getBoolean(CLEAR_SESSION)) {
+                viewModel.useCase.clearSavedSession()
+                (viewModel.state.value as? RoutineListState.Loaded)?.run {
+                    adapter.submitListWithHeader(routineCards)
                 }
             }
         }
@@ -62,7 +67,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
                 override fun onResumeSession() = resumeSession()
 
-                override fun onCancelSession() = cancelSession()
+                override fun onCancelSession() = cancelSession(CLEAR_SESSION)
             }
         )
         adapter.stateRestorationPolicy =
@@ -100,11 +105,15 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         return binding.root
     }
 
-    private fun cancelSession() {
-        viewModel.useCase.clearSavedSession()
-        (viewModel.state.value as? RoutineListState.Loaded)?.run {
-            adapter.submitListWithHeader(routineCards)
-        }
+    private fun cancelSession(listenerKey: String) {
+        findNavController().safeNavigate(
+            RoutineListFragmentDirections.actionRoutineListFragmentToConfirmationDialog(
+                R.string.clear_session_dialog_title,
+                R.string.clear_session_dialog_message,
+                R.string.clear,
+                listenerKey
+            )
+        )
     }
 
     override fun onDestroyView() {
@@ -133,14 +142,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
     private fun checkSessionSaved(id: Long) {
         if (prefs.contains(SAVED_SESSION_NAME)) {
             viewModel.sessionToStartId = id
-            findNavController().safeNavigate(
-                RoutineListFragmentDirections.actionRoutineListFragmentToConfirmationDialog(
-                    R.string.clear_session_dialog_title,
-                    R.string.clear_session_dialog_message,
-                    R.string.clear,
-                    CLEAR_SESSION
-                )
-            )
+            cancelSession(CLEAR_SESSION_AND_START)
         } else startSession(id)
     }
 }
