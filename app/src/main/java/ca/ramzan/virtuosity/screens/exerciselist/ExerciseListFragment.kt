@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentExerciseListBinding
@@ -44,9 +43,6 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
         _binding = FragmentExerciseListBinding.inflate(inflater)
 
         val adapter = ExerciseAdapter { exercise -> showExerciseView(exercise.id) }
-
-        adapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         binding.exerciseList.adapter = adapter
 

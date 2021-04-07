@@ -9,7 +9,6 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentRoutineListBinding
@@ -70,8 +69,6 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
                 override fun onCancelSession() = cancelSession(CLEAR_SESSION)
             }
         )
-        adapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         binding.routineList.adapter = adapter
 
