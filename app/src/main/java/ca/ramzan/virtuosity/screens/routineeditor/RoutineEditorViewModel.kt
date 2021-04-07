@@ -87,8 +87,12 @@ class RoutineEditorViewModel @AssistedInject constructor(
         return true
     }
 
-    fun deleteItem(index: Int) {
-        _state.value.exercises.removeAt(index)
+    fun deleteItem(index: Int): RoutineExercise {
+        return _state.value.exercises.removeAt(index)
+    }
+
+    fun undoDelete(exercise: RoutineExercise, position: Int) {
+        _state.value.exercises.add(position, exercise)
     }
 
     fun addExercise(exercise: Exercise) {

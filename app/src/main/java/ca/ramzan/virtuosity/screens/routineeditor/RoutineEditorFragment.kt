@@ -20,6 +20,7 @@ import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentRoutineEditorBinding
 import ca.ramzan.virtuosity.exercises.Exercise
 import ca.ramzan.virtuosity.screens.BaseFragment
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -195,8 +196,18 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
     }
 
     private fun deleteItem(position: Int) {
-        viewModel.deleteItem(position)
+        val deleted = viewModel.deleteItem(position)
         adapter.notifyItemRemoved(position)
+        Snackbar.make(
+            binding.root,
+            getString(R.string.routine_editor_exercise_removed_message),
+            Snackbar.LENGTH_SHORT
+        )
+            .setAction(getString(R.string.undo)) {
+                viewModel.undoDelete(deleted, position)
+                adapter.notifyItemInserted(position)
+            }
+            .show()
     }
 
     private fun showDeleteDialog() {
