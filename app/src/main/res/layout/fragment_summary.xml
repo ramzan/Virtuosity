@@ -22,9 +22,17 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        android:id="@+id/summary_view"
-        layout="@layout/list_item_history_outer" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/default_margin"
+        android:paddingTop="@dimen/default_margin">
+
+        <include
+            android:id="@+id/summary_view"
+            layout="@layout/list_item_history_outer" />
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
 
