@@ -13,6 +13,7 @@ import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentRoutineListBinding
 import ca.ramzan.virtuosity.screens.BaseFragment
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -58,10 +59,12 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
         adapter = RoutineListCardAdapter(
             object : RoutineListCardAdapter.OnClickListener {
-                override fun onEdit(routine: RoutineListCard.RoutineCard) =
+                override fun onCreateRoutine() = showRoutineEditor(0)
+
+                override fun onEditRoutine(routine: RoutineListCard.RoutineCard) =
                     showRoutineEditor(routine.id)
 
-                override fun onStart(routine: RoutineListCard.RoutineCard) =
+                override fun onStartSession(routine: RoutineListCard.RoutineCard) =
                     checkSessionSaved(routine.id)
 
                 override fun onResumeSession() = resumeSession()
@@ -95,8 +98,15 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
             }
         }
 
-        binding.fab.setOnClickListener {
-            showRoutineEditor(0)
+        if (requireArguments().getBoolean("routineDeleted")) {
+            Snackbar.make(
+                requireActivity().findViewById(R.id.nav_view),
+                getString(R.string.routine_deleted_message),
+                Snackbar.LENGTH_SHORT
+            )
+                .setAnchorView(requireActivity().findViewById(R.id.nav_view))
+                .show()
+            requireArguments().remove("routineDeleted")
         }
 
         return binding.root

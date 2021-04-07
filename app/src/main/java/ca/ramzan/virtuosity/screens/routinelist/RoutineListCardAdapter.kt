@@ -21,8 +21,9 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<RoutineListCard, RecyclerView.ViewHolder>(RoutineListCardDiffCallback()) {
 
     interface OnClickListener {
-        fun onEdit(routine: RoutineListCard.RoutineCard)
-        fun onStart(routine: RoutineListCard.RoutineCard)
+        fun onCreateRoutine()
+        fun onEditRoutine(routine: RoutineListCard.RoutineCard)
+        fun onStartSession(routine: RoutineListCard.RoutineCard)
         fun onResumeSession()
         fun onCancelSession()
     }
@@ -59,10 +60,10 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
             binding.routineTitle.text = item.name
             binding.routinePreview.text = item.preview
             binding.editRoutineButton.setOnClickListener {
-                onClickListener.onEdit(item)
+                onClickListener.onEditRoutine(item)
             }
             binding.startRoutineButton.setOnClickListener {
-                onClickListener.onStart(item)
+                onClickListener.onStartSession(item)
             }
         }
 
@@ -80,6 +81,8 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
 
     class RoutineHeaderViewHolder private constructor(binding: ListItemRoutineHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        val newRoutineBtn = binding.newRoutineBtn
 
         companion object {
             fun from(parent: ViewGroup): RoutineHeaderViewHolder {
@@ -119,7 +122,13 @@ class RoutineListCardAdapter(private val onClickListener: OnClickListener) :
                 item as RoutineListCard.SavedSessionCard,
                 onClickListener
             )
-            is RoutineHeaderViewHolder, is NoRoutinesMessageViewHolder -> {
+            is RoutineHeaderViewHolder -> {
+                holder.newRoutineBtn.setOnClickListener {
+                    onClickListener.onCreateRoutine()
+                }
+            }
+
+            is NoRoutinesMessageViewHolder -> {
                 /* no-op */
             }
             else -> throw Exception("Illegal holder type: $holder")

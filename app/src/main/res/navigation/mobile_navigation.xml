@@ -30,6 +30,10 @@
         <action
             android:id="@+id/action_routineListFragment_to_confirmationDialog"
             app:destination="@id/confirmationDialog" />
+        <argument
+            android:name="routineDeleted"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -100,6 +104,11 @@
         <action
             android:id="@+id/action_routineEditorFragment_to_durationPickerDialogFragment"
             app:destination="@id/durationPickerDialogFragment" />
+        <action
+            android:id="@+id/action_routineEditorFragment_to_routineListFragment"
+            app:destination="@id/routineListFragment"
+            app:popUpTo="@id/routineListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <dialog
         android:id="@+id/durationPickerDialogFragment"

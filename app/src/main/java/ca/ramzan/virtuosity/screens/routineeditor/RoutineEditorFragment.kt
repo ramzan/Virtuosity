@@ -85,14 +85,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
             if (bundle.getBoolean(DELETE_ROUTINE)) {
                 viewModel.deleteRoutine()
-                goBack()
-//                Snackbar.make(
-//                    binding.root,
-//                    getString(R.string.routine_deleted_message),
-//                    Snackbar.LENGTH_SHORT
-//                )
-//                    .setAnchorView(R.id.fab)
-//                    .show()
+                goBack(deleted = true)
             }
         }
         setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
@@ -228,9 +221,15 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         )
     }
 
-    private fun goBack() {
+    private fun goBack(deleted: Boolean = false) {
         imm.hideKeyboard(requireView().windowToken)
-        findNavController().popBackStack(R.id.routineListFragment, false)
+        findNavController().popBackStack(R.id.routineEditorFragment, false)
+        findNavController().safeNavigate(
+            RoutineEditorFragmentDirections.actionRoutineEditorFragmentToRoutineListFragment()
+                .apply {
+                    routineDeleted = deleted
+                }
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

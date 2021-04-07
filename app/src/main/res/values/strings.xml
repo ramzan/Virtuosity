@@ -82,5 +82,6 @@
     <string name="clear_session_dialog_message">Any unsaved progress will be lost.</string>
     <string name="clear">Clear</string>
     <string name="session_finish_dialog_message">Exercises with 0 or empty BPM will be discarded.</string>
+    <string name="new_routine_button_description">New Routine</string>
 
 </resources>

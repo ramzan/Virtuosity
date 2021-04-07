@@ -37,15 +37,4 @@
         tools:listitem="@layout/list_item_routine"
         tools:visibility="visible" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:contentDescription="@string/new_exercise"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
