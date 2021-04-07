@@ -18,7 +18,7 @@ class HistoryUseCase @Inject constructor(private val dao: HistoryDao) {
         }
     }
 
-    val history = Pager(PagingConfig(50)) {
+    val history = Pager(PagingConfig(10)) {
         dao.getSessionHistories()
     }.flow
 }
