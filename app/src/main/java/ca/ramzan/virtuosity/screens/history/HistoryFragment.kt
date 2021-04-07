@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
 
-    private val viewModel: HistoryViewModel by activityViewModels()
+    private val viewModel: HistoryViewModel by viewModels()
 
     override fun onStart() {
         super.onStart()
