@@ -12,7 +12,7 @@
         android:id="@+id/exercise_name"
         style="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:layout_width="0dp"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:ellipsize="end"
         android:scrollbars="none"

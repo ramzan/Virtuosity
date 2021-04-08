@@ -97,10 +97,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/history_graph_card">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/stats_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:padding="@dimen/card_padding"
             android:visibility="invisible"
             tools:visibility="visible">
@@ -110,42 +111,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/stats_card_title"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textAppearance="?attr/textAppearanceBody1" />
 
             <TextView
                 android:id="@+id/bpm_slowest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stats_card_title"
                 tools:text="@string/history_stats_slowest_message" />
 
             <TextView
                 android:id="@+id/bpm_fastest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/bpm_slowest"
                 tools:text="@string/history_stats_fastest_message" />
 
             <TextView
                 android:id="@+id/bpm_average"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stats_card_title"
                 tools:text="@string/history_stats_average_message" />
 
             <TextView
                 android:id="@+id/bpm_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/bpm_average"
                 tools:text="@string/history_stats_progress_message" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
