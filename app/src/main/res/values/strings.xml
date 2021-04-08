@@ -85,5 +85,8 @@
     <string name="new_routine_button_description">New Routine</string>
     <string name="history_deleted_message">Record deleted</string>
     <string name="exercise_deleted_message">Exercise deleted</string>
+    <string name="discard_changes_dialog_title">Discard changes?</string>
+    <string name="discard_changes_dialog_message">Any unsaved changes will be lost.</string>
+    <string name="discard">Discard</string>
 
 </resources>

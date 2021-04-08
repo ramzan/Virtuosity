@@ -26,6 +26,7 @@ const val DELETE_HISTORY = "DELETE_HISTORY"
 const val CLEAR_SESSION = "CLEAR_SESSION"
 const val CLEAR_SESSION_AND_START = "CLEAR_SESSION_AND_START"
 const val FINISH_SESSION = "FINISH_SESSION"
+const val DISCARD_CHANGES = "DISCARD_CHANGES"
 
 // Text input dialog result
 const val TEXT_INPUT_RESULT = "text_input_result"

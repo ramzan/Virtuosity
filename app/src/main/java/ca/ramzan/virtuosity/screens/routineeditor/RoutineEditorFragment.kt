@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -80,12 +81,22 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
     private val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() = warnDiscardChanges()
+            })
+    }
+
     override fun onStart() {
         super.onStart()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
             if (bundle.getBoolean(DELETE_ROUTINE)) {
                 viewModel.deleteRoutine()
                 goBack(deleted = true)
+            } else if (bundle.getBoolean(DISCARD_CHANGES)) {
+                goBack()
             }
         }
         setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
@@ -111,7 +122,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
         binding.apply {
             editorToolbar.setNavigationOnClickListener {
-                goBack()
+                warnDiscardChanges()
             }
 
             saveButton.setOnMenuItemClickListener {
@@ -185,6 +196,17 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
             }
         }
         return binding.root
+    }
+
+    private fun warnDiscardChanges() {
+        findNavController().safeNavigate(
+            RoutineEditorFragmentDirections.actionRoutineEditorFragmentToConfirmationDialog(
+                R.string.discard_changes_dialog_title,
+                R.string.discard_changes_dialog_message,
+                R.string.discard,
+                DISCARD_CHANGES
+            )
+        )
     }
 
     private fun showDurationPicker(exerciseIndex: Int, duration: Long) {
