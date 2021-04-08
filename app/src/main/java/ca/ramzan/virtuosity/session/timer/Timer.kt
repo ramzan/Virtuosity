@@ -12,7 +12,6 @@ import ca.ramzan.virtuosity.common.millisToTimerString
 import ca.ramzan.virtuosity.session.SessionExercise
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -106,12 +105,11 @@ class Timer(
             }
         }
 
-        GlobalScope.launch(Dispatchers.Main) {
+        timerScope.launch(Dispatchers.Main) {
             _timeLeft.emit(initialTime)
             _timeString.emit(millisToTimerString(initialTime))
+            updateTimerNotification()
         }
-
-        updateTimerNotification()
     }
 
     fun setUpTimer(newExercise: SessionExercise) {
