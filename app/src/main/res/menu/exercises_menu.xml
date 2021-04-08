@@ -10,4 +10,11 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 
+    <item
+        android:id="@+id/new_exercise"
+        android:contentDescription="@string/new_exercise"
+        android:icon="@drawable/ic_baseline_add_24"
+        android:title="@string/new_exercise"
+        app:showAsAction="ifRoom|collapseActionView" />
+
 </menu>

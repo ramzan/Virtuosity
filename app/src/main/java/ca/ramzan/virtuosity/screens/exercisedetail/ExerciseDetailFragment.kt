@@ -81,7 +81,6 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
             if (bundle.getBoolean(DELETE_EXERCISE)) {
                 viewModel.deleteExercise()
-                goBack()
             }
         }
         setFragmentResultListener(TEXT_INPUT_RESULT) { _, bundle ->
@@ -115,7 +114,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                             showRenameDialog(state.exercise.name)
                             true
                         }
-                    } else if (state is ExerciseDetailState.Deleted) goBack()
+                    } else if (state is ExerciseDetailState.Deleted) goBack(deleted = true)
                 }
             }
 
@@ -258,8 +257,11 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
         )
     }
 
-    private fun goBack() {
-        findNavController().popBackStack(R.id.exerciseListFragment, false)
+    private fun goBack(deleted: Boolean = false) {
+        findNavController().popBackStack(R.id.exerciseDetailFragment, false)
+        findNavController().safeNavigate(
+            ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToExerciseListFragment()
+                .apply { exerciseDeleted = deleted })
     }
 }
 

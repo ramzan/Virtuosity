@@ -15,6 +15,7 @@ import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentExerciseListBinding
 import ca.ramzan.virtuosity.screens.BaseFragment
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -70,9 +71,9 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
             }
         }
 
-
-        binding.fab.setOnClickListener {
+        binding.exercisesToolbar.menu.findItem(R.id.new_exercise).setOnMenuItemClickListener {
             showNewExerciseDialog()
+            true
         }
 
         binding.exercisesToolbar.menu.findItem(R.id.search).apply {
@@ -107,6 +108,17 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
                     return true
                 }
             })
+        }
+
+        if (requireArguments().getBoolean("exerciseDeleted")) {
+            Snackbar.make(
+                requireActivity().findViewById(R.id.nav_view),
+                getString(R.string.exercise_deleted_message),
+                Snackbar.LENGTH_SHORT
+            )
+                .setAnchorView(requireActivity().findViewById(R.id.nav_view))
+                .show()
+            requireArguments().remove("exerciseDeleted")
         }
         return binding.root
     }

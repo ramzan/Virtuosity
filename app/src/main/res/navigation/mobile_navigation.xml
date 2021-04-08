@@ -15,6 +15,10 @@
         <action
             android:id="@+id/action_exerciseListFragment_to_textInputDialog"
             app:destination="@id/textInputDialog" />
+        <argument
+            android:name="exerciseDeleted"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/routineListFragment"
@@ -53,6 +57,11 @@
         <action
             android:id="@+id/action_exerciseDetailFragment_to_textInputDialog"
             app:destination="@id/textInputDialog" />
+        <action
+            android:id="@+id/action_exerciseDetailFragment_to_exerciseListFragment"
+            app:destination="@id/exerciseListFragment"
+            app:popUpTo="@id/exerciseListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
