@@ -68,15 +68,23 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 timer.status.collect { status ->
                     when (status) {
                         TimerState.RUNNING -> {
-                            binding.pauseTimerButton.visibility = View.VISIBLE
-                            binding.startTimerButton.visibility = View.GONE
+                            binding.pausePlayButton.apply {
+                                setImageResource(R.drawable.ic_baseline_pause_24)
+                                setOnClickListener {
+                                    if (bound) this@SessionFragment.timer.pauseTimer()
+                                }
+                            }
 
                             binding.timerEditor.visibility = View.GONE
                             binding.timer.visibility = View.VISIBLE
                         }
                         TimerState.PAUSED, TimerState.STOPPED -> {
-                            binding.pauseTimerButton.visibility = View.GONE
-                            binding.startTimerButton.visibility = View.VISIBLE
+                            binding.pausePlayButton.apply {
+                                setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                                setOnClickListener {
+                                    if (bound) this@SessionFragment.timer.startTimer()
+                                }
+                            }
 
                             binding.timerEditor.visibility = View.VISIBLE
                             binding.timer.visibility = View.GONE
@@ -168,14 +176,6 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             sessionToolbar.menu.getItem(0).setOnMenuItemClickListener {
                 confirmFinishSession()
                 true
-            }
-
-            pauseTimerButton.setOnClickListener {
-                if (bound) this@SessionFragment.timer.pauseTimer()
-            }
-
-            startTimerButton.setOnClickListener {
-                if (bound) this@SessionFragment.timer.startTimer()
             }
 
             restartTimerButton.setOnClickListener {
