@@ -32,6 +32,7 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:clipToPadding="false"
         android:paddingHorizontal="@dimen/default_margin"
+        android:scrollbars="none"
         android:visibility="gone"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/list_item_routine"

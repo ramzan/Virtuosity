@@ -15,6 +15,7 @@
         android:layout_height="24dp"
         android:layout_marginStart="16dp"
         android:ellipsize="end"
+        android:scrollbars="none"
         android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/max_bpm"
