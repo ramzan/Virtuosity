@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import ca.ramzan.virtuosity.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,11 +30,6 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.timer_notification_channel_id),
             getString(R.string.timer_notification_channel_name)
         )
-        // TODO Implement metronome
-//        createChannel(
-//            getString(R.string.metronome_notification_channel_id),
-//            getString(R.string.metronome_notification_channel_name)
-//        )
     }
 
     private fun createChannel(channelId: String, channelName: String) {
