@@ -102,7 +102,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
         requireActivity().hideBottomNavBar()
 
-        val firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
+        var firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
 
         _binding = FragmentRoutineEditorBinding.inflate(inflater)
 
@@ -161,7 +161,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                     RoutineEditorState.Loading -> {
                         /* no-op */
                     }
-                    RoutineEditorState.Deleted -> goBack()
+                    RoutineEditorState.Deleted -> goBack(deleted = true)
                     is RoutineEditorState.Editing -> {
                         binding.apply {
                             editorToolbar.title = getString(R.string.editorTitleEdit)
@@ -178,6 +178,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                         if (firstRun) {
                             binding.nameInput.requestFocus()
                             imm.showKeyboard()
+                            firstRun = false
                         }
                     }
                 }
