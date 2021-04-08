@@ -13,6 +13,7 @@ import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentHistoryBinding
 import ca.ramzan.virtuosity.screens.BaseFragment
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -25,7 +26,16 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
         super.onStart()
         requireActivity().showBottomNavBar()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
-            if (bundle.getBoolean(DELETE_HISTORY)) viewModel.deleteHistoryItem()
+            if (bundle.getBoolean(DELETE_HISTORY)) {
+                viewModel.deleteHistoryItem()
+                Snackbar.make(
+                    requireActivity().findViewById(R.id.nav_view),
+                    getString(R.string.history_deleted_message),
+                    Snackbar.LENGTH_SHORT
+                )
+                    .setAnchorView(requireActivity().findViewById(R.id.nav_view))
+                    .show()
+            }
         }
     }
 

@@ -83,5 +83,6 @@
     <string name="clear">Clear</string>
     <string name="session_finish_dialog_message">Exercises with 0 or empty BPM will be discarded.</string>
     <string name="new_routine_button_description">New Routine</string>
+    <string name="history_deleted_message">Record deleted</string>
 
 </resources>
