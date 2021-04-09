@@ -168,11 +168,15 @@ class Timer(
     // Called when timer duration is edited
     fun updateTimeLeft(newTime: Long) {
         timer?.cancel()
+        timer = null
+        startingDuration = newTime
+        _timeLeft.value = null
         if (newTime != 0L) {
-            startingDuration = newTime
-            _timeLeft.value = newTime
             _status.value = TimerState.PAUSED
             createTimer()
+        } else {
+            _status.value = TimerState.STOPPED
+            emitTime(0)
         }
     }
 
