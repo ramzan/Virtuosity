@@ -14,11 +14,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 enum class TimerState {
-    STOPPED,
+    STOPPED, // Before any exercises are loaded OR when the current exercise has 0 duration
     RUNNING,
     PAUSED,
 }
@@ -34,6 +34,8 @@ class Timer(
     private val vibrator: Vibrator?,
     private val timerScope: CoroutineScope
 ) {
+
+    // region notifications ------------------------------------------------------------------------
 
     var notification = stoppedNotification
 
@@ -57,67 +59,66 @@ class Timer(
         notificationManager.notify(TIMER_NOTIFICATION_ID, stoppedNotification.build())
     }
 
+    // endregion notifications ---------------------------------------------------------------------
+
+    // region state --------------------------------------------------------------------------------
+
     private var timer: CountDownTimer? = null
 
+    private var startingDuration = 0L
+
+    // Order/index of exercise in the routine
+    private var currentExerciseOrder: Int? = null
+
+    private var currentExerciseName = ""
+
     private var _timeLeft = MutableStateFlow<Long?>(null)
-
-    val timeLeft: StateFlow<Long?>
-        get() = _timeLeft
-
-    val timeLeftPercent = timeLeft.map { time ->
-        if (startingTime == 0L || time == null) 0 else (time * 100 / startingTime).toInt()
-    }
-
-    private var startingTime = 0L
+    val timeLeft: StateFlow<Long?> get() = _timeLeft
 
     private val _timeString = MutableStateFlow("")
-
-    val timeString: StateFlow<String>
-        get() = _timeString
+    val timeString: StateFlow<String> get() = _timeString
 
     private var _status = MutableStateFlow(TimerState.STOPPED)
+    val status: StateFlow<TimerState> get() = _status
 
-    val status: StateFlow<TimerState>
-        get() = _status
+    // endregion state -----------------------------------------------------------------------------
 
-    private var currentExercise: SessionExercise? = null
-
-    private val currentExerciseName
-        get() = currentExercise?.name ?: ""
+    init {
+        timerScope.launch(Dispatchers.Main) {
+            timeString.collect {
+                if (status.value == TimerState.STOPPED) showStoppedNotification()
+                else updateTimerNotification()
+            }
+        }
+    }
 
     private fun createTimer() {
-        val initialTime = timeLeft.value ?: startingTime
-        timer = object : CountDownTimer(initialTime, 1000) {
+        val initialTime = timeLeft.value ?: startingDuration
+        timer = object : CountDownTimer(initialTime, 16) {
             override fun onTick(millisUntilFinished: Long) {
-                timerScope.launch(Dispatchers.Main) {
-                    _timeLeft.emit(millisUntilFinished)
-                    _timeString.emit(millisToTimerString(millisUntilFinished))
-                }
-
-                updateTimerNotification()
+                emitTime(millisUntilFinished)
             }
 
             override fun onFinish() {
-                clearTimer()
+                stopTimer()
+                notification = pausedNotification
                 showTimeUpNotification()
                 vibrator?.vibrate()
                 mediaPlayer.start()
             }
         }
-
-        timerScope.launch(Dispatchers.Main) {
-            _timeLeft.emit(initialTime)
-            _timeString.emit(millisToTimerString(initialTime))
-            updateTimerNotification()
-        }
+        emitTime(initialTime)
     }
 
     fun setUpTimer(newExercise: SessionExercise) {
-        if (newExercise.order == currentExercise?.order) return
-        currentExercise = newExercise
-        startingTime = newExercise.duration
-        clearTimer()
-        if (startingTime != 0L) {
+        // Don't restart timer on config change
+        if (newExercise.order == currentExerciseOrder) return
+
+        currentExerciseOrder = newExercise.order
+        currentExerciseName = newExercise.name
+        startingDuration = newExercise.duration
+        stopTimer()
+        if (startingDuration != 0L) {
             createTimer()
             startTimer()
         }
@@ -127,6 +128,7 @@ class Timer(
         timer?.let {
             notification = runningNotification
             it.start()
+            updateTimerNotification()
             _status.value = TimerState.RUNNING
         }
     }
@@ -134,14 +136,15 @@ class Timer(
     fun pauseTimer() {
         notification = pausedNotification
         timer?.cancel()
-        createTimer()
+        updateTimerNotification()
         _status.value = TimerState.PAUSED
+        createTimer()
     }
 
     fun restartTimer() {
         timer?.cancel()
         _timeLeft.value = null
-        if (startingTime != 0L) {
+        if (startingDuration != 0L) {
             createTimer()
             if (status.value == TimerState.RUNNING) {
                 startTimer()
@@ -153,28 +156,30 @@ class Timer(
         }
     }
 
-    fun clearTimer() {
+    fun stopTimer() {
         timer?.cancel()
         timer = null
         _status.value = TimerState.STOPPED
         _timeLeft.value = null
         _timeString.value = millisToTimerString(0L)
-        notification = pausedNotification
         showStoppedNotification()
     }
 
-    fun clearExercise() {
-        clearTimer()
-        currentExercise = null
-        notification = stoppedNotification
-    }
-
+    // Called when timer duration is edited
     fun updateTimeLeft(newTime: Long) {
         timer?.cancel()
         if (newTime != 0L) {
-            startingTime = newTime
+            startingDuration = newTime
             _timeLeft.value = newTime
+            _status.value = TimerState.PAUSED
             createTimer()
+        }
+    }
+
+    private fun emitTime(time: Long) {
+        timerScope.launch(Dispatchers.Main) {
+            _timeLeft.emit(time)
+            _timeString.emit(millisToTimerString(time))
         }
     }
 
@@ -183,6 +188,5 @@ class Timer(
         if (isOreoOrAbove()) {
             this.vibrate(VibrationEffect.createWaveform(longArrayOf(200, 250, 200, 250), -1))
         } else this.vibrate(longArrayOf(200, 250, 200, 250), -10)
-
     }
 }

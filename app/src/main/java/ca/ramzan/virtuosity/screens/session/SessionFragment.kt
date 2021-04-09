@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.IBinder
 import android.text.Editable
@@ -26,6 +27,7 @@ import ca.ramzan.virtuosity.session.timer.TimerService
 import ca.ramzan.virtuosity.session.timer.TimerState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import java.lang.Integer.min
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -59,8 +61,8 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             }
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-                timer.timeLeftPercent.collect { timeLeft ->
-                    binding.timerProgressBar.setProgressCompat(timeLeft, true)
+                timer.timeLeft.collect { timeLeft ->
+                    binding.timerProgressBar.setProgressCompat(timeLeft?.toInt() ?: 0, true)
                 }
             }
 
@@ -75,7 +77,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                                 }
                             }
 
-                            binding.timerEditor.visibility = View.GONE
+                            binding.timerEditor.visibility = View.INVISIBLE
                             binding.timer.visibility = View.VISIBLE
                         }
                         TimerState.PAUSED, TimerState.STOPPED -> {
@@ -87,7 +89,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                             }
 
                             binding.timerEditor.visibility = View.VISIBLE
-                            binding.timer.visibility = View.GONE
+                            binding.timer.visibility = View.INVISIBLE
                         }
                     }
 
@@ -96,12 +98,9 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.state.collect { state ->
-                    when (state) {
-                        is SessionState.PracticeScreen -> {
-                            timerService.updateRoutineName(state.sessionName)
-                            timer.setUpTimer(state.currentExercise)
-                        }
-                        else -> timer.clearExercise()
+                    if (state is SessionState.PracticeScreen) {
+                        timerService.updateRoutineName(state.sessionName)
+                        timer.setUpTimer(state.currentExercise)
                     }
                 }
             }
@@ -123,7 +122,12 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             requireContext().bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
         setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
-            timer.updateTimeLeft(bundle.getLong(DURATION_VALUE))
+            bundle.getLong(DURATION_VALUE).run {
+                timer.updateTimeLeft(this)
+                binding.timerProgressBar.max = this.toInt()
+                binding.timerProgressBar.setProgressCompat(this.toInt(), true)
+
+            }
         }
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
             if (bundle.getBoolean(FINISH_SESSION)) {
@@ -144,7 +148,8 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() = goBack()
-            })
+            }
+        )
     }
 
     override fun onCreateView(
@@ -189,6 +194,10 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             sessionToolbar.setNavigationOnClickListener {
                 goBack()
             }
+
+            timerProgressBar.indicatorSize = Resources.getSystem().displayMetrics.run {
+                min(widthPixels, heightPixels) / 4 * 3
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -204,6 +213,8 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                             nextExerciseButton.isEnabled = state.nextButtonEnabled
 
                             sessionCurrentExerciseName.text = state.currentExerciseName
+
+                            timerProgressBar.max = state.currentExercise.duration.toInt()
                             bpmInput.apply {
                                 text =
                                     Editable.Factory.getInstance().newEditable(state.newExerciseBpm)

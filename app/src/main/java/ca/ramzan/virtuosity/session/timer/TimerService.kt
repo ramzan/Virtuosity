@@ -91,7 +91,7 @@ class TimerService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(timerReceiver)
-        timer.clearTimer()
+        timer.stopTimer()
         notificationManager.cancel(TIMER_NOTIFICATION_ID)
         serviceJob.cancel()
     }
