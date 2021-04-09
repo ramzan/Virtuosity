@@ -126,7 +126,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 timer.updateTimeLeft(this)
                 binding.timerProgressBar.max = this.toInt()
                 binding.timerProgressBar.setProgressCompat(this.toInt(), true)
-
+                requireArguments().putInt(DURATION_VALUE, this.toInt())
             }
         }
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
@@ -165,10 +165,12 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
         binding.apply {
             nextExerciseButton.setOnClickListener {
+                requireArguments().remove(DURATION_VALUE)
                 viewModel.nextExercise()
             }
 
             previousExerciseButton.setOnClickListener {
+                requireArguments().remove(DURATION_VALUE)
                 viewModel.previousExercise()
             }
 
@@ -214,7 +216,12 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
                             sessionCurrentExerciseName.text = state.currentExerciseName
 
-                            timerProgressBar.max = state.currentExercise.duration.toInt()
+                            timerProgressBar.max =
+                                requireArguments().getInt(
+                                    DURATION_VALUE,
+                                    state.currentExercise.duration.toInt()
+                                )
+
                             bpmInput.apply {
                                 text =
                                     Editable.Factory.getInstance().newEditable(state.newExerciseBpm)
