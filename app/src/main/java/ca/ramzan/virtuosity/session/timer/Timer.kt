@@ -1,12 +1,9 @@
 package ca.ramzan.virtuosity.session.timer
 
-import android.app.NotificationManager
 import android.media.MediaPlayer
 import android.os.CountDownTimer
 import android.os.VibrationEffect
 import android.os.Vibrator
-import androidx.core.app.NotificationCompat
-import ca.ramzan.virtuosity.common.TIMER_NOTIFICATION_ID
 import ca.ramzan.virtuosity.common.isOreoOrAbove
 import ca.ramzan.virtuosity.common.millisToTimerString
 import ca.ramzan.virtuosity.session.SessionExercise
@@ -24,44 +21,11 @@ enum class TimerState {
 }
 
 class Timer(
-    private val runningNotification: NotificationCompat.Builder,
-    private val pausedNotification: NotificationCompat.Builder,
-    private val stoppedNotification: NotificationCompat.Builder,
-    private val notificationManager: NotificationManager,
-    private val timeRemainingPrefix: String,
-    private val timeUpString: String,
+    private val notificationManager: TimerNotificationManager,
     private val mediaPlayer: MediaPlayer,
     private val vibrator: Vibrator?,
     private val timerScope: CoroutineScope
 ) {
-
-    // region notifications ------------------------------------------------------------------------
-
-    var notification = stoppedNotification
-
-    private fun updateTimerNotification() {
-        notification.run {
-            setContentTitle(currentExerciseName)
-            setContentText(timeRemainingPrefix + " ${timeString.value}")
-            notificationManager.notify(TIMER_NOTIFICATION_ID, build())
-        }
-    }
-
-    private fun showTimeUpNotification() {
-        notification.run {
-            setContentTitle(currentExerciseName)
-            setContentText(timeUpString)
-            notificationManager.notify(TIMER_NOTIFICATION_ID, build())
-        }
-    }
-
-    private fun showStoppedNotification() {
-        notificationManager.notify(TIMER_NOTIFICATION_ID, stoppedNotification.build())
-    }
-
-    // endregion notifications ---------------------------------------------------------------------
-
-    // region state --------------------------------------------------------------------------------
 
     private var timer: CountDownTimer? = null
 
@@ -81,13 +45,14 @@ class Timer(
     private var _status = MutableStateFlow(TimerState.STOPPED)
     val status: StateFlow<TimerState> get() = _status
 
-    // endregion state -----------------------------------------------------------------------------
-
     init {
         timerScope.launch(Dispatchers.Main) {
             timeString.collect {
-                if (status.value == TimerState.STOPPED) showStoppedNotification()
-                else updateTimerNotification()
+                notificationManager.updateTimerNotification(
+                    currentExerciseName,
+                    timeString.value,
+                    status.value
+                )
             }
         }
     }
@@ -101,8 +66,7 @@ class Timer(
 
             override fun onFinish() {
                 stopTimer()
-                notification = pausedNotification
-                showTimeUpNotification()
+                notificationManager.showTimeUpNotification(currentExerciseName)
                 vibrator?.vibrate()
                 mediaPlayer.start()
             }
@@ -125,19 +89,15 @@ class Timer(
     }
 
     fun startTimer() {
-        timer?.let {
-            notification = runningNotification
-            it.start()
-            updateTimerNotification()
-            _status.value = TimerState.RUNNING
+        timer?.run {
+            start()
+            setStatus(TimerState.RUNNING)
         }
     }
 
     fun pauseTimer() {
-        notification = pausedNotification
         timer?.cancel()
-        updateTimerNotification()
-        _status.value = TimerState.PAUSED
+        setStatus(TimerState.PAUSED)
         createTimer()
     }
 
@@ -146,23 +106,16 @@ class Timer(
         _timeLeft.value = null
         if (startingDuration != 0L) {
             createTimer()
-            if (status.value == TimerState.RUNNING) {
-                startTimer()
-            } else {
-                _status.value = TimerState.PAUSED
-            }
-        } else {
-            _status.value = TimerState.STOPPED
-        }
+            if (status.value == TimerState.RUNNING) startTimer() else setStatus(TimerState.PAUSED)
+        } else setStatus(TimerState.STOPPED)
     }
 
     fun stopTimer() {
         timer?.cancel()
         timer = null
-        _status.value = TimerState.STOPPED
         _timeLeft.value = null
-        _timeString.value = millisToTimerString(0L)
-        showStoppedNotification()
+        timerScope.launch(Dispatchers.Main) { _timeString.emit(millisToTimerString(0L)) }
+        setStatus(TimerState.STOPPED)
     }
 
     // Called when timer duration is edited
@@ -172,11 +125,11 @@ class Timer(
         startingDuration = newTime
         _timeLeft.value = null
         if (newTime != 0L) {
-            _status.value = TimerState.PAUSED
+            setStatus(TimerState.PAUSED)
             createTimer()
         } else {
-            _status.value = TimerState.STOPPED
             emitTime(0)
+            setStatus(TimerState.STOPPED)
         }
     }
 
@@ -185,6 +138,15 @@ class Timer(
             _timeLeft.emit(time)
             _timeString.emit(millisToTimerString(time))
         }
+    }
+
+    private fun setStatus(newStatus: TimerState) {
+        _status.value = newStatus
+        notificationManager.updateTimerNotification(
+            currentExerciseName,
+            timeString.value,
+            newStatus
+        )
     }
 
     @Suppress("DEPRECATION")
