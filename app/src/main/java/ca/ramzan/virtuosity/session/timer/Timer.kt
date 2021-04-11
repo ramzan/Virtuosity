@@ -6,7 +6,6 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import ca.ramzan.virtuosity.common.isOreoOrAbove
 import ca.ramzan.virtuosity.common.millisToTimerString
-import ca.ramzan.virtuosity.session.SessionExercise
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -74,13 +73,13 @@ class Timer(
         emitTime(initialTime)
     }
 
-    fun setUpTimer(newExercise: SessionExercise) {
+    fun setUpTimer(newOrder: Int, newName: String, newDuration: Long) {
         // Don't restart timer on config change
-        if (newExercise.order == currentExerciseOrder) return
+        if (newOrder == currentExerciseOrder) return
 
-        currentExerciseOrder = newExercise.order
-        currentExerciseName = newExercise.name
-        startingDuration = newExercise.duration
+        currentExerciseOrder = newOrder
+        currentExerciseName = newName
+        startingDuration = newDuration
         stopTimer()
         if (startingDuration != 0L) {
             createTimer()

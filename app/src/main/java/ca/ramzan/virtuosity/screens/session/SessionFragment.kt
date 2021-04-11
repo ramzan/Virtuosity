@@ -100,7 +100,11 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 viewModel.state.collect { state ->
                     if (state is SessionState.PracticeScreen) {
                         timerService.updateRoutineName(state.sessionName)
-                        timer.setUpTimer(state.currentExercise)
+                        timer.setUpTimer(
+                            state.currentExercise.order,
+                            state.currentExercise.name,
+                            state.currentExercise.duration
+                        )
                     }
                 }
             }
