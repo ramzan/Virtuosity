@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import ca.ramzan.virtuosity.common.SAVED_SESSION_ID
 import ca.ramzan.virtuosity.common.SAVED_SESSION_NAME
+import ca.ramzan.virtuosity.common.SAVED_SESSION_NOTE
 import ca.ramzan.virtuosity.common.SAVED_SESSION_TIME
 import ca.ramzan.virtuosity.common.room.SessionDao
 import ca.ramzan.virtuosity.history.SessionHistoryEntity
@@ -40,6 +41,10 @@ class SessionUseCase @Inject constructor(
         }
     }
 
+    fun getNote(): String = prefs.getString(SAVED_SESSION_NOTE, "") ?: ""
+
+    fun updateNote(newNote: String) = prefs.edit { putString(SAVED_SESSION_NOTE, newNote) }
+
     fun updateSessionState(sessionExercise: SessionExercise) {
         CoroutineScope(Dispatchers.IO).launch {
             dao.update(sessionExercise)
@@ -49,6 +54,9 @@ class SessionUseCase @Inject constructor(
     fun completeSession(exercises: List<SessionExercise>) {
         val time = prefs.getLong(SAVED_SESSION_TIME, System.currentTimeMillis())
         val title = prefs.getString(SAVED_SESSION_NAME, "") as String
+        val note: String? = prefs.getString(SAVED_SESSION_NOTE, null)?.trim().run {
+            if (this.isNullOrEmpty()) null else this
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             dao.completeSession(
@@ -59,7 +67,8 @@ class SessionUseCase @Inject constructor(
                     title,
                     exercises.map { it.name },
                     exercises.map { it.newBpm },
-                    exercises.map { it.getBpmDiff() }
+                    exercises.map { it.getBpmDiff() },
+                    note
                 ),
                 time
             )
@@ -72,6 +81,7 @@ class SessionUseCase @Inject constructor(
             remove(SAVED_SESSION_NAME)
             remove(SAVED_SESSION_TIME)
             remove(SAVED_SESSION_ID)
+            remove(SAVED_SESSION_NOTE)
         }
         CoroutineScope(Dispatchers.IO).launch {
             dao.clearSavedSession()

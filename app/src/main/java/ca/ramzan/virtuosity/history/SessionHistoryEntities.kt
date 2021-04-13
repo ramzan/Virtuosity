@@ -16,6 +16,8 @@ data class SessionHistoryEntity(
 
     val improvements: List<String>,
 
+    val note: String?,
+
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 ) {

@@ -185,6 +185,12 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
             timerEditor.setOnClickListener { showTimerEditor() }
 
             sessionToolbar.setNavigationOnClickListener { goBack() }
+
+            notesInput.doOnTextChanged { text, _, _, _ ->
+                text?.let {
+                    viewModel.updateNote(it.toString())
+                }
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -210,6 +216,11 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                                 hint = state.currentExerciseBpmRecord
                                 isEnabled = true
                                 setSelection(text.length.coerceAtLeast(0))
+                            }
+
+                            if (!requireArguments().getBoolean(FIRST_RUN_KEY)) {
+                                notesInput.setText(state.sessionNote)
+                                requireArguments().putBoolean(FIRST_RUN_KEY, true)
                             }
 
                             sessionProgressBar.visibility = View.GONE

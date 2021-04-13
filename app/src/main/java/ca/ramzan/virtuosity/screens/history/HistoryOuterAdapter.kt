@@ -2,6 +2,7 @@ package ca.ramzan.virtuosity.screens.history
 
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -37,10 +38,19 @@ class HistoryOuterAdapter(private val onDelete: (Long) -> Unit) :
                     historyTitle.text = title
                     historyDate.text = displayTime
                     historyData.adapter = HistoryInnerAdapter(exercises, bpms, improvements)
+                    if (note == null) {
+                        notesData.visibility = View.GONE
+                        headerNotes.visibility = View.GONE
+                    } else {
+                        notesData.text = note
+                        headerNotes.visibility = View.VISIBLE
+                        notesData.visibility = View.VISIBLE
+                    }
                 } ?: run {
                     historyTitle.text = ""
                     historyDate.text = ""
                     historyData.adapter = null
+                    notesData.text = ""
                 }
             }
         }

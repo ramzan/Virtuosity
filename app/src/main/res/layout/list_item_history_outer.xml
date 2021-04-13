@@ -76,6 +76,23 @@
             app:layout_constraintTop_toBottomOf="@id/header_exercise"
             tools:listitem="@layout/list_item_history_inner" />
 
+        <TextView
+            android:id="@+id/header_notes"
+            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:text="@string/notes"
+            app:layout_constraintStart_toStartOf="@id/history_data"
+            app:layout_constraintTop_toBottomOf="@id/history_data" />
+
+        <TextView
+            android:id="@+id/notes_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/history_data"
+            app:layout_constraintTop_toBottomOf="@id/header_notes" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

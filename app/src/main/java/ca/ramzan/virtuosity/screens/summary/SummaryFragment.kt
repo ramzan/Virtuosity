@@ -40,6 +40,14 @@ class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
                 binding.summaryView.apply {
                     historyTitle.text = summary.title
                     historyDate.text = summary.displayTime
+                    if (summary.note == null) {
+                        notesData.visibility = View.GONE
+                        headerNotes.visibility = View.GONE
+                    } else {
+                        notesData.text = summary.note
+                        headerNotes.visibility = View.VISIBLE
+                        notesData.visibility = View.VISIBLE
+                    }
                     historyData.adapter = HistoryInnerAdapter(
                         summary.exercises,
                         summary.bpms,

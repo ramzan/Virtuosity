@@ -26,6 +26,7 @@ class SessionViewModel @AssistedInject constructor(
         viewModelScope.launch {
             val name = useCase.getRoutineName(routineId)
             val exercises = useCase.getSession(routineId)
+            val note = useCase.getNote()
             _state.emit(
                 if (exercises.isEmpty()) {
                     SessionState.EmptyRoutine
@@ -33,6 +34,7 @@ class SessionViewModel @AssistedInject constructor(
                     SessionState.PracticeScreen(
                         name,
                         exercises,
+                        note,
                         0
                     )
                 }
@@ -70,8 +72,13 @@ class SessionViewModel @AssistedInject constructor(
         }
     }
 
+    fun updateNote(newNote: String) {
+        useCase.updateNote(newNote)
+    }
+
     fun completeSession() {
-        useCase.completeSession((_state.value as SessionState.PracticeScreen).sessionExercises.filter { e -> e.newBpm.isNotEmpty() && e.newBpm != "0" })
+        useCase.completeSession((_state.value as SessionState.PracticeScreen).sessionExercises
+            .filter { e -> e.newBpm.isNotEmpty() && e.newBpm != "0" })
     }
 
     fun cancelSession() = useCase.clearSavedSession()
@@ -105,6 +112,7 @@ sealed class SessionState {
     data class PracticeScreen(
         val sessionName: String,
         val sessionExercises: MutableList<SessionExercise>,
+        val sessionNote: String,
         val currentIndex: Int
     ) : SessionState() {
 

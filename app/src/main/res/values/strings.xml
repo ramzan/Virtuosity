@@ -86,5 +86,6 @@
     <string name="discard_changes_dialog_title">Discard changes?</string>
     <string name="discard_changes_dialog_message">Any unsaved changes will be lost.</string>
     <string name="discard">Discard</string>
+    <string name="notes">Notes</string>
 
 </resources>
