@@ -99,7 +99,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
 
         binding.editorToolbar.apply {
             setNavigationOnClickListener {
-                goBack()
+                requireActivity().onBackPressed()
             }
 
             lifecycleScope.launchWhenStarted {
