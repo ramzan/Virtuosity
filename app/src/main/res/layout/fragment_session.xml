@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,8 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/session_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/sessionToolbar"
@@ -24,110 +23,149 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <ScrollView
+        android:id="@+id/practice_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:clipToPadding="false"
+        android:padding="@dimen/default_margin"
+        android:scrollbars="none"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/timer_editor"
+                style="@style/TextAppearance.MaterialComponents.Headline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:importantForAutofill="no"
+                android:inputType="none"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/session_current_exercise_name"
+                app:layout_constraintEnd_toStartOf="@id/pause_play_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="LabelFor"
+                tools:text="00:10:12"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/timer_display"
+                style="@style/TextAppearance.MaterialComponents.Headline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/timer_editor"
+                app:layout_constraintEnd_toEndOf="@id/timer_editor"
+                app:layout_constraintStart_toStartOf="@id/timer_editor"
+                app:layout_constraintTop_toTopOf="@id/timer_editor"
+                tools:text="00:10:12" />
+
+            <ImageButton
+                android:id="@+id/pause_play_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/start_timer"
+                android:src="@drawable/ic_baseline_play_arrow_24"
+                app:layout_constraintBottom_toBottomOf="@id/timer_display"
+                app:layout_constraintEnd_toStartOf="@id/restart_timer_button"
+                app:layout_constraintStart_toEndOf="@id/timer_display"
+                app:layout_constraintTop_toTopOf="@id/timer_display" />
+
+            <ImageButton
+                android:id="@+id/restart_timer_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/restart_timer"
+                android:src="@drawable/ic_baseline_replay_24"
+                app:layout_constraintBottom_toBottomOf="@id/pause_play_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/pause_play_button"
+                app:layout_constraintTop_toTopOf="@id/pause_play_button" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/timer_progress_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@id/restart_timer_button"
+                app:layout_constraintStart_toStartOf="@id/timer_display"
+                app:layout_constraintTop_toBottomOf="@id/restart_timer_button"
+                app:trackColor="@color/surfaceColor"
+                tools:progress="66" />
+
+            <TextView
+                android:id="@+id/session_current_exercise_name"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/timer_progress_bar"
+                tools:text="Exercise Name" />
+
+            <EditText
+                android:id="@+id/bpm_input"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/bpm"
+                android:digits="0123456789"
+                android:hint="@string/bpm"
+                android:inputType="numberDecimal"
+                android:maxLength="3"
+                app:layout_constraintEnd_toEndOf="@id/next_exercise_button"
+                app:layout_constraintHorizontal_bias="0.4"
+                app:layout_constraintStart_toStartOf="@id/previous_exercise_button"
+                app:layout_constraintTop_toBottomOf="@id/session_current_exercise_name"
+                tools:text="120" />
+
+            <TextView
+                android:id="@+id/bpm_input_title"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bpm"
+                app:layout_constraintBottom_toBottomOf="@id/bpm_input"
+                app:layout_constraintStart_toEndOf="@id/bpm_input"
+                app:layout_constraintTop_toTopOf="@id/bpm_input" />
+
+            <Button
+                android:id="@+id/previous_exercise_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                app:layout_constraintEnd_toStartOf="@id/next_exercise_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bpm_input" />
+
+            <Button
+                android:id="@+id/next_exercise_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next"
+                app:layout_constraintBottom_toBottomOf="@id/previous_exercise_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/previous_exercise_button" />
+
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
     <ProgressBar
         android:id="@+id/session_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/session_app_bar"
         tools:visibility="gone" />
 
-    <TextView
-        android:id="@+id/session_current_exercise_name"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/session_app_bar"
-        tools:text="Exercise Name" />
-
-    <ImageButton
-        android:id="@+id/pause_play_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/start_timer"
-        android:src="@drawable/ic_baseline_play_arrow_24"
-        app:layout_constraintEnd_toStartOf="@id/restart_timer_button"
-        app:layout_constraintStart_toStartOf="@id/timer"
-        app:layout_constraintTop_toBottomOf="@id/timer" />
-
-    <ImageButton
-        android:id="@+id/restart_timer_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/restart_timer"
-        android:src="@drawable/ic_baseline_replay_24"
-        app:layout_constraintEnd_toEndOf="@id/timer"
-        app:layout_constraintStart_toEndOf="@id/pause_play_button"
-        app:layout_constraintTop_toBottomOf="@id/timer" />
-
-    <EditText
-        android:id="@+id/bpm_input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="@string/bpm"
-        android:digits="0123456789"
-        android:hint="@string/bpm"
-        android:inputType="numberDecimal"
-        android:maxLength="3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/session_current_exercise_name"
-        tools:text="120" />
-
-    <Button
-        android:id="@+id/next_exercise_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bpm_input" />
-
-    <Button
-        android:id="@+id/previous_exercise_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bpm_input" />
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/timer_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:max="100"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/next_exercise_button" />
-
-    <TextView
-        android:id="@+id/timer"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/timer_progress_bar"
-        app:layout_constraintEnd_toEndOf="@id/timer_progress_bar"
-        app:layout_constraintStart_toStartOf="@id/timer_progress_bar"
-        app:layout_constraintTop_toTopOf="@id/timer_progress_bar"
-        tools:text="00:10:12" />
-
-    <EditText
-        android:id="@+id/timer_editor"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:focusable="false"
-        android:importantForAutofill="no"
-        android:inputType="none"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/timer_progress_bar"
-        app:layout_constraintEnd_toEndOf="@id/timer_progress_bar"
-        app:layout_constraintStart_toStartOf="@id/timer_progress_bar"
-        app:layout_constraintTop_toTopOf="@id/timer_progress_bar"
-        tools:ignore="LabelFor"
-        tools:text="00:10:12"
-        tools:visibility="visible" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

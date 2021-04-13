@@ -4,10 +4,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.IBinder
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +25,8 @@ import ca.ramzan.virtuosity.session.timer.TimerService
 import ca.ramzan.virtuosity.session.timer.TimerState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import java.lang.Integer.min
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class SessionFragment : BaseFragment<FragmentSessionBinding>() {
@@ -55,7 +53,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 timer.timeString.collect { string ->
-                    binding.timer.text = string
+                    binding.timerDisplay.text = string
                     binding.timerEditor.setText(string)
                 }
             }
@@ -68,31 +66,26 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 timer.status.collect { status ->
-                    when (status) {
-                        TimerState.RUNNING -> {
-                            binding.pausePlayButton.apply {
-                                setImageResource(R.drawable.ic_baseline_pause_24)
-                                setOnClickListener {
+                    binding.apply {
+                        when (status) {
+                            TimerState.RUNNING -> {
+                                pausePlayButton.setImageResource(R.drawable.ic_baseline_pause_24)
+                                pausePlayButton.setOnClickListener {
                                     if (bound) this@SessionFragment.timer.pauseTimer()
                                 }
+                                timerEditor.visibility = View.INVISIBLE
+                                timerDisplay.visibility = View.VISIBLE
                             }
-
-                            binding.timerEditor.visibility = View.INVISIBLE
-                            binding.timer.visibility = View.VISIBLE
-                        }
-                        TimerState.PAUSED, TimerState.STOPPED -> {
-                            binding.pausePlayButton.apply {
-                                setImageResource(R.drawable.ic_baseline_play_arrow_24)
-                                setOnClickListener {
+                            TimerState.PAUSED, TimerState.STOPPED -> {
+                                pausePlayButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                                pausePlayButton.setOnClickListener {
                                     if (bound) this@SessionFragment.timer.startTimer()
                                 }
+                                timerEditor.visibility = View.VISIBLE
+                                timerDisplay.visibility = View.INVISIBLE
                             }
-
-                            binding.timerEditor.visibility = View.VISIBLE
-                            binding.timer.visibility = View.INVISIBLE
                         }
                     }
-
                 }
             }
 
@@ -118,19 +111,17 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
     override fun onStart() {
         super.onStart()
         Intent(requireContext(), TimerService::class.java).also { intent ->
-            if (isOreoOrAbove()) {
-                requireContext().startForegroundService(intent)
-            } else {
-                requireContext().startService(intent)
-            }
+            if (isOreoOrAbove()) requireContext().startForegroundService(intent)
+            else requireContext().startService(intent)
             requireContext().bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
         setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
             bundle.getLong(DURATION_VALUE).run {
                 timer.updateTimeLeft(this)
-                binding.timerProgressBar.max = this.toInt()
-                binding.timerProgressBar.setProgressCompat(this.toInt(), true)
-                requireArguments().putInt(DURATION_VALUE, this.toInt())
+                val newTime = this.toInt()
+                binding.timerProgressBar.max = newTime
+                binding.timerProgressBar.setProgressCompat(newTime, true)
+                requireArguments().putInt(DURATION_VALUE, newTime)
             }
         }
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
@@ -162,9 +153,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-
         requireActivity().hideBottomNavBar()
-
         _binding = FragmentSessionBinding.inflate(inflater)
 
         binding.apply {
@@ -193,17 +182,9 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 if (bound) this@SessionFragment.timer.restartTimer()
             }
 
-            timerEditor.setOnClickListener {
-                showTimerEditor()
-            }
+            timerEditor.setOnClickListener { showTimerEditor() }
 
-            sessionToolbar.setNavigationOnClickListener {
-                goBack()
-            }
-
-            timerProgressBar.indicatorSize = Resources.getSystem().displayMetrics.run {
-                min(widthPixels, heightPixels) / 4 * 3
-            }
+            sessionToolbar.setNavigationOnClickListener { goBack() }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -211,8 +192,6 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 when (state) {
                     is SessionState.PracticeScreen -> {
                         binding.apply {
-                            sessionProgressBar.visibility = View.GONE
-
                             sessionToolbar.title = state.sessionName
 
                             previousExerciseButton.isEnabled = state.previousButtonEnabled
@@ -227,12 +206,15 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                                 )
 
                             bpmInput.apply {
-                                text =
-                                    Editable.Factory.getInstance().newEditable(state.newExerciseBpm)
+                                setText(state.newExerciseBpm)
                                 hint = state.currentExerciseBpmRecord
                                 isEnabled = true
                                 setSelection(text.length.coerceAtLeast(0))
                             }
+
+                            sessionProgressBar.visibility = View.GONE
+                            practiceView.visibility = View.VISIBLE
+
                         }
                     }
                     SessionState.Loading -> {
@@ -241,8 +223,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                     SessionState.EmptyRoutine -> {
                         binding.apply {
                             sessionProgressBar.visibility = View.GONE
-                            previousExerciseButton.visibility = View.GONE
-                            nextExerciseButton.visibility = View.GONE
+                            practiceView.visibility = View.GONE
                         }
                         viewModel.cancelSession()
                         findNavController().safeNavigate(
