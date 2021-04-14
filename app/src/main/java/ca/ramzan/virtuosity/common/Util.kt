@@ -40,7 +40,8 @@ fun isOreoOrAbove() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
 fun millisToTimerString(millis: Long): String {
     return (millis / 1000).let { s ->
-        String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60))
+        if (s < 3600) String.format("%02d:%02d", (s % 3600) / 60, (s % 60))
+        else String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60))
     }
 }
 

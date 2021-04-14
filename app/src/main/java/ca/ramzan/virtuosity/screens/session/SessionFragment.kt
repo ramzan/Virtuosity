@@ -1,5 +1,6 @@
 package ca.ramzan.virtuosity.screens.session
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -147,6 +148,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         )
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -203,7 +205,8 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                             previousExerciseButton.isEnabled = state.previousButtonEnabled
                             nextExerciseButton.isEnabled = state.nextButtonEnabled
 
-                            sessionCurrentExerciseName.text = state.currentExerciseName
+                            sessionCurrentExerciseName.text =
+                                "${state.currentIndex + 1}. ${state.currentExerciseName}"
 
                             timerProgressBar.max =
                                 requireArguments().getInt(
@@ -215,7 +218,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                                 setText(state.newExerciseBpm)
                                 hint = state.currentExerciseBpmRecord
                                 isEnabled = true
-                                setSelection(text.length.coerceAtLeast(0))
+                                text?.length?.let { setSelection(it.coerceAtLeast(0)) }
                             }
 
                             if (!requireArguments().getBoolean(FIRST_RUN_KEY)) {
