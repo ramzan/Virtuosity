@@ -65,13 +65,6 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
         }
     }
 
-    private val bpmFormatter = object : ValueFormatter() {
-        override fun getFormattedValue(value: Float): String {
-            return value.toInt().toString()
-        }
-
-    }
-
     private val yAxisFormatter = object : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?) = value.toInt().toString()
     }
@@ -114,7 +107,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                             showRenameDialog(state.exercise.name)
                             true
                         }
-                    } else if (state is ExerciseDetailState.Deleted) goBack(deleted = true)
+                    } else if (state is ExerciseDetailState.Deleted) goBack()
                 }
             }
 
@@ -134,7 +127,10 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             binding.historyRangerSpinner.adapter = adapter
         }
 
-        val graphColor = resources.getColor(R.color.pink1, null)
+        val dataPointColor = resources.getColor(R.color.brown_1, null)
+        val axisLabelColor = resources.getColor(R.color.axis_label_color, requireActivity().theme)
+        val dataPointFillColor =
+            resources.getColor(R.color.graph_point_fill_color, requireActivity().theme)
 
         binding.historyGraph.apply {
             description = null
@@ -142,6 +138,8 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
             axisRight.isEnabled = false
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             axisLeft.valueFormatter = yAxisFormatter
+            axisLeft.textColor = axisLabelColor
+            xAxis.textColor = axisLabelColor
             setNoDataText(getString(R.string.no_exercise_history_data_message))
             setNoDataTextColor(R.color.design_default_color_on_primary)
 
@@ -167,14 +165,15 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
                         is ExerciseDetailUseCase.GraphState.Loaded -> {
                             binding.apply {
                                 state.dataSet.apply {
-                                    circleColors = listOf(graphColor)
-                                    color = graphColor
-                                    highLightColor = graphColor
+                                    circleColors = listOf(dataPointColor)
+                                    color = dataPointColor
+                                    highLightColor = dataPointColor
                                     setDrawHorizontalHighlightIndicator(false)
+                                    circleHoleColor = dataPointFillColor
                                 }
 
                                 data = LineData(state.dataSet)
-                                data.setValueFormatter(bpmFormatter)
+                                data.setDrawValues(false)
 
                                 bpmSlowest.text = getString(
                                     R.string.history_stats_slowest_message,
@@ -257,11 +256,11 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
         )
     }
 
-    private fun goBack(deleted: Boolean = false) {
+    private fun goBack() {
         findNavController().popBackStack(R.id.exerciseDetailFragment, false)
         findNavController().safeNavigate(
             ExerciseDetailFragmentDirections.actionExerciseDetailFragmentToExerciseListFragment()
-                .apply { exerciseDeleted = deleted })
+                .apply { exerciseDeleted = true })
     }
 }
 

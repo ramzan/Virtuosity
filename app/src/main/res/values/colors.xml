@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_1">#b84c92</color>
-    <color name="purple_2">#851864</color>
-    <color name="purple_3">#54003a</color>
-    <color name="pink1">#9e1c77</color>
-    <color name="pink2">#6c004b</color>
+    <color name="brown_1">#9a7877</color>
+    <color name="brown_2">#6b4c4b</color>
+    <color name="brown_3">#3f2423</color>
     <color name="black">#FF000000</color>
     <color name="transparent_black">#BB000000</color>
+    <color name="transparent_white">#BBFFFFFF</color>
     <color name="grey">#d3d3d3</color>
     <color name="white">#FFFFFFFF</color>
 
     <color name="backgroundColor">#ebeaea</color>
     <color name="surfaceColor">#f3f3f3</color>
+
+    <color name="dark_grey">#141414</color>
+    <color name="axis_label_color">@color/black</color>
+    <color name="graph_point_fill_color">@color/white</color>
 
 </resources>

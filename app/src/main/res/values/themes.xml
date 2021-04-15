@@ -2,21 +2,19 @@
     <!-- Base application theme. -->
     <style name="Theme.Virtuosity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_2</item>
-        <item name="colorPrimaryVariant">@color/purple_3</item>
+        <item name="colorPrimary">@color/brown_2</item>
+        <item name="colorPrimaryVariant">@color/brown_3</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/pink1</item>
-        <item name="colorSecondaryVariant">@color/pink2</item>
+        <item name="colorSecondary">@color/brown_1</item>
+        <item name="colorSecondaryVariant">@color/brown_2</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-
     </style>
 
     <style name="ToolbarTheme">
-        <item name="android:textColorHint">@color/purple_3</item>
+        <item name="android:textColorHint">@color/transparent_white</item>
         <item name="android:editTextColor">@color/white</item>
     </style>
 

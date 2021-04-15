@@ -35,9 +35,9 @@
         android:paddingTop="?attr/actionBarSize"
         android:scrollbars="none"
         android:visibility="gone"
-        app:fastScrollPopupBgColor="@color/purple_1"
+        app:fastScrollPopupBgColor="@color/brown_1"
         app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-        app:fastScrollThumbColor="@color/purple_1"
+        app:fastScrollThumbColor="@color/brown_1"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/list_item_exercise"
         tools:visibility="visible" />
