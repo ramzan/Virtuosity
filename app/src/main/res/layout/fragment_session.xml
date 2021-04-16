@@ -52,7 +52,7 @@
 
                     <EditText
                         android:id="@+id/timer_editor"
-                        style="@style/TextAppearance.MaterialComponents.Headline5"
+                        style="@style/TextAppearance.MaterialComponents.Headline4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -70,7 +70,7 @@
 
                     <TextView
                         android:id="@+id/timer_display"
-                        style="@style/TextAppearance.MaterialComponents.Headline5"
+                        style="@style/TextAppearance.MaterialComponents.Headline4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintBottom_toBottomOf="@id/timer_editor"
@@ -85,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/start_timer"
-                        android:src="@drawable/ic_baseline_play_arrow_24"
+                        android:src="@drawable/ic_baseline_play_arrow_48"
                         app:layout_constraintBottom_toBottomOf="@id/timer_display"
                         app:layout_constraintEnd_toStartOf="@id/restart_timer_button"
                         app:layout_constraintStart_toEndOf="@id/timer_display"
@@ -97,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/restart_timer"
-                        android:src="@drawable/ic_baseline_replay_24"
+                        android:src="@drawable/ic_baseline_replay_48"
                         app:layout_constraintBottom_toBottomOf="@id/pause_play_button"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/pause_play_button"

@@ -71,7 +71,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                     binding.apply {
                         when (status) {
                             TimerState.RUNNING -> {
-                                pausePlayButton.setImageResource(R.drawable.ic_baseline_pause_24)
+                                pausePlayButton.setImageResource(R.drawable.ic_baseline_pause_48)
                                 pausePlayButton.setOnClickListener {
                                     if (bound) this@SessionFragment.timer.pauseTimer()
                                 }
@@ -79,7 +79,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                                 timerDisplay.visibility = View.VISIBLE
                             }
                             TimerState.PAUSED, TimerState.STOPPED -> {
-                                pausePlayButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                                pausePlayButton.setImageResource(R.drawable.ic_baseline_play_arrow_48)
                                 pausePlayButton.setOnClickListener {
                                     if (bound) this@SessionFragment.timer.startTimer()
                                 }

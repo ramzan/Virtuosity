@@ -32,7 +32,7 @@
         android:id="@+id/improvement"
         android:layout_width="36sp"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_blue_bright"
+        android:textColor="@color/history_improvement_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/max_bpm"

@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/brown_1</item>
         <item name="colorPrimaryVariant">#121212</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/brown_1</item>
         <item name="colorSecondaryVariant">@color/brown_2</item>
@@ -20,6 +20,7 @@
 
     <style name="ThemeOverlay.App.Toolbar" parent="">
         <item name="colorPrimary">@color/dark_grey</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 
 </resources>

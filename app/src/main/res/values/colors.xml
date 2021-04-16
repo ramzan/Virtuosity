@@ -16,4 +16,7 @@
     <color name="axis_label_color">@color/black</color>
     <color name="graph_point_fill_color">@color/white</color>
 
+    <color name="history_improvement_color">#00819d</color>
+
+
 </resources>
