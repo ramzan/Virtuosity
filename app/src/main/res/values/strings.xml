@@ -25,7 +25,7 @@
     <string name="add_an_exercise">Add an exercise</string>
     <string name="edit">Edit</string>
     <string name="start">Start</string>
-    <string name="bpm" translatable="false">BPM</string>
+    <string name="bpm">BPM</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
     <string name="done">Done</string>
@@ -44,7 +44,6 @@
     <string name="timer_notification_time_up_message">Time\'s up!</string>
     <string name="timer_notification_time_remaining_prefix">Time remaining:</string>
     <string name="no_exercise_history_data_message">No data for this period</string>
-    <string name="drag_handle_description">Drag handle</string>
     <string name="history_stats_average_message">Average: %d BPM</string>
     <string name="history_stats_slowest_message">Slowest: %d BPM</string>
     <string name="history_stats_fastest_message">Fastest: %d BPM</string>
@@ -70,14 +69,14 @@
     <string name="session_finish_dialog_title">Are you finished?</string>
     <string name="routine_editor_exercise_header">Exercise</string>
     <string name="routine_editor_duration_header">Duration</string>
-    <string name="no_history_message">No records found.\n Tap the \'Practice\' tab at the bottom to begin!</string>
+    <string name="no_history_message">No records found.\n Completed practice sessions will be found here.\n Tap the \'Practice\' tab at the bottom to begin!</string>
     <string name="routine_editor_exercise_removed_message">Exercise removed</string>
     <string name="undo">Undo</string>
     <string name="routine_deleted_message">Routine deleted</string>
     <string name="message_action_cannot_be_undone">This action cannot be undone.</string>
     <string name="clear_session_dialog_message">Any unsaved progress will be lost.</string>
     <string name="clear">Clear</string>
-    <string name="session_finish_dialog_message">Exercises with 0 or empty BPM will be discarded.</string>
+    <string name="session_finish_dialog_message">Incomplete exercises will not be recorded.</string>
     <string name="new_routine_button_description">New Routine</string>
     <string name="history_deleted_message">Record deleted</string>
     <string name="exercise_deleted_message">Exercise deleted</string>

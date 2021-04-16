@@ -49,7 +49,7 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginVertical="12dp"
             android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/drag_handle_description"
+            android:contentDescription="@string/delete"
             android:src="@drawable/ic_baseline_close_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
