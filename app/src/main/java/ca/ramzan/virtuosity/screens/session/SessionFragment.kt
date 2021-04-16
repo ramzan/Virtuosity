@@ -1,15 +1,13 @@
 package ca.ramzan.virtuosity.screens.session
 
 import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
@@ -34,6 +32,9 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
 
     @Inject
     lateinit var imm: InputMethodManager
+
+    @Inject
+    lateinit var prefs: SharedPreferences
 
     @Inject
     lateinit var factory: SessionViewModel.Factory
@@ -146,6 +147,9 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
                 override fun handleOnBackPressed() = goBack()
             }
         )
+        if (prefs.getBoolean(getString(R.string.key_session_stay_awake), false)) {
+            requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -257,6 +261,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
         requireContext().stopService(Intent(requireContext(), TimerService::class.java))
         imm.hideKeyboard(requireView().windowToken)
         findNavController().popBackStack(R.id.routineListFragment, false)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun showTimerEditor() {

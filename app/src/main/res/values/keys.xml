@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-<!--Categories-->
+    <!--Categories-->
     <string name="category_general">General</string>
-    <string name="category_timer">Timer</string>
+    <string name="category_practice">Practice</string>
 
-<!--Theme-->
+    <!--Theme-->
     <!--Key and values-->
     <string name="key_theme" translatable="false">theme</string>
     <string name="value_theme_light" translatable="false">light</string>
@@ -31,9 +31,16 @@
         <item>@string/display_theme_system</item>
     </string-array>
 
-<!--Vibrate-->
+    <!--Vibrate-->
     <!--Key and values-->
     <string name="key_timer_vibrate" translatable="false">timer_vibrate</string>
     <!--Display-->
-    <string name="title_timer_vibrate">Vibrate on complete</string>
+    <string name="title_timer_vibrate">Vibrate on time up</string>
+
+    <!--Session keep screen on-->
+    <!--Key and values-->
+    <string name="key_session_stay_awake" translatable="false">session_stay_awake</string>
+    <!--Display-->
+    <string name="title_session_stay_awake">Keep screen on</string>
+
 </resources>
