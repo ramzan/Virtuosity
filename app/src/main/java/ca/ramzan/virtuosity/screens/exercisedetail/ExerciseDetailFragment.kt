@@ -135,13 +135,15 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
         binding.historyGraph.apply {
             description = null
             legend.isEnabled = false
-            axisRight.isEnabled = false
+            setNoDataText(getString(R.string.no_exercise_history_data_message))
+            setNoDataTextColor(axisLabelColor)
+
             xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.textColor = axisLabelColor
+
+            axisRight.isEnabled = false
             axisLeft.valueFormatter = yAxisFormatter
             axisLeft.textColor = axisLabelColor
-            xAxis.textColor = axisLabelColor
-            setNoDataText(getString(R.string.no_exercise_history_data_message))
-            setNoDataTextColor(R.color.design_default_color_on_primary)
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.history.collect { state ->
