@@ -10,7 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import ca.ramzan.virtuosity.R
-import ca.ramzan.virtuosity.common.*
+import ca.ramzan.virtuosity.common.CONFIRMATION_RESULT
+import ca.ramzan.virtuosity.common.DELETE_HISTORY
+import ca.ramzan.virtuosity.common.safeNavigate
+import ca.ramzan.virtuosity.common.showBottomNavBar
 import ca.ramzan.virtuosity.databinding.FragmentHistoryBinding
 import ca.ramzan.virtuosity.screens.BaseFragment
 import com.google.android.material.snackbar.Snackbar
@@ -43,7 +46,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHistoryBinding.inflate(inflater)
+        mutableBinding = FragmentHistoryBinding.inflate(inflater)
 
         val adapter = HistoryOuterAdapter(::deleteSessionHistory)
 

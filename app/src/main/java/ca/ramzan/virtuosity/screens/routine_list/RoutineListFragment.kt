@@ -1,4 +1,4 @@
-package ca.ramzan.virtuosity.screens.routinelist
+package ca.ramzan.virtuosity.screens.routine_list
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -55,7 +55,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        _binding = FragmentRoutineListBinding.inflate(inflater)
+        mutableBinding = FragmentRoutineListBinding.inflate(inflater)
 
         adapter = RoutineListCardAdapter(
             object : RoutineListCardAdapter.OnClickListener {

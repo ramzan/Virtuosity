@@ -1,4 +1,4 @@
-package ca.ramzan.virtuosity.screens.exerciselist
+package ca.ramzan.virtuosity.screens.exercise_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -41,7 +41,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentExerciseListBinding.inflate(inflater)
+        mutableBinding = FragmentExerciseListBinding.inflate(inflater)
 
         val adapter = ExerciseAdapter { exercise -> showExerciseView(exercise.id) }
 

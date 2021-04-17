@@ -1,4 +1,4 @@
-package ca.ramzan.virtuosity.screens.routinelist
+package ca.ramzan.virtuosity.screens.routine_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

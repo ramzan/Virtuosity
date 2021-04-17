@@ -1,4 +1,4 @@
-package ca.ramzan.virtuosity.screens.routineeditor
+package ca.ramzan.virtuosity.screens.routine_editor
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

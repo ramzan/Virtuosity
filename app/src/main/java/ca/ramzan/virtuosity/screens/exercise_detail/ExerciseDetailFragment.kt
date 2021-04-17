@@ -1,4 +1,4 @@
-package ca.ramzan.virtuosity.screens.exercisedetail
+package ca.ramzan.virtuosity.screens.exercise_detail
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -88,7 +88,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
 
         requireActivity().hideBottomNavBar()
 
-        _binding = FragmentExerciseDetailBinding.inflate(inflater)
+        mutableBinding = FragmentExerciseDetailBinding.inflate(inflater)
 
         binding.editorToolbar.apply {
             setNavigationOnClickListener {

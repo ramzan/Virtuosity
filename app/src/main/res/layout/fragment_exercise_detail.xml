@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="0dp"
-            app:menu="@menu/exercise_view_menu"
+            app:menu="@menu/exercise_detail_menu"
             app:navigationIcon="@drawable/ic_baseline_close_24"
             tools:title="C# Melodic Minor Scale">
 

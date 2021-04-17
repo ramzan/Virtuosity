@@ -29,7 +29,7 @@ class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
 
         requireActivity().hideBottomNavBar()
 
-        _binding = FragmentSummaryBinding.inflate(inflater)
+        mutableBinding = FragmentSummaryBinding.inflate(inflater)
 
         binding.summaryToolbar.setNavigationOnClickListener {
             goBack()

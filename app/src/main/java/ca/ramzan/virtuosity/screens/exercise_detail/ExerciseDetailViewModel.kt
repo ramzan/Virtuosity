@@ -1,4 +1,4 @@
-package ca.ramzan.virtuosity.screens.exercisedetail
+package ca.ramzan.virtuosity.screens.exercise_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

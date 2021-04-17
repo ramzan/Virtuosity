@@ -16,7 +16,7 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/exercises_menu"
+            app:menu="@menu/exercise_list_menu"
             app:title="@string/exercises" />
     </com.google.android.material.appbar.AppBarLayout>
 

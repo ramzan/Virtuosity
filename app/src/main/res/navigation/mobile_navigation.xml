@@ -6,7 +6,7 @@
     app:startDestination="@id/routineListFragment">
     <fragment
         android:id="@+id/exerciseListFragment"
-        android:name="ca.ramzan.virtuosity.screens.exerciselist.ExerciseListFragment"
+        android:name="ca.ramzan.virtuosity.screens.exercise_list.ExerciseListFragment"
         android:label="@string/exercises"
         tools:layout="@layout/fragment_exercise_list">
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/routineListFragment"
-        android:name="ca.ramzan.virtuosity.screens.routinelist.RoutineListFragment"
+        android:name="ca.ramzan.virtuosity.screens.routine_list.RoutineListFragment"
         android:label="@string/practice"
         tools:layout="@layout/fragment_routine_list">
         <action
@@ -46,7 +46,7 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/exerciseDetailFragment"
-        android:name="ca.ramzan.virtuosity.screens.exercisedetail.ExerciseDetailFragment"
+        android:name="ca.ramzan.virtuosity.screens.exercise_detail.ExerciseDetailFragment"
         android:label="ExerciseDetailFragment">
         <argument
             android:name="exerciseId"
@@ -102,7 +102,7 @@
     </dialog>
     <fragment
         android:id="@+id/routineEditorFragment"
-        android:name="ca.ramzan.virtuosity.screens.routineeditor.RoutineEditorFragment"
+        android:name="ca.ramzan.virtuosity.screens.routine_editor.RoutineEditorFragment"
         android:label="RoutineEditorFragment">
         <argument
             android:name="routineId"

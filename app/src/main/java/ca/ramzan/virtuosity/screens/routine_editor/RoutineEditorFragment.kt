@@ -1,4 +1,4 @@
-package ca.ramzan.virtuosity.screens.routineeditor
+package ca.ramzan.virtuosity.screens.routine_editor
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -115,7 +115,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
         var firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
 
-        _binding = FragmentRoutineEditorBinding.inflate(inflater)
+        mutableBinding = FragmentRoutineEditorBinding.inflate(inflater)
 
         val deleteButton = binding.editorToolbar.menu.getItem(0)
         val saveButton = binding.editorToolbar.menu.getItem(1)

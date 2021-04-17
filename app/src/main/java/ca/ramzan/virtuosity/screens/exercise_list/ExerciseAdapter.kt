@@ -1,4 +1,4 @@
-package ca.ramzan.virtuosity.screens.exerciselist
+package ca.ramzan.virtuosity.screens.exercise_list
 
 
 import android.view.LayoutInflater
