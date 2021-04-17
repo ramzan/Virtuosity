@@ -75,6 +75,11 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
 
         binding.routineList.adapter = adapter
 
+        binding.routineListToolbar.menu.findItem(R.id.settings).setOnMenuItemClickListener {
+            goToSettings()
+            true
+        }
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
                 when (state) {
@@ -110,6 +115,12 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
         }
 
         return binding.root
+    }
+
+    private fun goToSettings() {
+        findNavController().safeNavigate(
+            RoutineListFragmentDirections.actionRoutineListFragmentToSettingsFragment()
+        )
     }
 
     private fun cancelSession(listenerKey: String) {
