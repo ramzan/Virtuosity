@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:menu="@menu/routine_editor_menu"
-            app:navigationIcon="@drawable/ic_baseline_close_24"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
             tools:title="@string/editorTitleNew">
 
         </com.google.android.material.appbar.MaterialToolbar>

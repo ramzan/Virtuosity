@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="0dp"
             app:menu="@menu/exercise_detail_menu"
-            app:navigationIcon="@drawable/ic_baseline_close_24"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
             tools:title="C# Melodic Minor Scale">
 
         </com.google.android.material.appbar.MaterialToolbar>
