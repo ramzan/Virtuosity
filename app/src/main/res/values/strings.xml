@@ -15,7 +15,7 @@
     <string name="save">Save</string>
     <string name="editorTitleEdit">Edit Routine</string>
     <string name="editorTitleNew">New Routine</string>
-    <string name="empty_name_error_msg">Name cannot be empty</string>
+    <string name="empty_name_error_msg">Name required</string>
     <string name="nameInputHint">Name</string>
     <string name="add_an_exercise">Add an exercise</string>
     <string name="edit">Edit</string>
@@ -27,7 +27,7 @@
     <string name="restart_timer">Restart timer</string>
     <string name="timer_notification_channel_name">Timer</string>
     <string name="timer_notification_channel_id" translatable="false">timer_channel</string>
-    <string name="clear_session_dialog_title">Clear the saved session?</string>
+    <string name="clear_session_dialog_title">Clear current session?</string>
     <string name="resume_session_title">Resume session</string>
     <string name="resume">Resume</string>
     <string name="history">History</string>
@@ -61,7 +61,7 @@
     <string name="session_finish_dialog_title">Are you finished?</string>
     <string name="routine_editor_exercise_header">Exercise</string>
     <string name="routine_editor_duration_header">Duration</string>
-    <string name="no_history_message">No records found.\n Completed practice sessions will be found here.\n Tap the \'Practice\' tab at the bottom to begin!</string>
+    <string name="no_history_message">No records found.\n Completed practice sessions will appear here.</string>
     <string name="routine_editor_exercise_removed_message">Exercise removed</string>
     <string name="undo">Undo</string>
     <string name="routine_deleted_message">Routine deleted</string>

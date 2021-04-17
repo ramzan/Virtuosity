@@ -7,13 +7,13 @@
         android:contentDescription="@string/rename"
         android:icon="@drawable/ic_baseline_edit_24"
         android:title="@string/rename"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/delete_exercise"
         android:contentDescription="@string/delete"
         android:icon="@drawable/ic_baseline_delete_24"
         android:title="@string/delete"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
 </menu>
