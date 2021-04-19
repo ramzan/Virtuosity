@@ -36,3 +36,6 @@ const val INPUT_TEXT = "input_text"
 // Duration picker dialog result
 const val DURATION_PICKER_RESULT = "duration_picker_result"
 const val DURATION_VALUE = "duration_value"
+
+// Routine editor add exercise results
+const val ADD_EXERCISE_RESULTS = "ADD_EXERCISE_RESULTS"

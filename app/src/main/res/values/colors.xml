@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="brown_0">#cba7a6</color>
     <color name="brown_1">#9a7877</color>
     <color name="brown_2">#6b4c4b</color>
     <color name="brown_3">#3f2423</color>
@@ -10,6 +11,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="surfaceColor">#f3f3f3</color>
+    <color name="exercise_background_color">@color/brown_0</color>
 
     <color name="dark_grey">#141414</color>
     <color name="axis_label_color">@color/black</color>

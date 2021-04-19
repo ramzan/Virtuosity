@@ -52,4 +52,17 @@
         android:text="@string/no_exercises_message"
         android:visibility="gone" />
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/add_exercises_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/default_margin"
+        android:backgroundTint="@color/brown_2"
+        android:contentDescription="@string/add_exercises"
+        android:text="@string/add_exercise"
+        android:visibility="gone"
+        app:icon="@drawable/ic_baseline_add_24"
+        tools:visibility="visible" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

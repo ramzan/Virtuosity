@@ -77,5 +77,8 @@
     <string name="discard">Discard</string>
     <string name="notes">Notes</string>
     <string name="previous">Previous</string>
+    <string name="add_exercise">Add exercise</string>
+    <string name="add_exercises">Add exercises</string>
+    <string name="add_n_exercises">Add %d exercises</string>
 
 </resources>

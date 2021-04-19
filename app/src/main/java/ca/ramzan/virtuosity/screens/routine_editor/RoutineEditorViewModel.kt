@@ -20,8 +20,6 @@ class RoutineEditorViewModel @AssistedInject constructor(
     private val useCase: RoutineEditorUseCase
 ) : ViewModel() {
 
-    val allExercises = useCase.getAllExercises()
-
     private var _state = MutableStateFlow<RoutineEditorState>(RoutineEditorState.Loading)
     val state: StateFlow<RoutineEditorState>
         get() = _state
@@ -95,15 +93,19 @@ class RoutineEditorViewModel @AssistedInject constructor(
         _state.value.exercises.add(position, exercise)
     }
 
-    fun addExercise(exercise: Exercise) {
-        _state.value.exercises.add(
-            RoutineExercise(
-                exercise.id,
-                exercise.name,
-                DEFAULT_TIMER_DURATION
-            )
+    fun addExercises(exercises: List<Exercise>) {
+        _state.value.exercises.addAll(
+            exercises.map { exercise ->
+                RoutineExercise(
+                    exercise.id,
+                    exercise.name,
+                    DEFAULT_TIMER_DURATION
+                )
+            }
         )
     }
+
+    val exercises get() = state.value.exercises
 
 // region Factory ------------------------------------------------------------------------------
 

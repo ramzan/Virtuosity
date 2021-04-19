@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="@drawable/list_item_exercise_background"
+    android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
     android:padding="4dp">
 

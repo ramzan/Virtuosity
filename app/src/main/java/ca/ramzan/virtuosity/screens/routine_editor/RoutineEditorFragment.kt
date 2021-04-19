@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResultListener
@@ -26,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
@@ -39,13 +38,28 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         RoutineEditorViewModel.provideFactory(factory, requireArguments().getLong("routineId"))
     }
 
-    private val adapter = RoutineExerciseAdapter(::showDurationPicker, ::deleteItem)
+    private val adapter =
+        RoutineExerciseAdapter(::showDurationPicker, ::deleteItem, ::showExercisePicker)
 
     private val simpleItemTouchCallback =
         object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
+
+            override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val dragFlags =
+                    ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END
+                val swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                return if (viewHolder.itemViewType == ITEM_VIEW_TYPE_ADD_BUTTON) 0 else makeMovementFlags(
+                    dragFlags,
+                    swipeFlags
+                )
+            }
+
 
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -77,6 +91,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                 super.clearView(recyclerView, viewHolder)
                 viewHolder.itemView.alpha = 1.0f
             }
+
         }
 
     private val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
@@ -101,6 +116,10 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         }
         setFragmentResultListener(DURATION_PICKER_RESULT) { _, bundle ->
             viewModel.updateDuration(bundle.getLong(DURATION_VALUE))
+        }
+        setFragmentResultListener(ADD_EXERCISE_RESULTS) { _, bundle ->
+            @Suppress("UNCHECKED_CAST")
+            (bundle.get(ADD_EXERCISE_RESULTS) as? List<Exercise>)?.let { viewModel.addExercises(it) }
         }
     }
 
@@ -144,22 +163,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
             nameInput.doOnTextChanged { text, _, _, _ ->
                 viewModel.state.value.nameInputText = text.toString().trim().replace('\n', ' ')
             }
-
-            exerciseSpinner.apply {
-                onItemClickListener = AdapterView.OnItemClickListener { _, _, pos, _ ->
-                    viewModel.addExercise(this.adapter.getItem(pos) as Exercise)
-                    binding.routineExerciseList.adapter?.notifyItemInserted(viewModel.state.value.exercises.size)
-                    setText("")
-                }
-            }
-
-            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-                viewModel.allExercises.collect { list ->
-                    exerciseSpinner.setAdapter(
-                        ArrayAdapter(requireContext(), R.layout.list_item_exercise_spinner, list)
-                    )
-                }
-            }
         }
 
         binding.routineExerciseList.adapter = adapter
@@ -167,7 +170,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
-                adapter.submitList(state.exercises)
+                adapter.submitWithFooter(state.exercises)
                 when (state) {
                     RoutineEditorState.Loading -> {
                         /* no-op */
@@ -198,6 +201,12 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        itemTouchHelper.attachToRecyclerView(null)
+        binding.routineExerciseList.adapter = null
+        super.onDestroyView()
+    }
+
     private fun warnDiscardChanges() {
         findNavController().safeNavigate(
             RoutineEditorFragmentDirections.actionRoutineEditorFragmentToConfirmationDialog(
@@ -220,7 +229,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
     private fun deleteItem(position: Int) {
         val deleted = viewModel.deleteItem(position)
-        adapter.notifyItemRemoved(position)
+        adapter.submitWithFooter(viewModel.exercises)
         Snackbar.make(
             binding.root,
             getString(R.string.routine_editor_exercise_removed_message),
@@ -228,9 +237,15 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         )
             .setAction(getString(R.string.undo)) {
                 viewModel.undoDelete(deleted, position)
-                adapter.notifyItemInserted(position)
+                adapter.submitWithFooter(viewModel.exercises)
             }
             .show()
+    }
+
+    private fun showExercisePicker() {
+        findNavController().safeNavigate(
+            RoutineEditorFragmentDirections.actionRoutineEditorFragmentToExerciseListFragment()
+                .apply { editingRoutine = true })
     }
 
     private fun showDeleteDialog() {

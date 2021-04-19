@@ -10,18 +10,19 @@ import ca.ramzan.virtuosity.databinding.ListItemExerciseBinding
 import ca.ramzan.virtuosity.exercises.ExerciseLatestBpm
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import java.util.*
+import kotlin.collections.HashSet
 
 
-class ExerciseAdapter(private val onClickListener: (ExerciseLatestBpm) -> Unit) :
+class ExerciseAdapter(private val onClickListener: (ExerciseLatestBpm, Int) -> Unit) :
     ListAdapter<ExerciseLatestBpm, ExerciseAdapter.ViewHolder>(ExerciseDiffCallback()),
     FastScrollRecyclerView.SectionedAdapter {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.itemView.setOnClickListener {
-            onClickListener(item)
+            onClickListener(item, position)
         }
-        holder.bind(item)
+        holder.bind(item, currentSelected.contains(item))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,9 +32,10 @@ class ExerciseAdapter(private val onClickListener: (ExerciseLatestBpm) -> Unit) 
     class ViewHolder private constructor(private val binding: ListItemExerciseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ExerciseLatestBpm) {
+        fun bind(item: ExerciseLatestBpm, selected: Boolean) {
             binding.exerciseName.text = item.name
             binding.maxBpm.text = item.bpmDisplay
+            binding.root.isSelected = selected
         }
 
         companion object {
@@ -51,6 +53,21 @@ class ExerciseAdapter(private val onClickListener: (ExerciseLatestBpm) -> Unit) 
     override fun getSectionName(position: Int): String {
         return currentList[position].name.first().toString().toUpperCase(Locale.ROOT)
     }
+
+    fun submitSelected(newSelected: HashSet<ExerciseLatestBpm>) {
+        oldSelected = currentSelected
+        currentSelected = newSelected
+    }
+
+    companion object {
+        private var oldSelected: HashSet<ExerciseLatestBpm> = HashSet()
+        private var currentSelected: HashSet<ExerciseLatestBpm> = HashSet()
+
+        fun selectionChanged(exercise: ExerciseLatestBpm): Boolean {
+            return oldSelected.contains(exercise) == currentSelected.contains(exercise)
+        }
+
+    }
 }
 
 class ExerciseDiffCallback : DiffUtil.ItemCallback<ExerciseLatestBpm>() {
@@ -62,6 +79,6 @@ class ExerciseDiffCallback : DiffUtil.ItemCallback<ExerciseLatestBpm>() {
         oldItem: ExerciseLatestBpm,
         newItem: ExerciseLatestBpm
     ): Boolean {
-        return oldItem == newItem
+        return oldItem == newItem && !ExerciseAdapter.selectionChanged(oldItem)
     }
 }

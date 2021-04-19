@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashSet
 
 @HiltViewModel
 class ExerciseListViewModel @Inject constructor(private val useCase: ExerciseListUseCase) :
@@ -37,6 +38,20 @@ class ExerciseListViewModel @Inject constructor(private val useCase: ExerciseLis
     }
 
     fun addExercise(name: String) = useCase.addExercise(name)
+
+    // region editing routine ----------------------------------------------------------------------
+
+    val selectedExercises: HashSet<ExerciseLatestBpm> = HashSet()
+    val numExercisesSelected = MutableStateFlow(0)
+
+    fun toggleSelected(exercise: ExerciseLatestBpm) {
+        if (selectedExercises.contains(exercise)) selectedExercises.remove(exercise)
+        else selectedExercises.add(exercise)
+        viewModelScope.launch {
+            numExercisesSelected.emit(selectedExercises.size)
+        }
+    }
+    // endregion editing routine -------------------------------------------------------------------
 }
 
 sealed class ExerciseListState {

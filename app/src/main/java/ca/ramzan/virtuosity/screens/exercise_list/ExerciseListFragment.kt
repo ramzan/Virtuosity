@@ -7,13 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
-import androidx.fragment.app.activityViewModels
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import ca.ramzan.virtuosity.R
 import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentExerciseListBinding
+import ca.ramzan.virtuosity.exercises.Exercise
 import ca.ramzan.virtuosity.screens.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,11 +29,15 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
     @Inject
     lateinit var imm: InputMethodManager
 
-    private val viewModel: ExerciseListViewModel by activityViewModels()
+    private val viewModel: ExerciseListViewModel by viewModels()
+
+    private lateinit var adapter: ExerciseAdapter
 
     override fun onStart() {
         super.onStart()
-        requireActivity().showBottomNavBar()
+        if (requireArguments().getBoolean("editingRoutine")) {
+            requireActivity().hideBottomNavBar()
+        } else requireActivity().showBottomNavBar()
         setFragmentResultListener(TEXT_INPUT_RESULT) { _, bundle ->
             bundle.getString(INPUT_TEXT)?.let { viewModel.addExercise(it) }
         }
@@ -43,7 +50,13 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
     ): View {
         mutableBinding = FragmentExerciseListBinding.inflate(inflater)
 
-        val adapter = ExerciseAdapter { exercise -> showExerciseView(exercise.id) }
+        adapter = if (requireArguments().getBoolean("editingRoutine")) {
+            setUpSelectionView()
+            ExerciseAdapter { exercise, position ->
+                viewModel.toggleSelected(exercise)
+                adapter.notifyItemChanged(position)
+            }
+        } else ExerciseAdapter { exercise, _ -> showExerciseView(exercise.id) }
 
         binding.exerciseList.adapter = adapter
 
@@ -51,6 +64,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
             viewModel.state.collect { state ->
                 when (state) {
                     is ExerciseListState.Loaded -> {
+                        adapter.submitSelected(viewModel.selectedExercises)
                         adapter.submitList(state.filteredExercises)
                         if (state.filteredExercises.isEmpty()) {
                             binding.exerciseList.visibility = View.GONE
@@ -141,6 +155,46 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
                 ""
             )
         )
+    }
+
+    // Adjust layout/behaviour for exercise selection in routine editor
+    private fun setUpSelectionView() {
+        binding.apply {
+            root.setPadding(0, 0, 0, 0)
+            exercisesToolbar.apply {
+                setNavigationIcon(R.drawable.ic_baseline_arrow_back_24)
+                setTitle(R.string.add_exercises)
+                setNavigationOnClickListener {
+                    requireActivity().onBackPressed()
+                }
+            }
+            addExercisesFab.setOnClickListener {
+                setFragmentResult(
+                    ADD_EXERCISE_RESULTS,
+                    bundleOf(
+                        ADD_EXERCISE_RESULTS to viewModel.selectedExercises.toList()
+                            .map { Exercise(it.name, it.id) })
+                )
+                requireActivity().onBackPressed()
+            }
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                viewModel.numExercisesSelected.collect { numSelected ->
+                    when {
+                        numSelected == 0 -> addExercisesFab.hide()
+                        numSelected == 1 -> {
+                            addExercisesFab.text = getString(R.string.add_exercise)
+                            addExercisesFab.show()
+                        }
+                        numSelected > 1 -> {
+                            addExercisesFab.text = getString(R.string.add_n_exercises, numSelected)
+                            addExercisesFab.show()
+                        }
+                        else -> throw Exception("Illegal number of exercises selected: $numSelected")
+
+                    }
+                }
+            }
+        }
     }
 
     override fun onStop() {

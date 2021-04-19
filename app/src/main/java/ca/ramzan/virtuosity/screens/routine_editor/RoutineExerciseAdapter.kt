@@ -8,24 +8,58 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.common.millisToTimerString
+import ca.ramzan.virtuosity.databinding.ListItemAddExerciseButtonBinding
 import ca.ramzan.virtuosity.databinding.ListItemRoutineExerciseBinding
 import ca.ramzan.virtuosity.routine.RoutineExercise
 
+private const val ITEM_VIEW_TYPE_EXERCISE = 0
+const val ITEM_VIEW_TYPE_ADD_BUTTON = 1
 
 class RoutineExerciseAdapter(
     private val onDurationClick: (exerciseIndex: Int, duration: Long) -> Unit,
-    private val onDeleteClick: (exerciseIndex: Int) -> Unit
-) : ListAdapter<RoutineExercise, RoutineExerciseAdapter.ViewHolder>(RoutineDiffCallback()) {
+    private val onDeleteClick: (exerciseIndex: Int) -> Unit,
+    private val onAddExerciseClick: () -> Unit
+) : ListAdapter<RoutineEditorListItem, RecyclerView.ViewHolder>(
+    RoutineDiffCallback()
+) {
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), onDurationClick, onDeleteClick)
+    fun submitWithFooter(list: MutableList<RoutineExercise>) {
+        super.submitList(
+            list.map { RoutineEditorListItem.ExerciseRow(it) }
+                    + listOf(RoutineEditorListItem.AddExerciseButton)
+        )
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = getItem(position)
+        when (holder) {
+            is ExerciseViewHolder -> holder.bind(
+                (item as RoutineEditorListItem.ExerciseRow).exercise,
+                onDurationClick,
+                onDeleteClick
+            )
+            is AddExerciseButtonViewHolder -> holder.itemView.setOnClickListener {
+                onAddExerciseClick()
+            }
+
+            else -> throw Exception("Illegal holder type: $holder")
+        }
     }
 
-    class ViewHolder private constructor(private val binding: ListItemRoutineExerciseBinding) :
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            ITEM_VIEW_TYPE_EXERCISE -> ExerciseViewHolder.from(parent)
+            ITEM_VIEW_TYPE_ADD_BUTTON -> AddExerciseButtonViewHolder.from(parent)
+            else -> throw ClassCastException("Unknown viewType $viewType")
+
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == currentList.size - 1) ITEM_VIEW_TYPE_ADD_BUTTON else ITEM_VIEW_TYPE_EXERCISE
+    }
+
+    class ExerciseViewHolder private constructor(private val binding: ListItemRoutineExerciseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -48,30 +82,62 @@ class RoutineExerciseAdapter(
         }
 
         companion object {
-            fun from(parent: ViewGroup): ViewHolder {
+            fun from(parent: ViewGroup): ExerciseViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
 
                 val binding =
                     ListItemRoutineExerciseBinding.inflate(layoutInflater, parent, false)
 
-                return ViewHolder(binding)
+                return ExerciseViewHolder(binding)
+            }
+        }
+    }
+
+    class AddExerciseButtonViewHolder private constructor(binding: ListItemAddExerciseButtonBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        companion object {
+            fun from(parent: ViewGroup): AddExerciseButtonViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+
+                val binding =
+                    ListItemAddExerciseButtonBinding.inflate(layoutInflater, parent, false)
+
+                return AddExerciseButtonViewHolder(binding)
             }
         }
     }
 }
 
-class RoutineDiffCallback : DiffUtil.ItemCallback<RoutineExercise>() {
+class RoutineDiffCallback : DiffUtil.ItemCallback<RoutineEditorListItem>() {
     override fun areItemsTheSame(
-        oldItem: RoutineExercise,
-        newItem: RoutineExercise
+        oldItem: RoutineEditorListItem,
+        newItem: RoutineEditorListItem
     ): Boolean {
-        return oldItem.name == newItem.name && oldItem.duration == newItem.duration
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: RoutineExercise,
-        newItem: RoutineExercise
+        oldItem: RoutineEditorListItem,
+        newItem: RoutineEditorListItem
     ): Boolean {
         return oldItem == newItem
+    }
+}
+
+sealed class RoutineEditorListItem {
+
+    abstract val id: Long
+
+    object AddExerciseButton : RoutineEditorListItem() {
+        override val id = -1L
+    }
+
+    class ExerciseRow(val exercise: RoutineExercise) :
+        RoutineEditorListItem() {
+        // This causes an odd swiping animation if you have the same exercise listed multiple
+        // times in a row and delete one of them, since they would have the same id.
+        // However, functionality is not affected.
+        override val id = exercise.exerciseId
     }
 }
