@@ -88,8 +88,10 @@
 
         <TextView
             android:id="@+id/notes_data"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            tools:text="Test note text. Test note text. Test note text. Test note text. Test note text. Test note text. "
+            app:layout_constraintEnd_toEndOf="@id/history_data"
             app:layout_constraintStart_toStartOf="@id/history_data"
             app:layout_constraintTop_toBottomOf="@id/header_notes" />
 
