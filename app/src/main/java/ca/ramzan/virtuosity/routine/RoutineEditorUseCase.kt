@@ -8,8 +8,6 @@ import javax.inject.Inject
 
 class RoutineEditorUseCase @Inject constructor(private val dao: RoutineEditorDao) {
 
-    fun getAllExercises() = dao.getAllExercises()
-
     suspend fun getRoutine(id: Long) = dao.getRoutine(id)
 
     suspend fun getRoutineExerciseNames(routineId: Long) = dao.getRoutineExerciseNames(routineId)

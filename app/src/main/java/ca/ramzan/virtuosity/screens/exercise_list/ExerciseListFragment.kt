@@ -180,15 +180,15 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.numExercisesSelected.collect { numSelected ->
                     when {
+                        numSelected > 0 -> {
+                            addExercisesFab.text = resources.getQuantityString(
+                                R.plurals.add_n_exercises,
+                                numSelected,
+                                numSelected
+                            )
+                            addExercisesFab.show()
+                        }
                         numSelected == 0 -> addExercisesFab.hide()
-                        numSelected == 1 -> {
-                            addExercisesFab.text = getString(R.string.add_exercise)
-                            addExercisesFab.show()
-                        }
-                        numSelected > 1 -> {
-                            addExercisesFab.text = getString(R.string.add_n_exercises, numSelected)
-                            addExercisesFab.show()
-                        }
                         else -> throw Exception("Illegal number of exercises selected: $numSelected")
 
                     }

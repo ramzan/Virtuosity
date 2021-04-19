@@ -51,9 +51,6 @@ interface RoutineEditorDao {
     @Query("SELECT * FROM routine_table WHERE id = :key")
     suspend fun getRoutine(key: Long): Routine?
 
-    @Query("SELECT * FROM exercise_table ORDER BY name COLLATE NOCASE ASC")
-    fun getAllExercises(): Flow<List<Exercise>>
-
     @Query("SELECT * FROM routine_exercise_table WHERE routineId = :routineId ORDER BY `order`")
     fun getRoutineExercises(routineId: Long): List<RoutineExerciseEntity>
 

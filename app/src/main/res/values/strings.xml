@@ -17,7 +17,6 @@
     <string name="editorTitleNew">New Routine</string>
     <string name="empty_name_error_msg">Name required</string>
     <string name="nameInputHint">Name</string>
-    <string name="add_an_exercise">Add an exercise</string>
     <string name="edit">Edit</string>
     <string name="start">Start</string>
     <string name="bpm">BPM</string>
@@ -79,6 +78,10 @@
     <string name="previous">Previous</string>
     <string name="add_exercise">Add exercise</string>
     <string name="add_exercises">Add exercises</string>
-    <string name="add_n_exercises">Add %d exercises</string>
+    <plurals name="add_n_exercises">
+        <item quantity="one">Add exercise</item>
+        <item quantity="other">Add %d exercises</item>
+    </plurals>
+
 
 </resources>
