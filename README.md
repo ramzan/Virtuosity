@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/ramzan/Virtuosity/blob/main/images/ic_launcher-playstore.webp?raw=true" width="150"></p> 
+<p align="center"><img src="https://github.com/ramzan/Virtuosity/blob/main/fastlane/metadata/android/en-US/images/icon.png?raw=true" width="150"></p> 
 <h2 align="center"><b>Virtuosity</b></h2>
 <h4 align="center">Organize and track your music practice</h4>
 <p align="center">
@@ -17,10 +17,10 @@
 
 ## Screenshots
 <div align="center">
-<img src="images/graph.jpg" width=280>
-<img src="images/routines.jpg" width=280>
-<img src="images/history.jpg" width=280>
-<img src="images/session.jpg" width=280>
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width=280>
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width=280>
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width=280>
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width=280>
 </div>
 
 ### Features

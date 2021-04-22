@@ -1,0 +1,9 @@
+<p>Virtuosity helps you organize and track your music practice, allowing you to your reach musical goals faster.</p>
+<p><b>Organize</b></p>
+<p>Create routines of the exercises you wish to practice.</p>
+<p><b>Practice</b></p>
+<p>Stay focused while practicing with a built in timer.</p>
+<p><b>Measure</b></p>
+<p>View logs of your previous practice sessions, as well as detailed graphs showing your performance (BPM) over time.</p>
+<p><b>Offline, ad-free, and open source</b></p>
+<p>No advertisements, annoying notifications, intrusive permissions, or trackers in this app. Your data is yours. The complete source code is available under an open-source license (GPLv3).</p>
