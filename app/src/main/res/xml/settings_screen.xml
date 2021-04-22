@@ -33,4 +33,15 @@
             app:title="@string/title_timer_vibrate" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/category_about">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_view_source"
+            app:title="@string/title_view_source" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -4,6 +4,7 @@
     <!--Categories-->
     <string name="category_general">General</string>
     <string name="category_practice">Practice</string>
+    <string name="category_about">About</string>
 
     <!--Theme-->
     <!--Key and values-->
@@ -42,5 +43,12 @@
     <string name="key_session_stay_awake" translatable="false">session_stay_awake</string>
     <!--Display-->
     <string name="title_session_stay_awake">Keep screen on</string>
+
+    <!--About section-->
+    <!--Key and values-->
+    <string name="key_view_source" translatable="false">view_source</string>
+    <!--Display-->
+    <string name="title_view_source">View source code</string>
+
 
 </resources>
