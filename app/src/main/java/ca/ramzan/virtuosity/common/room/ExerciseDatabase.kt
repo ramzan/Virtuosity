@@ -5,12 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
+import ca.ramzan.virtuosity.common.DEFAULT_TIMER_DURATION
 import ca.ramzan.virtuosity.exercises.Exercise
 import ca.ramzan.virtuosity.exercises.ExerciseHistory
 import ca.ramzan.virtuosity.history.SessionHistoryEntity
 import ca.ramzan.virtuosity.routine.Routine
 import ca.ramzan.virtuosity.routine.RoutineExerciseEntity
 import ca.ramzan.virtuosity.session.SessionExercise
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Database(
     entities = [
@@ -48,8 +54,56 @@ abstract class ExerciseDatabase : RoomDatabase() {
                         ExerciseDatabase::class.java,
                         "exercise_database"
                     )
-                        .createFromAsset("db/exercise_database")
                         .fallbackToDestructiveMigration()
+                        .addCallback(object : Callback() {
+                            override fun onCreate(db: SupportSQLiteDatabase) {
+                                super.onCreate(db)
+                                GlobalScope.launch(Dispatchers.IO) {
+                                    withContext(Dispatchers.IO) {
+                                        // Prepopulate db
+                                        getInstance(context).run {
+                                            listOf(
+                                                Exercise("A Major Scale", 1),
+                                                Exercise("B Major Scale", 2),
+                                                Exercise("C Major Scale", 3),
+                                                Exercise("D Major Scale", 4),
+                                            ).forEach { exerciseListDao.insert(it) }
+
+                                            routineEditorDao.insert(Routine("Sample Routine", 1))
+
+                                            routineEditorDao.insertRoutineExercises(
+                                                listOf(
+                                                    RoutineExerciseEntity(
+                                                        1,
+                                                        1,
+                                                        1,
+                                                        DEFAULT_TIMER_DURATION
+                                                    ),
+                                                    RoutineExerciseEntity(
+                                                        1,
+                                                        2,
+                                                        2,
+                                                        DEFAULT_TIMER_DURATION
+                                                    ),
+                                                    RoutineExerciseEntity(
+                                                        1,
+                                                        3,
+                                                        3,
+                                                        DEFAULT_TIMER_DURATION
+                                                    ),
+                                                    RoutineExerciseEntity(
+                                                        1,
+                                                        4,
+                                                        4,
+                                                        DEFAULT_TIMER_DURATION
+                                                    ),
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        })
                         .build()
                     INSTANCE = instance
                 }
