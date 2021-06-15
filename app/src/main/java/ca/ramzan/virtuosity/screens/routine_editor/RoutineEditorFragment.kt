@@ -132,8 +132,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
         requireActivity().hideBottomNavBar()
 
-        var firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
-
         setUpBinding(FragmentRoutineEditorBinding.inflate(inflater))
 
         val deleteButton = binding.editorToolbar.menu.getItem(0)
@@ -179,20 +177,20 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                     is RoutineEditorState.Editing -> {
                         binding.apply {
                             editorToolbar.title = getString(R.string.editorTitleEdit)
-                            if (firstRun) nameInput.setText(state.nameInputText)
-
+                            if (viewModel.firstRun) nameInput.setText(state.nameInputText)
                             nameInput.setSelection(state.nameInputText.length)
                             deleteButton.isVisible = true
                             saveButton.isVisible = true
+                            viewModel.firstRun = false
                         }
                     }
                     is RoutineEditorState.New -> {
                         binding.editorToolbar.title = getString(R.string.editorTitleNew)
                         saveButton.isVisible = true
-                        if (firstRun) {
+                        if (viewModel.firstRun) {
                             binding.nameInput.requestFocus()
                             imm.showKeyboard()
-                            firstRun = false
+                            viewModel.firstRun = false
                         }
                     }
                 }
@@ -268,10 +266,5 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                     routineDeleted = deleted
                 }
         )
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(FIRST_RUN_KEY, false)
     }
 }

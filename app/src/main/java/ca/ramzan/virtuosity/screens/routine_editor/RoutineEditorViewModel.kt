@@ -26,6 +26,8 @@ class RoutineEditorViewModel @AssistedInject constructor(
 
     var indexToUpdate: Int = -1
 
+    var firstRun = true
+
     init {
         if (routineId == 0L) {
             _state.value = RoutineEditorState.New(
