@@ -48,7 +48,7 @@ class ExerciseListFragment : BaseFragment<FragmentExerciseListBinding>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mutableBinding = FragmentExerciseListBinding.inflate(inflater)
+        setUpBinding(FragmentExerciseListBinding.inflate(inflater))
 
         adapter = if (requireArguments().getBoolean("editingRoutine")) {
             setUpSelectionView()

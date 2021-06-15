@@ -134,7 +134,7 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
         var firstRun = savedInstanceState?.getBoolean(FIRST_RUN_KEY) ?: true
 
-        mutableBinding = FragmentRoutineEditorBinding.inflate(inflater)
+        setUpBinding(FragmentRoutineEditorBinding.inflate(inflater))
 
         val deleteButton = binding.editorToolbar.menu.getItem(0)
         val saveButton = binding.editorToolbar.menu.getItem(1)

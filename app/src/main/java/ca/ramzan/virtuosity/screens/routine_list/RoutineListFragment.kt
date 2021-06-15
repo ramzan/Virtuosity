@@ -55,7 +55,7 @@ class RoutineListFragment : BaseFragment<FragmentRoutineListBinding>() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        mutableBinding = FragmentRoutineListBinding.inflate(inflater)
+        setUpBinding(FragmentRoutineListBinding.inflate(inflater))
 
         adapter = RoutineListCardAdapter(
             object : RoutineListCardAdapter.OnClickListener {

@@ -88,7 +88,7 @@ class ExerciseDetailFragment : BaseFragment<FragmentExerciseDetailBinding>() {
 
         requireActivity().hideBottomNavBar()
 
-        mutableBinding = FragmentExerciseDetailBinding.inflate(inflater)
+        setUpBinding(FragmentExerciseDetailBinding.inflate(inflater))
 
         binding.editorToolbar.apply {
             setNavigationOnClickListener {

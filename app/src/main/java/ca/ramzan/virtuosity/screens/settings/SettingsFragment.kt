@@ -19,7 +19,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
         super.onCreateView(inflater, container, savedInstanceState)
         requireActivity().hideBottomNavBar()
 
-        mutableBinding = FragmentSettingsBinding.inflate(inflater)
+        setUpBinding(FragmentSettingsBinding.inflate(inflater))
 
         childFragmentManager
             .beginTransaction()

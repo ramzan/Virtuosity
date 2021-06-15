@@ -46,7 +46,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mutableBinding = FragmentHistoryBinding.inflate(inflater)
+        setUpBinding(FragmentHistoryBinding.inflate(inflater))
 
         val adapter = HistoryOuterAdapter(::deleteSessionHistory)
 

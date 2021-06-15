@@ -160,7 +160,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         requireActivity().hideBottomNavBar()
-        mutableBinding = FragmentSessionBinding.inflate(inflater)
+        setUpBinding(FragmentSessionBinding.inflate(inflater))
 
         binding.apply {
             nextExerciseButton.setOnClickListener {
