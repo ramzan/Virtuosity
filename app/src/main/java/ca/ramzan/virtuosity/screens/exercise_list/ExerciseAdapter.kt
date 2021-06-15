@@ -51,7 +51,7 @@ class ExerciseAdapter(private val onClickListener: (ExerciseLatestBpm, Int) -> U
     }
 
     override fun getSectionName(position: Int): String {
-        return currentList[position].name.first().toString().toUpperCase(Locale.ROOT)
+        return currentList[position].name.first().toString().uppercase(Locale.ROOT)
     }
 
     fun submitSelected(newSelected: HashSet<ExerciseLatestBpm>) {

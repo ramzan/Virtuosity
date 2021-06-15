@@ -29,7 +29,7 @@ class ExerciseListViewModel @Inject constructor(private val useCase: ExerciseLis
     }
 
     fun setNameQuery(name: String) {
-        query = name.toLowerCase(Locale.ROOT).trim()
+        query = name.lowercase(Locale.ROOT).trim()
         viewModelScope.launch {
             (state.value as? ExerciseListState.Loaded)?.run {
                 state.emit(copy(query = query))
@@ -64,7 +64,7 @@ sealed class ExerciseListState {
         ExerciseListState() {
 
         val filteredExercises = allExercises.filter { exercise ->
-            exercise.name.toLowerCase(Locale.ROOT).contains(query)
+            exercise.name.lowercase(Locale.ROOT).contains(query)
         }
     }
 }
