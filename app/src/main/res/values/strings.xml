@@ -78,6 +78,7 @@
     <string name="previous">Previous</string>
     <string name="add_exercise">Add exercise</string>
     <string name="add_exercises">Add exercises</string>
+    <string name="session_current_exercise">%d. %s</string>
     <plurals name="add_n_exercises">
         <item quantity="one">Add exercise</item>
         <item quantity="other">Add %d exercises</item>
