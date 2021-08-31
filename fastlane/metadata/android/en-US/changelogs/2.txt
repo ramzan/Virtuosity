@@ -1,0 +1,3 @@
+- fix weird animations when rearranging/deleting exercises in the routine editor
+- enable Google Auto Backup if it's enabled on your device
+- various bug fixes/under the hood improvements
