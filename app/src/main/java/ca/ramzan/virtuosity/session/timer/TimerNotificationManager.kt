@@ -41,7 +41,7 @@ class TimerNotificationManager(
             context,
             requestCode,
             Intent(intentAction),
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         ).run {
             NotificationCompat.Action.Builder(
                 icon,
@@ -94,7 +94,7 @@ class TimerNotificationManager(
                     context,
                     TIMER_NOTIFICATION_ID,
                     Intent(context, MainActivity::class.java),
-                    PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
     }
