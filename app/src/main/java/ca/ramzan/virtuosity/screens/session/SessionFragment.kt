@@ -19,6 +19,7 @@ import ca.ramzan.virtuosity.common.*
 import ca.ramzan.virtuosity.databinding.FragmentSessionBinding
 import ca.ramzan.virtuosity.screens.BaseFragment
 import ca.ramzan.virtuosity.session.timer.Timer
+import ca.ramzan.virtuosity.session.timer.TimerBinder
 import ca.ramzan.virtuosity.session.timer.TimerService
 import ca.ramzan.virtuosity.session.timer.TimerState
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +49,7 @@ class SessionFragment : BaseFragment<FragmentSessionBinding>() {
     private val connection = object : ServiceConnection {
 
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val timerService = service as TimerService.TimerBinder
+            val timerService = service as TimerBinder
             timer = timerService.getTimer()
             bound = true
 

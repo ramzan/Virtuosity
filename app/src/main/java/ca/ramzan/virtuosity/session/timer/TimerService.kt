@@ -6,14 +6,15 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.media.MediaPlayer
-import android.os.*
-import ca.ramzan.virtuosity.*
-import ca.ramzan.virtuosity.common.*
+import android.os.Binder
+import android.os.IBinder
+import android.os.Vibrator
+import ca.ramzan.virtuosity.R
+import ca.ramzan.virtuosity.common.TIMER_NOTIFICATION_ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import java.util.*
 import javax.inject.Inject
 
 
@@ -67,6 +68,7 @@ class TimerService : Service() {
         }.also {
             registerReceiver(timerReceiver, it)
         }
+        binder = TimerBinder(timerNotificationManager, timer)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -89,10 +91,13 @@ class TimerService : Service() {
 
     override fun onBind(intent: Intent): IBinder = binder
 
-    private val binder = TimerBinder()
+    private lateinit var binder: TimerBinder
+}
 
-    inner class TimerBinder : Binder() {
-        fun getTimer(): Timer = this@TimerService.timer
-        fun updateRoutineName(name: String) = timerNotificationManager.updateRoutineName(name)
-    }
+class TimerBinder(
+    private val notificationManager: TimerNotificationManager,
+    private val timer: Timer
+) : Binder() {
+    fun getTimer(): Timer = timer
+    fun updateRoutineName(name: String) = notificationManager.updateRoutineName(name)
 }
