@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.virtuosity.common.millisToTimerString
 import ca.ramzan.virtuosity.databinding.ListItemAddExerciseButtonBinding
 import ca.ramzan.virtuosity.databinding.ListItemRoutineExerciseBinding
-import ca.ramzan.virtuosity.routine.RoutineExercise
+import ca.ramzan.virtuosity.routine.RoutineEditorExercise
 
 private const val ITEM_VIEW_TYPE_EXERCISE = 0
 const val ITEM_VIEW_TYPE_ADD_BUTTON = 1
@@ -23,7 +23,7 @@ class RoutineExerciseAdapter(
     RoutineDiffCallback()
 ) {
 
-    fun submitWithFooter(list: MutableList<RoutineExercise>) {
+    fun submitWithFooter(list: List<RoutineEditorExercise>) {
         super.submitList(
             list.map { RoutineEditorListItem.ExerciseRow(it) }
                     + listOf(RoutineEditorListItem.AddExerciseButton)
@@ -63,7 +63,7 @@ class RoutineExerciseAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            item: RoutineExercise,
+            item: RoutineEditorExercise,
             onDurationClick: (exerciseIndex: Int, duration: Long) -> Unit,
             onDeleteClick: (exerciseIndex: Int) -> Unit
         ) {
@@ -133,11 +133,8 @@ sealed class RoutineEditorListItem {
         override val id = -1L
     }
 
-    class ExerciseRow(val exercise: RoutineExercise) :
+    class ExerciseRow(val exercise: RoutineEditorExercise) :
         RoutineEditorListItem() {
-        // This causes an odd swiping animation if you have the same exercise listed multiple
-        // times in a row and delete one of them, since they would have the same id.
-        // However, functionality is not affected.
-        override val id = exercise.exerciseId
+        override val id = exercise.listId
     }
 }

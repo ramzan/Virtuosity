@@ -51,6 +51,16 @@ data class RoutineExercise(
     val duration: Long
 )
 
+data class RoutineEditorExercise(
+    val listId: Long,
+
+    val exerciseId: Long,
+
+    val name: String,
+
+    val duration: Long
+)
+
 data class RoutineDisplay(
     val routine: Routine,
 

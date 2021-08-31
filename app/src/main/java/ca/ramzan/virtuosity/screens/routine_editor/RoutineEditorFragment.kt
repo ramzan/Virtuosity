@@ -47,6 +47,9 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
 
+            private var dragFrom = -1
+            private var dragTo = -1
+
             override fun getMovementFlags(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder
@@ -60,7 +63,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
                 )
             }
 
-
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -70,8 +72,14 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
                 val fromPos = viewHolder.bindingAdapterPosition
                 val toPos = target.bindingAdapterPosition
-                viewModel.moveItem(fromPos, toPos)
-                adapter.notifyItemMoved(fromPos, toPos)
+
+                if (dragFrom == -1) dragFrom = fromPos
+                dragTo = toPos
+
+                adapter.currentList.toMutableList().run {
+                    this.add(toPos, this.removeAt(fromPos))
+                    adapter.submitList(this)
+                }
                 return true
             }
 
@@ -82,6 +90,11 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
                 if (actionState != ACTION_STATE_IDLE) viewHolder?.itemView?.alpha = 0.5f
+                if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
+                    viewModel.moveItem(dragFrom, dragTo)
+                }
+                dragFrom = -1
+                dragTo = -1
             }
 
             override fun clearView(
@@ -227,7 +240,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
 
     private fun deleteItem(position: Int) {
         val deleted = viewModel.deleteItem(position)
-        adapter.submitWithFooter(viewModel.exercises)
         Snackbar.make(
             binding.root,
             getString(R.string.routine_editor_exercise_removed_message),
@@ -235,7 +247,6 @@ class RoutineEditorFragment : BaseFragment<FragmentRoutineEditorBinding>() {
         )
             .setAction(getString(R.string.undo)) {
                 viewModel.undoDelete(deleted, position)
-                adapter.submitWithFooter(viewModel.exercises)
             }
             .show()
     }
