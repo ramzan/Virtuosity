@@ -10,7 +10,6 @@ import ca.ramzan.virtuosity.databinding.ListItemExerciseBinding
 import ca.ramzan.virtuosity.exercises.ExerciseLatestBpm
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import java.util.*
-import kotlin.collections.HashSet
 
 
 class ExerciseAdapter(private val onClickListener: (ExerciseLatestBpm, Int) -> Unit) :
@@ -54,15 +53,14 @@ class ExerciseAdapter(private val onClickListener: (ExerciseLatestBpm, Int) -> U
         return currentList[position].name.first().toString().uppercase(Locale.ROOT)
     }
 
-    fun submitSelected(newSelected: HashSet<ExerciseLatestBpm>) {
+    fun submitSelected(newSelected: List<ExerciseLatestBpm>) {
         oldSelected = currentSelected
         currentSelected = newSelected
     }
 
     companion object {
-        private var oldSelected: HashSet<ExerciseLatestBpm> = HashSet()
-        private var currentSelected: HashSet<ExerciseLatestBpm> = HashSet()
-
+        private var oldSelected: List<ExerciseLatestBpm> = emptyList()
+        private var currentSelected: List<ExerciseLatestBpm> = emptyList()
         fun selectionChanged(exercise: ExerciseLatestBpm): Boolean {
             return oldSelected.contains(exercise) == currentSelected.contains(exercise)
         }
