@@ -2,7 +2,6 @@
 <h2 align="center"><b>Virtuosity</b></h2>
 <h4 align="center">Organize and track your music practice</h4>
 <p align="center">
-<a href="https://play.google.com/store/apps/details?id=ca.ramzan.virtuosity"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" height="100"></a>
 <a href="https://f-droid.org/packages/ca.ramzan.virtuosity">
     <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
